@@ -14,6 +14,12 @@ at ``asitic_kernel.c:9212``) is functionally replaced by
 ``substrate.green.integrate_green_kernel`` for per-pair queries.
 """
 
+from reasitic.substrate.coupled import (
+    HJCoupledCaps,
+    coupled_microstrip_caps_hj,
+    coupled_microstrip_to_cap_matrix,
+    even_odd_impedances,
+)
 from reasitic.substrate.fft_grid import (
     GreenFFTGrid,
     green_apply,
@@ -31,7 +37,11 @@ from reasitic.substrate.shunt import (
 
 __all__ = [
     "GreenFFTGrid",
+    "HJCoupledCaps",
     "coupled_capacitance_per_pair",
+    "coupled_microstrip_caps_hj",
+    "coupled_microstrip_to_cap_matrix",
+    "even_odd_impedances",
     "green_apply",
     "green_function_static",
     "integrate_green_kernel",

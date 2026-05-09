@@ -353,10 +353,11 @@ Keep the table sorted by Python module path, then by function name.
 | Optimisation (Opt/Sweep family) | 9 | 6 | 67% |
 | Info commands (Geom/MetArea/LRMAT/ListSegs) | 5 | 4 | 80% |
 | Substrate Green's (incl. Sommerfeld + FFT + eddy) | 12 | 7 | 58% |
+| Coupled-microstrip H/J caps (Cp, Cf, Cf′, Cga, Cgd, Z_e/Z_o) | 2 | 2 | 100% |
 | Shape transforms (Move/Flip/Rotate) | 6 | 4 | 67% |
 | REPL commands | 117 | 117 | 100% |
 | GUI (X11/Mesa front-end → Tk) | 28 | 12 | 43% |
-| **Total identified C functions** | **643** | ~177 | ~28% |
+| **Total identified C functions** | **643** | ~179 | ~28% |
 
 ## GUI (X11 / Mesa → Tk)
 

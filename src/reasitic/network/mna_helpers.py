@@ -211,6 +211,57 @@ def solve_3port_equations(
     return np.asarray(Ypp - correction, dtype=complex)
 
 
+def back_substitute_solution(
+    x: np.ndarray,
+    *,
+    node_indices: list[int] | None = None,
+    bias: float = 0.0,
+) -> np.ndarray:
+    """Distribute an LU-solver output vector across per-node voltage slots.
+
+    Mirrors ``node_eq_back_substitute`` (decomp ``0x0806dfc4``).
+    The binary's back-substitute pass walks the node list and copies
+    each entry of the solution vector to the corresponding node's
+    voltage field, optionally shifted by a ``bias`` offset.
+
+    The Python equivalent is a one-line array reorder + add: given
+    ``x`` of shape ``(N,)`` and an optional ``node_indices``
+    permutation, return ``x[node_indices] + bias`` (or ``x + bias``
+    if no permutation is given).
+    """
+    arr = np.asarray(x, dtype=complex)
+    if node_indices is not None:
+        arr = arr[node_indices]
+    return np.asarray(arr + bias, dtype=complex)
+
+
+def build_segment_node_list(
+    shape: object,
+    tech: object,
+) -> list[tuple[int, int, int]]:
+    """Build a (poly_idx, vertex_idx, metal_idx) graph from ``shape``.
+
+    Mirrors ``build_segment_node_list`` (decomp ``0x08053a1c``, 986 B):
+    walks the spiral's polygon list and emits one entry per polygon-
+    vertex pair, including the metal-layer index. The binary uses the
+    output as the node-discretisation input to the cap matrix and
+    the MNA setup paths.
+
+    Returns:
+        List of ``(polygon_index, vertex_index, metal_index)`` triples
+        across every polygon's vertex set.
+    """
+    polys = getattr(shape, "polygons", None) or []
+    out: list[tuple[int, int, int]] = []
+    for pi, poly in enumerate(polys):
+        verts = getattr(poly, "vertices", None) or []
+        metal = int(getattr(poly, "metal", 0))
+        for vi in range(len(verts)):
+            out.append((pi, vi, metal))
+    _ = tech  # retained for API parity with the binary
+    return out
+
+
 def lmat_subblock_assemble(
     L_full: np.ndarray,
     row_indices: list[int],

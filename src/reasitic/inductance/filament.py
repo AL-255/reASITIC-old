@@ -92,6 +92,33 @@ def auto_filament_subdivisions(
     return n_w, n_t
 
 
+def auto_filament_subdivisions_critical(
+    segment: Segment,
+    rsh_ohm_per_sq: float,
+    freq_ghz: float,
+    *,
+    cells_per_skin_depth: float = 4.0,
+    n_max: int = 16,
+) -> tuple[int, int]:
+    """Critical-mode filament subdivisions (finer than the normal mode).
+
+    Mirrors ``set_cell_size_critical`` (decomp ``0x08071cec``, 3454 B):
+    the binary's stricter cell-sizer for high-accuracy regimes.
+    Same formula as :func:`auto_filament_subdivisions` but with
+    twice the cells-per-skin-depth target (default 4× rather than
+    2×) and a higher cap (``n_max=16`` rather than 8). The binary
+    logs the result with a leading ``!#`` marker that routes the
+    line to the per-spiral log file.
+
+    Returns the ``(n_w, n_t)`` subdivision counts.
+    """
+    return auto_filament_subdivisions(
+        segment, rsh_ohm_per_sq, freq_ghz,
+        cells_per_skin_depth=cells_per_skin_depth,
+        n_max=n_max,
+    )
+
+
 def filament_grid(segment: Segment, n_w: int = 1, n_t: int = 1) -> list[Filament]:
     """Split ``segment`` into a ``n_w × n_t`` grid of filaments.
 

@@ -19,6 +19,8 @@ from reasitic.network.analysis import (
 )
 from reasitic.network.mna_helpers import (
     assemble_mna_matrix,
+    back_substitute_solution,
+    build_segment_node_list,
     lmat_compute_partial_traces,
     lmat_subblock_assemble,
     setup_mna_rhs,
@@ -73,6 +75,8 @@ __all__ = [
     "TouchstonePoint",
     "TransformerAnalysis",
     "assemble_mna_matrix",
+    "back_substitute_solution",
+    "build_segment_node_list",
     "calc_transformer",
     "deembed_pad_open",
     "deembed_pad_open_short",

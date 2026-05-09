@@ -4,6 +4,7 @@ from reasitic.inductance.eddy import assemble_eddy_matrix, eddy_packed_index
 from reasitic.inductance.filament import (
     Filament,
     auto_filament_subdivisions,
+    auto_filament_subdivisions_critical,
     build_inductance_matrix,
     build_resistance_vector,
     filament_grid,
@@ -49,6 +50,7 @@ __all__ = [
     "FilamentList",
     "assemble_eddy_matrix",
     "auto_filament_subdivisions",
+    "auto_filament_subdivisions_critical",
     "build_filament_list",
     "build_inductance_matrix",
     "build_resistance_vector",

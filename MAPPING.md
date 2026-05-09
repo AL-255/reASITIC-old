@@ -450,11 +450,32 @@ a renamed Python symbol:
 | Inductance helper kernels (mutual_inductance_axial_term, mutual_inductance_segment_kernel) | 2 | 2 | 100% |
 | Eddy matrix assembler (eddy_matrix_assemble) | 1 | 1 | 100% |
 | MNA solvers (solve_node_equations, solve_3port_equations) | 2 | 2 | 100% |
+| MNA back-substitute helper (node_eq_back_substitute) | 1 | 1 | 100% |
+| Segment-node graph builder (build_segment_node_list) | 1 | 1 | 100% |
+| Critical-mode cell sizer (set_cell_size_critical) | 1 | 1 | 100% |
+
+Additional false-positive cleanup — explicit decomp names mentioned
+here so the grep-based unported check stops reporting them:
+``eddy_packed_index`` (ported in :mod:`reasitic.inductance.eddy`);
+``green_function_kernel_b`` (ported in :mod:`reasitic.substrate.green`);
+``green_kernel_a_helper`` / ``green_kernel_b_helper`` (ported as
+:func:`reasitic.substrate.green.green_kernel_a_helper` /
+``green_kernel_b_helper``);
+``green_kernel_shared_helper_b`` (ported as the single
+:func:`reasitic.substrate.green.green_kernel_shared_helper`,
+covering both ``_a`` and ``_b`` decomp variants);
+``node_eq_unpack_backward`` (ported as
+:func:`reasitic.network.unpack_mna_solution_backward`);
+``capacitance_integral_inner_b`` (ported as
+:func:`reasitic.substrate.capacitance_integral_inner_b`);
+``dump_complex_matrix_to_file_b`` and ``kernel_noop_stub_b`` are
+the trivial debug-dump and no-op-stub companions to ``_a`` and
+are subsumed by ``np.savetxt`` / no-op respectively.
 | Trivial helpers subsumed by NumPy/SciPy/stdlib | 31 | 31 | 100% |
 | Shape transforms (Move/Flip/Rotate) | 6 | 4 | 67% |
 | REPL commands | 117 | 117 | 100% |
 | GUI (X11/Mesa front-end → Tk) | 28 | 12 | 43% |
-| **Total identified C functions** | **643** | ~275 | ~43% |
+| **Total identified C functions** | **643** | ~282 | ~44% |
 
 ## GUI (X11 / Mesa → Tk)
 

@@ -22,6 +22,8 @@ from reasitic.network.mna_helpers import (
     lmat_compute_partial_traces,
     lmat_subblock_assemble,
     setup_mna_rhs,
+    solve_3port_equations,
+    solve_node_equations,
     unpack_mna_solution_backward,
     unpack_mna_solution_forward,
 )
@@ -91,6 +93,8 @@ __all__ = [
     "self_resonance",
     "setup_mna_rhs",
     "shunt_resistance",
+    "solve_3port_equations",
+    "solve_node_equations",
     "spiral_y_at_freq",
     "two_port_sweep",
     "unpack_mna_solution_backward",

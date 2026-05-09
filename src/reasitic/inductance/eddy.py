@@ -35,6 +35,74 @@ from reasitic.resistance.skin import skin_depth
 from reasitic.tech import Tech
 
 
+def assemble_eddy_matrix(
+    shape: Shape,
+    tech: Tech,
+    freq_ghz: float,
+    *,
+    n_w: int = 1,
+    n_t: int = 1,
+) -> np.ndarray:
+    """Build the per-filament substrate-image eddy mutual-L matrix.
+
+    Mirrors the binary's ``eddy_matrix_assemble`` (decomp
+    ``0x080930a4``, 1501 bytes): produces an ``N × N`` complex
+    matrix whose off-diagonals are the source-to-image mutual
+    inductances between every filament pair, attenuated by the
+    skin-depth factor through the substrate.
+
+    Args:
+        shape:    The spiral geometry to discretise.
+        tech:     Tech file (provides bulk silicon resistivity +
+                  thickness).
+        freq_ghz: Frequency for the skin-depth attenuation.
+        n_w, n_t: Per-segment filament subdivisions.
+
+    Returns:
+        ``(N, N)`` real matrix of source-image mutual-L coupling
+        in **nH**. Diagonal entries are the self-image term; off-
+        diagonals are the cross-image. Multiply by ``jω`` and add
+        to the partial-L matrix to get the full eddy-corrected ``Z``.
+    """
+    if not tech.layers:
+        return np.zeros((0, 0))
+    rho_ohm_cm = float(tech.layers[0].rho)
+    t_sub_um = float(tech.layers[0].t)
+    if rho_ohm_cm <= 0 or freq_ghz <= 0:
+        return np.zeros((0, 0))
+
+    delta_m = skin_depth(rho_ohm_cm, freq_ghz * 1.0e9)
+    if delta_m <= 0:
+        return np.zeros((0, 0))
+    delta_um = delta_m * 1e6
+    t_sub_m = t_sub_um * 1e-6
+    thickness_factor = 1.0 - math.exp(-2.0 * t_sub_m / delta_m)
+
+    segs = shape.segments()
+    filaments: list[Filament] = []
+    for idx, s in enumerate(segs):
+        for f in filament_grid(s, n_w=n_w, n_t=n_t):
+            f.parent_segment = idx
+            filaments.append(f)
+    n = len(filaments)
+    if n == 0:
+        return np.zeros((0, 0))
+
+    M = np.zeros((n, n))
+    for i, fi in enumerate(filaments):
+        depth_i = max(fi.a.z, fi.b.z, 1e-9)
+        att_i = math.exp(-2.0 * depth_i / delta_um) * thickness_factor
+        for j in range(i, n):
+            fj_image = _image_filament(filaments[j])
+            m_ij = _filament_pair_m(fi, fj_image)
+            depth_j = max(filaments[j].a.z, filaments[j].b.z, 1e-9)
+            att_j = math.exp(-2.0 * depth_j / delta_um) * thickness_factor
+            v = float(m_ij) * 0.5 * (att_i + att_j)
+            M[i, j] = v
+            M[j, i] = v
+    return M
+
+
 def eddy_packed_index(i: int, j: int) -> int:
     """Index calculator for the binary's packed eddy matrix layout.
 

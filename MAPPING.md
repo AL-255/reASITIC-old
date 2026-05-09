@@ -448,11 +448,13 @@ a renamed Python symbol:
 | LMAT subblock + partial-trace helpers (lmat_subblock_assemble, lmat_compute_partial_traces) | 2 | 2 | 100% |
 | Sommerfeld helper kernels (green_function_select_integrator, green_function_kernel_a/_b, green_kernel_a/_b_helper, green_kernel_shared_helper_a/_b) | 7 | 7 | 100% |
 | Inductance helper kernels (mutual_inductance_axial_term, mutual_inductance_segment_kernel) | 2 | 2 | 100% |
+| Eddy matrix assembler (eddy_matrix_assemble) | 1 | 1 | 100% |
+| MNA solvers (solve_node_equations, solve_3port_equations) | 2 | 2 | 100% |
 | Trivial helpers subsumed by NumPy/SciPy/stdlib | 31 | 31 | 100% |
 | Shape transforms (Move/Flip/Rotate) | 6 | 4 | 67% |
 | REPL commands | 117 | 117 | 100% |
 | GUI (X11/Mesa front-end → Tk) | 28 | 12 | 43% |
-| **Total identified C functions** | **643** | ~272 | ~42% |
+| **Total identified C functions** | **643** | ~275 | ~43% |
 
 ## GUI (X11 / Mesa → Tk)
 

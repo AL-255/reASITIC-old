@@ -1,4 +1,4 @@
-"""Modified-Nodal-Analysis matrix helpers.
+"""Modified-Nodal-Analysis matrix helpers and solvers.
 
 Mirrors a cluster of small MNA-pipeline functions from the binary:
 
@@ -130,6 +130,85 @@ def unpack_mna_solution_backward(
 
 
 # LMAT helpers --------------------------------------------------------------
+
+
+def solve_node_equations(
+    Y: np.ndarray,
+    b: np.ndarray,
+) -> np.ndarray:
+    """Solve a Modified-Nodal-Analysis system ``Y · v = b``.
+
+    Mirrors the binary's ``solve_node_equations`` (decomp
+    ``0x08053e00``, 3078 bytes of LAPACK-backed assembly). The
+    binary calls ``ZGETRF`` + ``ZGETRS`` via its
+    ``lapack_lu_factor_matobj`` + ``lapack_lu_solve_matobj``
+    wrappers; the Python equivalent is one call to
+    :func:`numpy.linalg.solve`, which dispatches to the same LAPACK
+    routines under the hood.
+
+    Args:
+        Y:  Complex MNA matrix (square).
+        b:  Complex right-hand-side vector with ``len(b) == Y.shape[0]``.
+
+    Returns:
+        The complex node-voltage solution ``v``.
+
+    Raises:
+        ValueError: if ``Y`` is not square or shapes don't match.
+        numpy.linalg.LinAlgError: if ``Y`` is singular.
+    """
+    if Y.ndim != 2 or Y.shape[0] != Y.shape[1]:
+        raise ValueError(f"Y must be a square 2-D matrix; got {Y.shape}")
+    if b.shape != (Y.shape[0],):
+        raise ValueError(
+            f"b shape {b.shape} does not match Y[{Y.shape[0]}, ...]"
+        )
+    return np.asarray(np.linalg.solve(Y, b), dtype=complex)
+
+
+def solve_3port_equations(
+    Y_full: np.ndarray,
+    *,
+    port_nodes: list[int],
+) -> np.ndarray:
+    """Reduce a full MNA system to a 3×3 port-only Y matrix.
+
+    Mirrors the binary's ``solve_3port_equations`` (decomp
+    ``0x08054bf8``, 2401 bytes). For an N-node MNA matrix and three
+    port-node indices, the 3-port admittance matrix is the Schur
+    complement of the non-port block:
+
+    .. math::
+
+        Y_\\text{ports} = Y_{pp} − Y_{pi} \\, Y_{ii}^{-1} \\, Y_{ip}
+
+    where ``p`` indexes the three port nodes and ``i`` indexes the
+    interior nodes. Equivalent to driving each port with a unit
+    current source one at a time, solving for all node voltages,
+    and reading off the port-pair Z columns — but cheaper.
+
+    Args:
+        Y_full:      Full ``(N, N)`` MNA matrix.
+        port_nodes:  Exactly three node indices to retain as ports.
+
+    Returns:
+        ``(3, 3)`` complex Y matrix.
+    """
+    if len(port_nodes) != 3:
+        raise ValueError(f"expected 3 port_nodes, got {len(port_nodes)}")
+    if Y_full.ndim != 2 or Y_full.shape[0] != Y_full.shape[1]:
+        raise ValueError(f"Y_full must be square; got {Y_full.shape}")
+    n = Y_full.shape[0]
+    interior = [i for i in range(n) if i not in set(port_nodes)]
+    Ypp = Y_full[np.ix_(port_nodes, port_nodes)]
+    if not interior:
+        return np.asarray(Ypp, dtype=complex)
+    Ypi = Y_full[np.ix_(port_nodes, interior)]
+    Yip = Y_full[np.ix_(interior, port_nodes)]
+    Yii = Y_full[np.ix_(interior, interior)]
+    # Schur complement
+    correction = Ypi @ np.linalg.solve(Yii, Yip)
+    return np.asarray(Ypp - correction, dtype=complex)
 
 
 def lmat_subblock_assemble(

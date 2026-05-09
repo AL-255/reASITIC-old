@@ -1,6 +1,6 @@
 """Partial-inductance kernels."""
 
-from reasitic.inductance.eddy import eddy_packed_index
+from reasitic.inductance.eddy import assemble_eddy_matrix, eddy_packed_index
 from reasitic.inductance.filament import (
     Filament,
     auto_filament_subdivisions,
@@ -47,6 +47,7 @@ from reasitic.inductance.skew import (
 __all__ = [
     "Filament",
     "FilamentList",
+    "assemble_eddy_matrix",
     "auto_filament_subdivisions",
     "build_filament_list",
     "build_inductance_matrix",

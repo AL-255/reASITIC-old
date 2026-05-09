@@ -3,10 +3,18 @@
 A clean-room Python port of ASITIC, validated against the original
 1999 binary checked in at `../run/asitic.linux.2.2`.
 
-The full reverse-engineered C surface is **643 functions / ~60 kLOC**.
-The plan below is staged: foundation first (parsers + simplest
-kernels + validation harness), then numerical kernels, then network
-extraction, then optimisation, then a CLI/REPL.
+The full reverse-engineered C surface is **643 functions / ~60 kLOC**,
+and the port has reached **100 % coverage** — every identified C
+function is either re-implemented in Python or explicitly subsumed
+by a NumPy / SciPy / stdlib equivalent. The plan below documents
+the staged path that got us there: foundation first (parsers +
+simplest kernels + validation harness), then numerical kernels,
+network extraction, optimisation, REPL/CLI, and finally the GUI
+plus the GDS / SPICE / Touchstone export surface.
+
+See [`MAPPING.md`](./MAPPING.md) for the per-function ledger and
+[`docs/milestone.md`](./docs/milestone.md) for the narrative
+milestone summary.
 
 ## Library substitutions
 

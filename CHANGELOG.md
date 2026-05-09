@@ -8,8 +8,12 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- Comprehensive REPL CLI with 105+ commands matching the original
-  ASITIC binary (~90 % command coverage).
+- Comprehensive REPL CLI with all 117 commands matching the
+  original ASITIC binary (100 % command coverage).
+- 100 % coverage of the binary's 643 identified C functions —
+  every one is re-implemented in Python or explicitly subsumed by
+  a NumPy / SciPy / stdlib equivalent. See [`MAPPING.md`](./MAPPING.md)
+  and [`docs/milestone.md`](./docs/milestone.md).
 - 10 geometry builders: square spiral, polygon spiral, wire, ring,
   via cluster, transformer, 3D mirror transformer, symmetric square,
   symmetric polygon, balun, MIM capacitor, multi-metal series square.

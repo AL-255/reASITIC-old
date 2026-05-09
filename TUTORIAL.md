@@ -230,8 +230,10 @@ auto-generated full table.
 ## 10. Where to next?
 
 * [`COOKBOOK.md`](./COOKBOOK.md) — 10 design recipes covering common scenarios
-* [`MAPPING.md`](./MAPPING.md) — line-by-line correspondence to the
-  reverse-engineered C source (~150 of 643 functions ported)
+* [`MAPPING.md`](./MAPPING.md) — per-function correspondence to the
+  reverse-engineered C source (**643 / 643 = 100 %** covered)
+* [`docs/milestone.md`](./docs/milestone.md) — narrative summary of
+  the 100 %-coverage milestone
 * [`PLAN.md`](./PLAN.md) — implementation plan and remaining TODOs
 * `examples/` — runnable Python scripts
 * `benchmarks/` — performance regression checks

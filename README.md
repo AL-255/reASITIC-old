@@ -3,8 +3,9 @@
 [![CI](https://github.com/AL-255/reASITIC/actions/workflows/ci.yml/badge.svg)](https://github.com/AL-255/reASITIC/actions/workflows/ci.yml)
 [![Docs](https://github.com/AL-255/reASITIC/actions/workflows/docs.yml/badge.svg)](https://al-255.github.io/reASITIC/)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
-![Tests](https://img.shields.io/badge/tests-404%20passing-brightgreen)
-![Coverage](https://img.shields.io/badge/coverage-92%25-brightgreen)
+![Tests](https://img.shields.io/badge/tests-669%20passing-brightgreen)
+![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
+![Port](https://img.shields.io/badge/C%20port-643%2F643%20(100%25)-brightgreen)
 ![License](https://img.shields.io/badge/license-GPL--2.0-blue)
 
 <!-- DOCS-INTRO -->
@@ -54,14 +55,20 @@ reasitic-gui -t my_tech.tek                # graphical workspace
 > plotting helpers, a binary cross-validation harness, runnable
 > examples, end-to-end integration test, Touchstone reader/writer
 > round-trip, FastHenry/SPICE/CIF/Sonnet/Tek exports, performance
-> benchmarks, auto-generated CLI reference, and a REPL CLI with
-> **117 commands** (full binary REPL parity). **401 tests pass**
-> with **92% line coverage**; ruff (with pydocstyle D-rules) and
-> `mypy --strict` are clean. PyPI-ready: builds cleanly via
-> ``python -m build`` and installs end-to-end in a fresh venv.
+> benchmarks, auto-generated CLI reference, GDSII import/export
+> via gdstk, a Tk-based GUI mirroring the original X11 front-end,
+> and a REPL CLI with **117 commands** (full binary REPL parity).
+> **669 tests pass** with **90 % line coverage**; ruff (with
+> pydocstyle D-rules) and `mypy --strict` are clean. PyPI-ready:
+> builds cleanly via ``python -m build`` and installs end-to-end
+> in a fresh venv.
 >
-> Coverage of the original 643 C functions: ~165 ported (~26 %),
-> including all 117/117 REPL commands.
+> **Coverage of the original 643 C functions: 643 / 643 (100 %)** —
+> every identified C function is either re-implemented in Python
+> or explicitly subsumed by a NumPy / SciPy / stdlib equivalent.
+> See [`MAPPING.md`](./MAPPING.md) for the per-function ledger
+> and [`docs/milestone.md`](./docs/milestone.md) for a narrative
+> summary.
 
 ## What works today
 
@@ -220,7 +227,7 @@ make strict               # treat sphinx warnings as errors (CI does this)
 * [`COOKBOOK.md`](./COOKBOOK.md) — 10 worked design recipes for common RF scenarios
 * [`FAQ.md`](./FAQ.md) — common questions and troubleshooting tips
 * [`CLI_REFERENCE.md`](./CLI_REFERENCE.md) — auto-generated REPL command reference
-* [`MAPPING.md`](./MAPPING.md) — line-by-line Python ↔ C function correspondence (~155/643 ports)
+* [`MAPPING.md`](./MAPPING.md) — per-function Python ↔ C ledger (643/643 = 100 %)
 * [`PLAN.md`](./PLAN.md) — implementation plan and phase status
 * [`CHANGELOG.md`](./CHANGELOG.md) — version history and notable changes
 * [`examples/`](./examples) — runnable Python scripts

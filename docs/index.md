@@ -64,7 +64,8 @@ print(f"Q = {reasitic.metal_only_q(sp, tech, 2.4):.1f}")
 ## Feature surface
 
 - **117 / 117** original REPL commands
-- **404** unit / integration / regression tests, **92 %** line coverage
+- **669** unit / integration / regression tests, **90 %** line coverage
+- **643 / 643** identified C functions covered (**100 %**) — see [milestone](milestone.md)
 - **`mypy --strict`** clean across the entire public surface
 - Greenhouse + Grover partial-inductance summation with filament-level
   current-crowding, Wheeler skin effect, substrate eddy correction

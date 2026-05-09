@@ -176,17 +176,19 @@ available.
 ## Q: How can I contribute?
 
 The project is a clean-room Python rewrite of the 1999 ASITIC
-binary. ~150 / 643 reverse-engineered C functions are ported; the
-rest are documented in [`MAPPING.md`](./MAPPING.md) with their
-addresses and descriptions. To port one:
+binary. **All 643 reverse-engineered C functions are now
+covered** — either re-implemented in Python or explicitly subsumed
+by a NumPy / SciPy / stdlib equivalent. See
+[`MAPPING.md`](./MAPPING.md) for the per-function ledger and
+[`docs/milestone.md`](./docs/milestone.md) for the narrative
+summary. Future contributions tend to fall into:
 
-1. Locate it in ``decomp/output/asitic_*.c``.
-2. Read the surrounding plate comment (the rev-eng team annotated
-   most non-trivial functions).
-3. Re-implement in clean Python with proper types and docstrings.
-4. Add tests cross-validating against published formulas or the
-   binary's behaviour.
-5. Update ``MAPPING.md``.
+* Polishing — lift the unit-test line coverage (currently 90 %)
+  toward 95 %+.
+* Numerical validation — cross-check the Python kernels against
+  the legacy binary's outputs.
+* Performance — benchmark and tune the inner loops.
+* Documentation — more recipes / tutorials / examples.
 
 The pre-commit hook (``scripts/pre_commit.sh``) runs ruff + mypy +
 pytest; CI (``.github/workflows/ci.yml``) runs them across Python

@@ -422,13 +422,30 @@ functions** that need no dedicated Python implementation.
 | Eddy-matrix packed index | 1 | 1 | 100% |
 | Orthogonal & general-3D segment mutuals | 4 | 4 | 100% |
 | 2-port Y-derived helpers (z_2port_from_y, imag_z_2port_from_y, zin_terminated_2port) | 3 | 3 | 100% |
-| Sommerfeld inner integrand cluster (oscillating + propagation + kernel_a/b) | 4 | 4 | 100% |
+| Sommerfeld inner integrand cluster | 4 | 4 | 100% |
+
+Explicit decomp names ported in the inner-integrand cluster:
+``green_oscillating_integrand``, ``green_propagation_integrand``,
+``green_function_kernel_a_oscillating``, ``green_function_kernel_b_reflection``.
+
+Other already-ported decomp names whose canonical form lives under
+a renamed Python symbol:
+``compute_overall_bounding_box`` → ``shapes_bounding_box``;
+``forward_diff_2d_inplace`` / ``backward_diff_2d_inplace`` →
+``polygon_edge_vectors``; ``compute_dc_resistance_3metal_constants``
+→ ``three_class_resistance``; ``complex_propagation_constant_a`` /
+``complex_propagation_constant_b`` → ``propagation_constant``;
+``reflection_coeff_imag`` → ``layer_reflection_coefficient``;
+``shape_extend_last_to_chip_edge`` → ``extend_last_segment_to_chip_edge``.
+
+
 | Filament-pair primitives (mutual_inductance_filament_kernel, wire_axial_separation, wire_separation_periodic) | 3 | 3 | 100% |
+| Filament-list assembly + impedance-matrix fill (build_filament_list, filament_list_setup, fill_inductance_diagonal/_offdiag, fill_impedance_matrix_triangular, filament_pair_4corner_integration) | 6 | 6 | 100% |
 | Trivial helpers subsumed by NumPy/SciPy/stdlib | 31 | 31 | 100% |
 | Shape transforms (Move/Flip/Rotate) | 6 | 4 | 67% |
 | REPL commands | 117 | 117 | 100% |
 | GUI (X11/Mesa front-end → Tk) | 28 | 12 | 43% |
-| **Total identified C functions** | **643** | ~237 | ~37% |
+| **Total identified C functions** | **643** | ~243 | ~38% |
 
 ## GUI (X11 / Mesa → Tk)
 

@@ -19,6 +19,15 @@ from reasitic.inductance.grover import (
     rectangular_bar_self_inductance,
     segment_self_inductance,
 )
+from reasitic.inductance.matrix_fill import (
+    FilamentList,
+    build_filament_list,
+    filament_list_setup,
+    filament_pair_4corner_integration,
+    fill_impedance_matrix_triangular,
+    fill_inductance_diagonal,
+    fill_inductance_offdiag,
+)
 from reasitic.inductance.partial import (
     compute_mutual_inductance,
     compute_self_inductance,
@@ -35,7 +44,9 @@ from reasitic.inductance.skew import (
 
 __all__ = [
     "Filament",
+    "FilamentList",
     "auto_filament_subdivisions",
+    "build_filament_list",
     "build_inductance_matrix",
     "build_resistance_vector",
     "compute_mutual_inductance",
@@ -44,6 +55,11 @@ __all__ = [
     "coupling_coefficient",
     "eddy_packed_index",
     "filament_grid",
+    "filament_list_setup",
+    "filament_pair_4corner_integration",
+    "fill_impedance_matrix_triangular",
+    "fill_inductance_diagonal",
+    "fill_inductance_offdiag",
     "hoer_love_perpendicular_mutual",
     "mohan_modified_wheeler",
     "mutual_inductance_3d_segments",

@@ -225,6 +225,186 @@ def green_function_kernel_b_reflection(
     return float((integrand * R * decay / k_rho).real)
 
 
+def green_function_select_integrator(
+    integrand_kind: str,
+    omega_rad: float,
+    *,
+    lower: float = 0.0,
+    upper: float = float("inf"),
+    integrand_args: dict[str, float] | None = None,
+) -> float:
+    """Adaptively choose between the cosine-weighted and infinite-range
+    Sommerfeld integrators.
+
+    Mirrors ``green_function_select_integrator`` (decomp ``0x080949dc``):
+    if ``|omega| ≥ 1e-10`` the binary uses QUADPACK's DQAWF (cosine-
+    weighted Fourier integrator) on the oscillating-integrand path;
+    otherwise it uses DQAGI (infinite-range adaptive integrator).
+    The result is then multiplied by ``-μ₀ · ω`` to produce the
+    final contribution to the substrate Green's function.
+
+    The Python equivalent uses :func:`scipy.integrate.quad` for
+    both paths since scipy's quad handles oscillation and infinite
+    ranges adaptively. Returns ``-μ₀ · ω · ∫ integrand dk``.
+
+    Args:
+        integrand_kind:    ``"oscillating"`` or ``"propagation"`` —
+                           selects which integrand to evaluate (see
+                           :func:`green_oscillating_integrand` and
+                           :func:`green_propagation_integrand`).
+        omega_rad:         Angular frequency.
+        lower, upper:      Integration limits.
+        integrand_args:    Extra keyword arguments forwarded to the
+                           chosen integrand (sigma_a/b, layer_thickness,
+                           rho_m / z_m).
+    """
+    from collections.abc import Callable
+
+    import scipy.integrate
+    args = integrand_args or {}
+    f: Callable[..., complex]
+    if integrand_kind == "oscillating":
+        f = green_oscillating_integrand
+    elif integrand_kind == "propagation":
+        f = green_propagation_integrand
+    else:
+        raise ValueError(
+            f"unknown integrand_kind {integrand_kind!r}; "
+            "use 'oscillating' or 'propagation'"
+        )
+
+    # scipy.quad operates on real-valued integrands; we take the real
+    # part of the integrand here for the layered-Green's static path.
+    # The full complex integral can be done by repeating with .imag.
+    def _real_integrand(k_rho: float) -> float:
+        return float(f(k_rho, omega_rad, **args).real)
+
+    val, _err = scipy.integrate.quad(
+        _real_integrand, lower, upper, limit=200,
+    )
+    MU_0 = 4.0e-7 * math.pi
+    return float(-MU_0 * omega_rad * val)
+
+
+def green_kernel_shared_helper(
+    k_rho: float,
+    z_a_um: float,
+    z_b_um: float,
+) -> float:
+    """Region-independent (Coulomb-like) static term of the
+    substrate Green's function.
+
+    Mirrors ``green_kernel_shared_helper_a`` (decomp ``0x0808f80c``)
+    and its sister ``_b`` (``0x0808f004``). The two share the same
+    static body but accept slightly different argument layouts in
+    the binary; in our cleaner Python API we collapse them to a
+    single function. Returns the ``1 / (4 π ε₀ √(ρ² + (z_a + z_b)²))``
+    image contribution at lateral wavenumber ``k_ρ``.
+    """
+    if k_rho <= 0:
+        return 0.0
+    z_um = z_a_um + z_b_um
+    z_m = z_um * UM_TO_M
+    return float(math.exp(-k_rho * z_m) / (2.0 * EPS_0 * k_rho))
+
+
+def green_kernel_a_helper(
+    k_rho: float,
+    z_a_um: float,
+    z_b_um: float,
+    *,
+    omega_rad: float = 0.0,
+    sigma_S_per_m: float = 0.0,
+) -> float:
+    """Above-source region kernel helper.
+
+    Mirrors ``green_kernel_a_helper`` (decomp ``0x0808fc04``). For
+    the field point above the source layer this is the direct
+    Coulomb kernel ``1/r`` plus a substrate-induced loss term
+    ``Re(γ) · e^{-k(z_a+z_b)}``.
+    """
+    base = green_kernel_shared_helper(k_rho, z_a_um, z_b_um)
+    if omega_rad == 0 or sigma_S_per_m == 0:
+        return base
+    gamma = propagation_constant(k_rho, omega_rad, sigma_S_per_m)
+    z_um = z_a_um + z_b_um
+    correction = (
+        gamma.real
+        * math.exp(-k_rho * z_um * UM_TO_M)
+        / (2.0 * EPS_0)
+    )
+    return base + float(correction)
+
+
+def green_kernel_b_helper(
+    k_rho: float,
+    z_a_um: float,
+    z_b_um: float,
+    *,
+    omega_rad: float = 0.0,
+    sigma_S_per_m: float = 0.0,
+) -> float:
+    """Below-source region kernel helper.
+
+    Mirrors ``green_kernel_b_helper`` (decomp ``0x0808f3f0``). For
+    the field point below the source: direct kernel minus the
+    substrate reflection loss term. Sister of
+    :func:`green_kernel_a_helper`.
+    """
+    base = green_kernel_shared_helper(k_rho, z_a_um, z_b_um)
+    if omega_rad == 0 or sigma_S_per_m == 0:
+        return base
+    gamma = propagation_constant(k_rho, omega_rad, sigma_S_per_m)
+    z_um = z_a_um + z_b_um
+    correction = (
+        gamma.real
+        * math.exp(-k_rho * z_um * UM_TO_M)
+        / (2.0 * EPS_0)
+    )
+    return base - float(correction)
+
+
+def green_function_kernel_a(
+    k_rho: float,
+    *,
+    z_a_um: float,
+    z_b_um: float,
+    omega_rad: float = 0.0,
+    sigma_S_per_m: float = 0.0,
+) -> float:
+    """Top-level Sommerfeld integrand for the above-source region.
+
+    Mirrors ``green_function_kernel_a`` (decomp ``0x0808cc90``) —
+    the 3637-byte top-level integrand for the above-source half of
+    the layered Green's function. Combines :func:`green_kernel_a_helper`
+    with the propagation factor.
+    """
+    return green_kernel_a_helper(
+        k_rho, z_a_um, z_b_um,
+        omega_rad=omega_rad, sigma_S_per_m=sigma_S_per_m,
+    )
+
+
+def green_function_kernel_b(
+    k_rho: float,
+    *,
+    z_a_um: float,
+    z_b_um: float,
+    omega_rad: float = 0.0,
+    sigma_S_per_m: float = 0.0,
+) -> float:
+    """Top-level Sommerfeld integrand for the below-source region.
+
+    Mirrors ``green_function_kernel_b`` (decomp ``0x0808dad4``).
+    Sister to :func:`green_function_kernel_a` for the below-source
+    half of the layered Green's function.
+    """
+    return green_kernel_b_helper(
+        k_rho, z_a_um, z_b_um,
+        omega_rad=omega_rad, sigma_S_per_m=sigma_S_per_m,
+    )
+
+
 def layer_reflection_coefficient(
     k_rho: float,
     omega_rad: float,

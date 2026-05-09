@@ -298,6 +298,46 @@ def wire_separation_periodic(
     return -base
 
 
+def mutual_inductance_axial_term(
+    a1: Point, a2: Point, b1: Point, b2: Point,
+    *,
+    radius_um: float = 0.0,
+    freq_factor: float = 1.0,
+) -> float:
+    """Single-axial-term mutual-inductance contribution.
+
+    Mirrors ``mutual_inductance_axial_term`` (decomp ``0x08094404``):
+    the binary multiplies :func:`wire_axial_separation` (the centre-
+    line gap minus 2× the wire radius) by a frequency-dependent
+    scaling and the Green's-integrator output. Here we expose the
+    axial term in its raw form: ``(|B−A| − 2r) · freq_factor``.
+
+    The ``freq_factor`` parameter packages whatever ω-dependent
+    scaling the caller wants to apply; for static analyses it
+    defaults to 1.0.
+
+    Returns:
+        The axial scalar term in **μm** (or scaled units if
+        ``freq_factor`` carries a unit).
+    """
+    sep = wire_axial_separation(a1, a2, radius_um=radius_um)
+    return sep * freq_factor
+
+
+def mutual_inductance_segment_kernel(
+    seg_a: Segment, seg_b: Segment,
+) -> float:
+    """Per-segment mutual-inductance integrand value.
+
+    Mirrors ``mutual_inductance_segment_kernel`` from the binary —
+    a thin wrapper around the filament-pair kernel that operates
+    directly on :class:`Segment` objects.
+    """
+    return mutual_inductance_filament_kernel(
+        seg_a.a, seg_a.b, seg_b.a, seg_b.b,
+    )
+
+
 def mutual_inductance_3d_segments(
     seg_a: Segment,
     seg_b: Segment,

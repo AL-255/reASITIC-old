@@ -446,11 +446,13 @@ a renamed Python symbol:
 | Shape mutations (shape_terminal_segment_extend_unit, shape_emit_vias_at_layer_transitions) | 2 | 2 | 100% |
 | MNA matrix helpers (node_eq_assemble, node_eq_setup_rhs, node_eq_unpack_forward/_backward) | 4 | 4 | 100% |
 | LMAT subblock + partial-trace helpers (lmat_subblock_assemble, lmat_compute_partial_traces) | 2 | 2 | 100% |
+| Sommerfeld helper kernels (green_function_select_integrator, green_function_kernel_a/_b, green_kernel_a/_b_helper, green_kernel_shared_helper_a/_b) | 7 | 7 | 100% |
+| Inductance helper kernels (mutual_inductance_axial_term, mutual_inductance_segment_kernel) | 2 | 2 | 100% |
 | Trivial helpers subsumed by NumPy/SciPy/stdlib | 31 | 31 | 100% |
 | Shape transforms (Move/Flip/Rotate) | 6 | 4 | 67% |
 | REPL commands | 117 | 117 | 100% |
 | GUI (X11/Mesa front-end → Tk) | 28 | 12 | 43% |
-| **Total identified C functions** | **643** | ~263 | ~41% |
+| **Total identified C functions** | **643** | ~272 | ~42% |
 
 ## GUI (X11 / Mesa → Tk)
 

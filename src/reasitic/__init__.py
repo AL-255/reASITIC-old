@@ -63,6 +63,13 @@ from reasitic.resistance import (
     compute_dc_resistance,
     three_class_resistance,
 )
+from reasitic.spiral_helpers import (
+    segment_pair_distance_metric,
+    spiral_max_n,
+    spiral_radius_for_n,
+    spiral_turn_position,
+    wire_position_periodic_fold,
+)
 from reasitic.tech import (
     Tech,
     parse_tech,
@@ -117,7 +124,11 @@ __all__ = [
     "polygon_edge_vectors",
     "polygon_spiral",
     "ring",
+    "segment_pair_distance_metric",
     "shapes_bounding_box",
+    "spiral_max_n",
+    "spiral_radius_for_n",
+    "spiral_turn_position",
     "square_spiral",
     "summary",
     "symmetric_polygon",
@@ -127,6 +138,7 @@ __all__ = [
     "transformer_3d",
     "via",
     "wire",
+    "wire_position_periodic_fold",
     "write_tech",
     "write_tech_file",
 ]

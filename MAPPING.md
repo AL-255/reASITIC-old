@@ -442,11 +442,12 @@ a renamed Python symbol:
 | Filament-pair primitives (mutual_inductance_filament_kernel, wire_axial_separation, wire_separation_periodic) | 3 | 3 | 100% |
 | Filament-list assembly + impedance-matrix fill (build_filament_list, filament_list_setup, fill_inductance_diagonal/_offdiag, fill_impedance_matrix_triangular, filament_pair_4corner_integration) | 6 | 6 | 100% |
 | Per-segment substrate-cap pipeline (capacitance_setup, capacitance_segment_integral, capacitance_integral_inner_a/b, capacitance_per_segment, analyze_capacitance_polygon, analyze_capacitance_driver) | 7 | 7 | 100% |
+| Spiral / cell-sizing helpers (spiral_FindMaxN, spiral_radius_for_N, spiral_turn_position_recursive, wire_position_periodic_fold, segment_pair_distance_metric) | 5 | 5 | 100% |
 | Trivial helpers subsumed by NumPy/SciPy/stdlib | 31 | 31 | 100% |
 | Shape transforms (Move/Flip/Rotate) | 6 | 4 | 67% |
 | REPL commands | 117 | 117 | 100% |
 | GUI (X11/Mesa front-end → Tk) | 28 | 12 | 43% |
-| **Total identified C functions** | **643** | ~250 | ~39% |
+| **Total identified C functions** | **643** | ~255 | ~40% |
 
 ## GUI (X11 / Mesa → Tk)
 

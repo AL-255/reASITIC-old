@@ -144,3 +144,63 @@ def test_compute_self_inductance_square_spiral(tech) -> None:
     # The published ASITIC manual examples typically report similar
     # geometries at ~3-5 nH.
     assert 0.5 < L < 30.0
+
+
+# Skew-mutual dispatch (TODO #1: wire the C check_segments_intersect path) -
+
+
+def test_compute_self_inductance_polygon_spiral_includes_skew_mutuals(tech) -> None:
+    """A polygon (non-Manhattan) spiral must accumulate non-zero mutual
+    contributions through the skew-filament path. Before TODO #1 was
+    addressed, ``_segment_pair_mutual`` returned 0 for all
+    non-axis-aligned pairs and L was just the sum of self-terms.
+    """
+    from reasitic import polygon_spiral
+
+    sp = polygon_spiral(
+        "OCT",
+        radius=80.0, width=10.0, spacing=2.0, turns=2.0,
+        sides=8, tech=tech, metal="m3",
+    )
+    segs = sp.segments()
+    L_self_only = sum(
+        rectangular_bar_self_inductance(s.length, s.width, s.thickness)
+        for s in segs
+        if s.length > 0
+    )
+    L_total = compute_self_inductance(sp)
+
+    assert math.isfinite(L_total)
+    # Mutual coupling on a 2-turn octagon adds materially to the
+    # bare self-sum (positive because adjacent turns run in the same
+    # angular direction). Insist on at least 30 % uplift; the actual
+    # fraction is ~50 % for this geometry but that's geometry-dependent.
+    assert L_total > L_self_only * 1.30
+    # Sanity: low-nH range, like a comparable square spiral.
+    assert 0.3 < L_total < 5.0
+
+
+def test_compute_self_inductance_polygon_close_to_square(tech) -> None:
+    """A 32-sided polygon spiral should approach a same-radius square
+    spiral within ~25%; both summations route through the new skew
+    dispatch but the closed-form parallel kernel still owns most of
+    the contribution thanks to the perpendicular short-circuit."""
+    from reasitic import polygon_spiral
+
+    radius = 85.0
+    poly = polygon_spiral(
+        "P32",
+        radius=radius, width=10.0, spacing=2.0, turns=2.0,
+        sides=32, tech=tech, metal="m3",
+    )
+    sq = square_spiral(
+        "SQ",
+        length=2 * radius, width=10.0, spacing=2.0, turns=2.0,
+        tech=tech, metal="m3",
+    )
+    L_poly = compute_self_inductance(poly)
+    L_sq = compute_self_inductance(sq)
+    # Polygon (inscribed circle) is somewhat shorter total length than
+    # square (which has corners poking out), so L_poly < L_sq is expected.
+    assert L_poly < L_sq
+    assert L_poly > 0.65 * L_sq

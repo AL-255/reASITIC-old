@@ -12,14 +12,22 @@ same direction along their common axis, -1 when they oppose, and 0
 when they are perpendicular (parallel-segment Grover formula yields
 zero in that case anyway). Reference: H. M. Greenhouse, "Design of
 Planar Rectangular Microelectronic Inductors," IEEE Trans. PHP-10
-(1974). The ASITIC binary uses the same formulation as the leaf
-case of ``compute_mutual_inductance`` for spirals whose segments
-are all axis-aligned.
+(1974).
 
-This module currently handles axis-aligned (square / Manhattan)
-spirals. Polygon spirals with non-orthogonal segments require the
-full 3D Grover formula (planned in
-``inductance.grover.general_segment_mutual``).
+The per-pair dispatch mirrors the binary's ``check_segments_intersect``
+(decomp ``0x08061110``) and ``mutual_inductance_3d_segments``
+(``0x08062ebc``):
+
+* perpendicular pairs (``|û_a · û_b| < 1e-10``) → 0
+* axis-aligned parallel pairs → closed-form Grover 4-corner via
+  :func:`reasitic.inductance.grover.parallel_segment_mutual`
+* general parallel-not-axis-aligned and skew pairs → Maxwell double
+  integral via :func:`reasitic.inductance.skew.mutual_inductance_skew_segments`
+
+The skew kernel internally short-circuits exactly-parallel pairs to
+its own closed form, so the only pairs that hit the numerical
+integrator are genuinely non-parallel ones (typical only for
+polygon spirals and 3D / multi-metal structures).
 """
 
 from __future__ import annotations
@@ -31,6 +39,7 @@ from reasitic.inductance.grover import (
     parallel_segment_mutual,
     rectangular_bar_self_inductance,
 )
+from reasitic.inductance.skew import mutual_inductance_skew_segments
 
 
 def _axis_of(seg: Segment) -> tuple[int, float]:
@@ -111,35 +120,67 @@ def _coord(p: Point, axis: int) -> float:
     return p.x if axis == 0 else (p.y if axis == 1 else p.z)
 
 
-def _segment_pair_mutual(a: Segment, b: Segment) -> float:
-    """Signed mutual-inductance contribution from one parallel pair.
+_PERP_DOT_TOL = 1e-10
 
-    Returns the value already multiplied by ``σ_ij`` (the orientation
-    sign). For non-parallel or coincident-axis pairs, returns 0.
+
+def _segment_pair_mutual(a: Segment, b: Segment) -> float:
+    """Signed mutual-inductance contribution from one segment pair.
+
+    Mirrors the C dispatch in ``check_segments_intersect``
+    (``asitic_kernel.c:3882``) followed by the geometry classifier
+    in ``mutual_inductance_3d_segments`` (``:4875``):
+
+    1. If ``|û_a · û_b| < 1e-10`` (perpendicular), contribute 0.
+       The C path early-returns before classification.
+    2. Try the axis-aligned-parallel closed form first. Manhattan
+       spirals — which are the bulk of ASITIC use — flow entirely
+       through this fast path.
+    3. Otherwise delegate to :func:`mutual_inductance_skew_segments`
+       which handles parallel-non-axis-aligned (closed form) and
+       general skew (Maxwell double integral).
+
+    Co-linear segments (zero perpendicular separation) are suppressed
+    to match the binary's intra-shape chain handling.
     """
+    dx_a = a.b.x - a.a.x
+    dy_a = a.b.y - a.a.y
+    dz_a = a.b.z - a.a.z
+    dx_b = b.b.x - b.a.x
+    dy_b = b.b.y - b.a.y
+    dz_b = b.b.z - b.a.z
+    L_a_sq = dx_a * dx_a + dy_a * dy_a + dz_a * dz_a
+    L_b_sq = dx_b * dx_b + dy_b * dy_b + dz_b * dz_b
+    if L_a_sq < 1e-24 or L_b_sq < 1e-24:
+        return 0.0
+    L_a = math.sqrt(L_a_sq)
+    L_b = math.sqrt(L_b_sq)
+    cos_alpha = (dx_a * dx_b + dy_a * dy_b + dz_a * dz_b) / (L_a * L_b)
+    if abs(cos_alpha) < _PERP_DOT_TOL:
+        return 0.0
+
     try:
         ax_a, _ = _axis_of(a)
     except ValueError:
-        return 0.0
-    pair = _parallel_axis_pair(a, b, ax_a)
-    if pair is None:
-        return 0.0
-    L1, L2, sep, offset, sign = pair
-    if sep < 1e-12:
-        # Co-linear continuation; suppressed (matches the binary's
-        # behaviour for shape-internal segment chains).
-        return 0.0
-    M = parallel_segment_mutual(L1, L2, sep, offset)
-    return sign * M
+        ax_a = -1
+    pair = _parallel_axis_pair(a, b, ax_a) if ax_a >= 0 else None
+    if pair is not None:
+        L1, L2, sep, offset, sign = pair
+        if sep < 1e-12:
+            # Co-linear continuation; suppressed.
+            return 0.0
+        return sign * parallel_segment_mutual(L1, L2, sep, offset)
+
+    # General path: parallel-non-axis-aligned + skew.
+    return mutual_inductance_skew_segments(a.a, a.b, b.a, b.b)
 
 
 def compute_self_inductance(shape: Shape) -> float:
-    """Total self-inductance (in nH) of a planar Manhattan shape.
+    """Total self-inductance (in nH) of a shape.
 
-    Uses Greenhouse partial-inductance summation. Falls back to
-    self-only when segments are non-orthogonal or the geometry is
-    multi-layer (mutual inductance for those cases is implemented in
-    a follow-up kernel).
+    Uses Greenhouse partial-inductance summation. Mutual terms are
+    routed through :func:`_segment_pair_mutual`, which dispatches to
+    the axis-aligned-parallel closed form for Manhattan spirals and
+    to the general skew kernel for polygon / 3D geometry.
     """
     segs = shape.segments()
     if not segs:
@@ -169,9 +210,9 @@ def compute_mutual_inductance(shape_a: Shape, shape_b: Shape) -> float:
     the self case does **not** apply here because each (i, j) pair
     appears exactly once.
 
-    Mirrors the leaf-case dispatch of the binary's
-    ``cmd_coupling_compute`` (``asitic_repl.c:1478``) for parallel /
-    Manhattan geometries.
+    Mirrors the binary's ``cmd_coupling_compute``
+    (``asitic_repl.c:1478``) — parallel, perpendicular, and general
+    skew geometries are all handled via :func:`_segment_pair_mutual`.
     """
     M = 0.0
     for sa in shape_a.segments():

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>reASITIC REPL — RF spiral inductor playground</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header>
+  <div class="brand">
+    <h1>reASITIC <span class="tag">REPL</span></h1>
+    <p class="tagline">RF planar-spiral inductor design — Python in your browser via Pyodide.</p>
+  </div>
+  <nav>
+    <a href="../index.html">Docs</a>
+    <a href="https://github.com/AL-255/reASITIC" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+</header>
+
+<main>
+  <section class="panel params">
+    <h2>Geometry</h2>
+
+    <label>Tech file
+      <select id="tech-select">
+        <option value="BiCMOS.tek">BiCMOS.tek</option>
+        <option value="CMOS.tek">CMOS.tek</option>
+      </select>
+    </label>
+
+    <label>Shape
+      <select id="shape-select">
+        <option value="square_spiral">Square spiral</option>
+        <option value="polygon_spiral">Polygon spiral</option>
+        <option value="symmetric_square">Symmetric square</option>
+        <option value="wire">Single wire</option>
+      </select>
+    </label>
+
+    <label>Metal layer
+      <select id="metal-select"></select>
+    </label>
+
+    <div class="grid2">
+      <label>Length / radius (μm)
+        <input id="p-length" type="number" value="170" step="any" min="1" />
+      </label>
+      <label>Width (μm)
+        <input id="p-width" type="number" value="10" step="any" min="0.1" />
+      </label>
+      <label data-only="square_spiral polygon_spiral symmetric_square">Spacing (μm)
+        <input id="p-spacing" type="number" value="3" step="any" min="0.1" />
+      </label>
+      <label data-only="square_spiral polygon_spiral symmetric_square">Turns
+        <input id="p-turns" type="number" value="2" step="0.5" min="0.5" />
+      </label>
+      <label data-only="polygon_spiral">Sides
+        <input id="p-sides" type="number" value="8" step="1" min="3" />
+      </label>
+      <label>Frequency (GHz)
+        <input id="p-freq" type="number" value="2.4" step="any" min="0.001" />
+      </label>
+    </div>
+
+    <button id="btn-build" class="primary" disabled>Build inductor</button>
+
+    <h2>Analysis</h2>
+    <div class="actions">
+      <button data-action="lrq" disabled>L · R · Q</button>
+      <button data-action="pi" disabled>Pi-model</button>
+      <button data-action="sweep" disabled>Sweep S-params</button>
+      <button data-action="s2p" disabled>Export .s2p</button>
+      <button data-action="spice" disabled>Export SPICE</button>
+      <button data-action="info" disabled>Geom info</button>
+    </div>
+
+    <div class="sweep-row">
+      <label>Sweep f₁ (GHz) <input id="sw-f1" type="number" value="1" step="any" min="0.01" /></label>
+      <label>Sweep f₂ (GHz) <input id="sw-f2" type="number" value="10" step="any" min="0.01" /></label>
+      <label>Step (GHz) <input id="sw-step" type="number" value="0.5" step="any" min="0.01" /></label>
+    </div>
+  </section>
+
+  <section class="panel viewer">
+    <div class="viewer-head">
+      <h2>Layout</h2>
+      <div class="legend" id="legend"></div>
+    </div>
+    <svg id="canvas" viewBox="-100 -100 200 200" preserveAspectRatio="xMidYMid meet"></svg>
+    <p class="dims" id="dims">No shape yet.</p>
+  </section>
+
+  <section class="panel output">
+    <div class="output-head">
+      <h2>Output</h2>
+      <div class="output-tabs">
+        <button class="tab active" data-tab="results">Results</button>
+        <button class="tab" data-tab="repl">Python REPL</button>
+      </div>
+    </div>
+
+    <div class="tab-pane active" data-pane="results">
+      <pre id="results">Loading Pyodide and reASITIC… first load is ~30 MB and takes a moment.</pre>
+    </div>
+
+    <div class="tab-pane" data-pane="repl">
+      <p class="hint">The current shape is bound as <code>shape</code>; the tech as <code>tech</code>. <code>reasitic</code> is imported. Press <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to run.</p>
+      <textarea id="code" spellcheck="false">import reasitic
+print(reasitic.summary())
+print("Shape:", shape.name, "| turns:", shape.turns, "| segments:", len(shape.segments()))
+print("L =", round(reasitic.compute_self_inductance(shape), 4), "nH")
+</textarea>
+      <div class="repl-row">
+        <button id="btn-run" disabled>Run (Ctrl+Enter)</button>
+        <button id="btn-clear" type="button">Clear output</button>
+      </div>
+      <pre id="repl-out"></pre>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span id="status">Booting…</span>
+  <span class="version" id="version"></span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js"></script>
+<script src="draw.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

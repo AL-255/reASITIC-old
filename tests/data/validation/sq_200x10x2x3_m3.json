@@ -1,0 +1,23 @@
+{
+  "name": "sq_200x10x2x3_m3",
+  "build_command": "SQ NAME=B:LEN=200:W=10:S=2:N=3:METAL=m3:XORG=200:YORG=200",
+  "shape_name": "B",
+  "tech": "BiCMOS",
+  "geom": {
+    "name": "B",
+    "kind": "Square spiral",
+    "length_um": null,
+    "width_um": 10.0,
+    "metal": null,
+    "total_length_um": 2043.76,
+    "total_area_um2": 20418.22,
+    "location": [200.0, 200.0],
+    "n_segments": 14,
+    "spiral_l1_um": 200.0,
+    "spiral_l2_um": 200.0,
+    "spiral_spacing_um": 2.0,
+    "spiral_turns": 3.0
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 1
+}

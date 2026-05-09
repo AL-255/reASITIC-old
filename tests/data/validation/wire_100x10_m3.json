@@ -1,0 +1,23 @@
+{
+  "name": "wire_100x10_m3",
+  "build_command": "W NAME=W1:LEN=100:WID=10:METAL=m3:XORG=0:YORG=0",
+  "shape_name": "W1",
+  "tech": "BiCMOS",
+  "geom": {
+    "name": "W1",
+    "kind": "Wire",
+    "length_um": 100.0,
+    "width_um": 10.0,
+    "metal": "M3",
+    "total_length_um": 100.0,
+    "total_area_um2": 1000.0,
+    "location": [0.0, 0.0],
+    "n_segments": 1,
+    "spiral_l1_um": null,
+    "spiral_l2_um": null,
+    "spiral_spacing_um": null,
+    "spiral_turns": null
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 1
+}

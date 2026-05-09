@@ -27,6 +27,7 @@ gui
 
 api/index
 mapping
+benchmarks
 milestone
 changelog
 ```

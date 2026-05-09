@@ -260,6 +260,58 @@ def capacitance_per_segment(
     return P
 
 
+def shape_pi_capacitances(
+    shape: Shape,
+    tech: Tech,
+    *,
+    n_div: int = 2,
+) -> tuple[float, float, float]:
+    """Reduce a single shape's per-segment cap matrix to a Pi network.
+
+    Aggregates the ``(N, N)`` Maxwell capacitance matrix from
+    :func:`analyze_capacitance_driver` into three Pi-network values:
+
+    * ``C_p1`` — port-1 shunt cap to ground (F)
+    * ``C_p2`` — port-2 shunt cap to ground (F)
+    * ``C_s`` — series cap between the two ports (F, typically tiny
+      for an inductor)
+
+    The two ports are taken to be the chain-ordered halves of the
+    segment list: the first ``N // 2`` segments form port 1, the
+    remainder form port 2. This mirrors the binary's
+    ``analyze_narrow_band_2port`` reduction (decomp ``0x080515e4``)
+    in the case where the spiral has no explicit port-2 segment list
+    — the natural symmetric split. The C path additionally subtracts
+    a tail set of "via-only" segments before reduction; without that
+    metadata in our segment representation, we keep the symmetric
+    split, which agrees with the binary on the dominant terms.
+
+    For Maxwell C matrices, the Pi-network reduction is::
+
+        C_p1 = sum_{i in P1, all j} C[i, j]   (port-1 row sum)
+        C_p2 = sum_{i in P2, all j} C[i, j]   (port-2 row sum)
+        C_s  = -sum_{i in P1, j in P2} C[i, j]
+
+    Args:
+        shape: the spiral / wire shape to reduce.
+        tech:  tech layer stack.
+        n_div: per-segment subdivision (forwarded to
+            :func:`analyze_capacitance_driver`).
+    """
+    result = analyze_capacitance_driver([shape], tech, n_div=n_div)
+    C = result.C_matrix
+    n = C.shape[0]
+    if n == 0:
+        return 0.0, 0.0, 0.0
+    half = max(1, n // 2)
+    p1 = slice(0, half)
+    p2 = slice(half, n)
+    C_p1 = float(C[p1, :].sum())
+    C_p2 = float(C[p2, :].sum())
+    C_s = -float(C[p1, p2].sum())
+    return C_p1, C_p2, C_s
+
+
 def analyze_capacitance_polygon(
     shapes: list[Shape] | dict[str, Shape],
     tech: Tech,

@@ -319,6 +319,15 @@ def spiral_y_at_freq(
 
     Series impedance is ``R(f) + jωL``. Substrate-loss conductance is
     not modelled in this stub.
+
+    A Pi-aggregator on the per-segment Maxwell cap matrix is exposed
+    separately as
+    :func:`reasitic.substrate.shape_pi_capacitances`, but it routes
+    through ``analyze_capacitance_driver`` whose underlying P matrix
+    needs the substrate Green's-function rework in TODO.md §3 before
+    its values are physically meaningful for spirals. Wiring the
+    full ``analyze_narrow_band_2port`` path here is therefore gated
+    on §3.
     """
     L_nH = compute_self_inductance(shape)
     R = compute_ac_resistance(shape, tech, freq_ghz)

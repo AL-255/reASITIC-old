@@ -55,6 +55,7 @@ from reasitic.substrate.segment_cap import (
     capacitance_per_segment,
     capacitance_segment_integral,
     capacitance_setup,
+    shape_pi_capacitances,
 )
 from reasitic.substrate.shunt import (
     parallel_plate_cap_per_area,
@@ -96,6 +97,7 @@ __all__ = [
     "propagation_constant",
     "rasterize_shape",
     "setup_green_fft_grid",
+    "shape_pi_capacitances",
     "shape_shunt_capacitance",
     "substrate_cap_matrix",
 ]

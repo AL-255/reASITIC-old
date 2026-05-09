@@ -18,6 +18,7 @@ from reasitic.substrate import (
     capacitance_per_segment,
     capacitance_segment_integral,
     capacitance_setup,
+    shape_pi_capacitances,
 )
 from tests import _paths
 
@@ -221,3 +222,39 @@ class TestAnalyzeCapacitanceDriver:
         result = analyze_capacitance_driver([], tech)
         assert result.P_matrix.shape == (0, 0)
         assert result.segments == []
+
+
+# shape_pi_capacitances --------------------------------------------------
+
+
+class TestShapePiCapacitances:
+    """Pi-network reduction of the per-segment Maxwell C matrix.
+
+    These tests exercise the algebra of the aggregator (the 3-tuple
+    return obeys row-sum and cross-term identities). Whether the
+    underlying P matrix is dimensionally correct is the subject of
+    TODO §3 — until that's resolved the absolute values returned
+    here aren't meaningful for spirals, only the algebraic
+    consistency.
+    """
+
+    def test_row_sum_identity(self, tech):
+        """C_p1 + C_p2 == sum-of-all-entries of the C matrix; the
+        cross term sits inside both row sums and is double-counted
+        only once via the slice arithmetic."""
+        sp = reasitic.square_spiral(
+            "L", length=170, width=10, spacing=3, turns=2.0,
+            tech=tech, metal="m3",
+        )
+        c_p1, c_p2, c_s = shape_pi_capacitances(sp, tech)
+        result = analyze_capacitance_driver([sp], tech)
+        np.testing.assert_allclose(
+            c_p1 + c_p2, float(result.C_matrix.sum()), rtol=1e-9,
+        )
+        # c_s is the negative of one half of the cross-block sum;
+        # by the symmetric port split, the cross-block is C[:half, half:]
+        n = result.C_matrix.shape[0]
+        half = max(1, n // 2)
+        np.testing.assert_allclose(
+            -c_s, float(result.C_matrix[:half, half:].sum()), rtol=1e-9,
+        )

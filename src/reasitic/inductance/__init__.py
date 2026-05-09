@@ -1,5 +1,6 @@
 """Partial-inductance kernels."""
 
+from reasitic.inductance.eddy import eddy_packed_index
 from reasitic.inductance.filament import (
     Filament,
     auto_filament_subdivisions,
@@ -33,6 +34,7 @@ __all__ = [
     "compute_self_inductance",
     "coupled_wire_self_inductance",
     "coupling_coefficient",
+    "eddy_packed_index",
     "filament_grid",
     "hoer_love_perpendicular_mutual",
     "mohan_modified_wheeler",

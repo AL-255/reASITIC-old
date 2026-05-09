@@ -36,12 +36,71 @@ function integration cost.
 
 from __future__ import annotations
 
+import cmath
 import math
 
 import scipy.integrate
 
 from reasitic.tech import Tech
 from reasitic.units import EPS_0, UM_TO_M
+
+# Magic constant from the binary: 2π · μ₀ ≈ 7.8957e-6 (in SI, F/m → H/m).
+# Mirrors the literal at decomp/output/asitic_kernel.c:13254 (and twin
+# at :13273) inside complex_propagation_constant_a/b.
+TWO_PI_MU0 = 7.895683520871488e-06
+
+
+def propagation_constant(
+    k_rho: float,
+    omega_rad: float,
+    sigma_S_per_m: float,
+) -> complex:
+    """Complex propagation constant for one substrate layer.
+
+    Mirrors the binary's ``complex_propagation_constant_a`` and ``_b``
+    (decomp addresses ``0x0809421c`` and ``0x08094268``):
+
+    .. math::
+
+        \\gamma = \\sqrt{k_\\rho^2 + j \\, 2\\pi\\mu_0 \\sigma \\omega}
+
+    The square root is the principal complex sqrt (positive real
+    part), matching the convention of the libstdc++ ``sqrt(complex)``
+    used in the binary.
+
+    Args:
+        k_rho:           Radial wavenumber in 1/m.
+        omega_rad:       Angular frequency in rad/s.
+        sigma_S_per_m:   Bulk conductivity in S/m.
+
+    Returns:
+        Complex ``γ`` in 1/m.
+    """
+    z2 = k_rho * k_rho + 1j * TWO_PI_MU0 * sigma_S_per_m * omega_rad
+    return cmath.sqrt(z2)
+
+
+def layer_reflection_coefficient(
+    k_rho: float,
+    omega_rad: float,
+    sigma_S_per_m: float,
+) -> complex:
+    """Substrate reflection coefficient for one Bessel mode.
+
+    Mirrors ``reflection_coeff_imag`` (decomp ``0x08093eb8``) but
+    returns the *full* complex coefficient instead of just its
+    imaginary part — callers can take ``.imag`` when they need to
+    match the binary's narrowed return.
+
+    .. math::
+
+        \\Gamma(k_\\rho) = \\frac{k_\\rho - \\gamma(k_\\rho)}
+                                 {k_\\rho + \\gamma(k_\\rho)}
+
+    where ``γ`` is :func:`propagation_constant`.
+    """
+    gamma = propagation_constant(k_rho, omega_rad, sigma_S_per_m)
+    return (k_rho - gamma) / (k_rho + gamma)
 
 
 def _stack_reflection_coefficient(tech: Tech, k_rho: float) -> float:

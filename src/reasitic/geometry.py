@@ -259,6 +259,49 @@ def polygon_edge_vectors(
     ]
 
 
+def shapes_bounding_box(
+    shapes: list[Shape] | dict[str, Shape],
+    tech: Tech | None = None,
+) -> tuple[float, float, float, float]:
+    """Return the union bbox ``(x_min, y_min, x_max, y_max)`` of ``shapes``.
+
+    Mirrors the binary's ``compute_overall_bounding_box`` (decomp
+    address ``0x08081ed4``). If the input is empty and ``tech`` is
+    provided, falls back to the chip outline ``(0, 0, chipx, chipy)``;
+    if neither shapes nor tech is supplied, returns the all-zero bbox.
+
+    The world-frame translation ``(x_origin, y_origin)`` of each
+    :class:`Shape` is folded into the bounding-box result, matching
+    the binary which adds the cell offset to each shape's local bbox.
+    """
+    items: list[Shape] = (
+        list(shapes.values()) if isinstance(shapes, dict) else list(shapes)
+    )
+    if not items:
+        if tech is not None and tech.chip.chipx > 0 and tech.chip.chipy > 0:
+            return (0.0, 0.0, tech.chip.chipx, tech.chip.chipy)
+        return (0.0, 0.0, 0.0, 0.0)
+
+    x_min = float("+inf")
+    y_min = float("+inf")
+    x_max = float("-inf")
+    y_max = float("-inf")
+    for sh in items:
+        bx0, by0, bx1, by1 = sh.bounding_box()
+        if bx0 == bx1 == by0 == by1 == 0.0:
+            continue
+        x_min = min(x_min, bx0 + sh.x_origin)
+        y_min = min(y_min, by0 + sh.y_origin)
+        x_max = max(x_max, bx1 + sh.x_origin)
+        y_max = max(y_max, by1 + sh.y_origin)
+    if x_min == float("+inf"):
+        # Every shape was empty
+        if tech is not None and tech.chip.chipx > 0 and tech.chip.chipy > 0:
+            return (0.0, 0.0, tech.chip.chipx, tech.chip.chipy)
+        return (0.0, 0.0, 0.0, 0.0)
+    return (x_min, y_min, x_max, y_max)
+
+
 def extend_last_segment_to_chip_edge(shape: Shape, tech: Tech) -> Shape:
     """Push the last segment of ``shape`` out to the nearest chip boundary.
 

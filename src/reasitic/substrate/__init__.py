@@ -29,6 +29,8 @@ from reasitic.substrate.green import (
     coupled_capacitance_per_pair,
     green_function_static,
     integrate_green_kernel,
+    layer_reflection_coefficient,
+    propagation_constant,
 )
 from reasitic.substrate.shunt import (
     parallel_plate_cap_per_area,
@@ -45,7 +47,9 @@ __all__ = [
     "green_apply",
     "green_function_static",
     "integrate_green_kernel",
+    "layer_reflection_coefficient",
     "parallel_plate_cap_per_area",
+    "propagation_constant",
     "setup_green_fft_grid",
     "shape_shunt_capacitance",
 ]

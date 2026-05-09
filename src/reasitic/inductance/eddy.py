@@ -35,6 +35,27 @@ from reasitic.resistance.skin import skin_depth
 from reasitic.tech import Tech
 
 
+def eddy_packed_index(i: int, j: int) -> int:
+    """Index calculator for the binary's packed eddy matrix layout.
+
+    Mirrors ``eddy_packed_index`` (decomp ``0x080941ec``):
+
+    .. code-block:: text
+
+        if j < i:   index = 8 * j  − 4 * i + 3
+        else:       index = 4 * i − 3
+
+    The eddy matrix is symmetric, so the off-diagonal block is stored
+    in the lower-triangular half with a stride of 8 (two doubles per
+    complex entry); the diagonal block has a stride of 4.
+
+    Returns the byte-stride-aware offset into the packed buffer.
+    """
+    if j < i:
+        return 8 * j - 4 * i + 3
+    return 4 * i - 3
+
+
 def _image_filament(f: Filament) -> Filament:
     """Return the substrate-image of ``f``: same xy, mirrored z about
     ``z=0`` and direction reversed (image current opposes source)."""

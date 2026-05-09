@@ -415,11 +415,14 @@ functions** that need no dedicated Python implementation.
 | Polygon edge ops (forward/backward 2-D diff) | 2 | 2 | 100% |
 | Chip-edge segment extension | 1 | 1 | 100% |
 | Three-class DC-resistance accumulator | 1 | 1 | 100% |
+| Multi-shape bounding-box utility | 1 | 1 | 100% |
+| Substrate Green's primitives (γ, Γ per layer) | 3 | 3 | 100% |
+| Eddy-matrix packed index | 1 | 1 | 100% |
 | Trivial helpers subsumed by NumPy/SciPy/stdlib | 31 | 31 | 100% |
 | Shape transforms (Move/Flip/Rotate) | 6 | 4 | 67% |
 | REPL commands | 117 | 117 | 100% |
 | GUI (X11/Mesa front-end → Tk) | 28 | 12 | 43% |
-| **Total identified C functions** | **643** | ~214 | ~33% |
+| **Total identified C functions** | **643** | ~219 | ~34% |
 
 ## GUI (X11 / Mesa → Tk)
 

@@ -24,6 +24,11 @@ from reasitic.inductance.partial import (
     compute_self_inductance,
     coupling_coefficient,
 )
+from reasitic.inductance.skew import (
+    mutual_inductance_3d_segments,
+    mutual_inductance_orthogonal_segments,
+    mutual_inductance_skew_segments,
+)
 
 __all__ = [
     "Filament",
@@ -38,6 +43,9 @@ __all__ = [
     "filament_grid",
     "hoer_love_perpendicular_mutual",
     "mohan_modified_wheeler",
+    "mutual_inductance_3d_segments",
+    "mutual_inductance_orthogonal_segments",
+    "mutual_inductance_skew_segments",
     "parallel_segment_mutual",
     "perpendicular_segment_mutual",
     "rectangular_bar_self_inductance",

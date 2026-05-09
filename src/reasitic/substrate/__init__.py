@@ -40,6 +40,16 @@ from reasitic.substrate.green import (
     layer_reflection_coefficient,
     propagation_constant,
 )
+from reasitic.substrate.segment_cap import (
+    SegmentCapResult,
+    analyze_capacitance_driver,
+    analyze_capacitance_polygon,
+    capacitance_integral_inner_a,
+    capacitance_integral_inner_b,
+    capacitance_per_segment,
+    capacitance_segment_integral,
+    capacitance_setup,
+)
 from reasitic.substrate.shunt import (
     parallel_plate_cap_per_area,
     shape_shunt_capacitance,
@@ -48,6 +58,14 @@ from reasitic.substrate.shunt import (
 __all__ = [
     "GreenFFTGrid",
     "HJCoupledCaps",
+    "SegmentCapResult",
+    "analyze_capacitance_driver",
+    "analyze_capacitance_polygon",
+    "capacitance_integral_inner_a",
+    "capacitance_integral_inner_b",
+    "capacitance_per_segment",
+    "capacitance_segment_integral",
+    "capacitance_setup",
     "compute_green_function",
     "coupled_capacitance_per_pair",
     "coupled_microstrip_caps_hj",

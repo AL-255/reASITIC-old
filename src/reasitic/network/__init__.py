@@ -38,13 +38,16 @@ from reasitic.network.twoport import (
     PiModel,
     deembed_pad_open,
     deembed_pad_open_short,
+    imag_z_2port_from_y,
     pi_equivalent,
     pi_to_y,
     s_to_y,
     spiral_y_at_freq,
     y_to_s,
     y_to_z,
+    z_2port_from_y,
     z_to_y,
+    zin_terminated_2port,
 )
 
 __all__ = [
@@ -62,6 +65,7 @@ __all__ = [
     "calc_transformer",
     "deembed_pad_open",
     "deembed_pad_open_short",
+    "imag_z_2port_from_y",
     "linear_freqs",
     "pi3_model",
     "pi4_model",
@@ -81,7 +85,9 @@ __all__ = [
     "write_touchstone_file",
     "y_to_s",
     "y_to_z",
+    "z_2port_from_y",
     "z_to_s_3port",
     "z_to_y",
     "zin_terminated",
+    "zin_terminated_2port",
 ]

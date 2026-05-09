@@ -205,6 +205,99 @@ def deembed_pad_open_short(
     return np.asarray(np.linalg.inv(Z_meas_open - Z_short_open), dtype=complex)
 
 
+def z_2port_from_y(
+    Y: np.ndarray,
+    *,
+    differential: bool = False,
+    port: int = 1,
+) -> complex:
+    """Convert a 2-port Y matrix to a single complex impedance.
+
+    Mirrors the binary's ``z_2port_from_y`` (decomp ``0x0804e8b0``):
+
+    * Single-ended (``differential=False``):
+        - ``port == 1`` → ``Z = 1 / Y[1, 1]`` (look into port 1 with
+          port 2 short-circuited via Y inversion convention).
+        - ``port != 1`` → ``Z = 1 / Y[0, 0]``.
+    * Differential (``differential=True``) — the LC-mode impedance of
+      a symmetric pair under ``Y[0,1] == Y[1,0]``:
+
+      .. math::
+
+          Z_d = (Y_{11} + Y_{22} + 2 Y_{21}) / (Y_{11} Y_{22} - Y_{21}^2)
+
+    The binary's globals ``Y22_re/im`` correspond to ``Y[1, 1]`` and
+    ``g_Y11_re/im`` to ``Y[0, 0]``; the matrix layout convention is the
+    standard ``Y[i, j]`` indexing here.
+    """
+    if Y.shape != (2, 2):
+        raise ValueError(f"expected 2x2 Y, got {Y.shape}")
+    if differential:
+        Y11 = Y[0, 0]
+        Y22 = Y[1, 1]
+        Y21 = Y[1, 0]
+        det = Y11 * Y22 - Y21 * Y21
+        num = Y11 + Y22 + 2.0 * Y21
+        return complex(num / det)
+    if port == 1:
+        return complex(1.0 / Y[1, 1])
+    return complex(1.0 / Y[0, 0])
+
+
+def imag_z_2port_from_y(
+    Y: np.ndarray,
+    *,
+    differential: bool = False,
+    port: int = 1,
+) -> float:
+    """Imaginary part of :func:`z_2port_from_y`.
+
+    Mirrors the binary's ``imag_z_2port_from_y`` (decomp
+    ``0x0804e7c0``). Convenience wrapper that takes the imaginary
+    component directly so callers extracting a reactance don't need
+    to remember the indexing convention.
+    """
+    return float(z_2port_from_y(
+        Y, differential=differential, port=port
+    ).imag)
+
+
+def zin_terminated_2port(
+    Y: np.ndarray,
+    Y_load: complex,
+    *,
+    port: int = 1,
+) -> complex:
+    """Input impedance with the *other* port terminated in admittance ``Y_load``.
+
+    Mirrors the binary's ``zin_terminated_2port`` (decomp
+    ``0x0804e9b0``). Implements the standard 2-port reduction
+    identity::
+
+        Y_in = Y_ii − Y_ij · Y_ji / (Y_jj + Y_load)
+        Z_in = 1 / Y_in
+
+    Unlike :func:`z_2port_from_y`, this routine reads ``Y[0, 1]``
+    independently of ``Y[1, 0]`` — it does **not** assume reciprocity,
+    matching the binary's only function in this group that pulls the
+    Y12 slot separately.
+
+    Args:
+        Y:        2×2 admittance matrix.
+        Y_load:   Load admittance terminating the *other* port.
+        port:     Which port we're looking into (1 or 2).
+    """
+    if Y.shape != (2, 2):
+        raise ValueError(f"expected 2x2 Y, got {Y.shape}")
+    if port == 1:
+        # Look into port 1; port 2 terminated by Y_load
+        Y_in = Y[0, 0] - Y[0, 1] * Y[1, 0] / (Y[1, 1] + Y_load)
+    else:
+        # Look into port 2; port 1 terminated by Y_load
+        Y_in = Y[1, 1] - Y[0, 1] * Y[1, 0] / (Y[0, 0] + Y_load)
+    return complex(1.0 / Y_in)
+
+
 def spiral_y_at_freq(
     shape: Shape,
     tech: Tech,

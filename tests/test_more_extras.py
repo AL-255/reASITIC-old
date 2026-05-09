@@ -21,8 +21,9 @@ from reasitic.network import (
     deembed_pad_open_short,
     spiral_y_at_freq,
 )
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
 
 
 @pytest.fixture

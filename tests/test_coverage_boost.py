@@ -24,8 +24,9 @@ from reasitic.substrate import (
     green_function_static,
     integrate_green_kernel,
 )
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
 
 
 @pytest.fixture

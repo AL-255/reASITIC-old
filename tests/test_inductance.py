@@ -9,7 +9,6 @@ Cross-check values are taken from:
 """
 
 import math
-from pathlib import Path
 
 import pytest
 
@@ -21,8 +20,9 @@ from reasitic.inductance import (
     rectangular_bar_self_inductance,
     segment_self_inductance,
 )
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
 
 
 # Closed-form / limiting-case validation ---------------------------------

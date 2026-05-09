@@ -1,13 +1,12 @@
 """Tests for parametric geometry sweep."""
 
-from pathlib import Path
-
 import pytest
 
 from reasitic import parse_tech_file
 from reasitic.optimise import sweep_square_spiral, sweep_to_tsv
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
 
 
 @pytest.fixture

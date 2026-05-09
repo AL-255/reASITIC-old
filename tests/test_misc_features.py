@@ -1,7 +1,6 @@
 """Tests for FFT Green's grid, transforms, and the DesignReport."""
 
 import math
-from pathlib import Path
 
 import numpy as np
 import pytest
@@ -17,8 +16,9 @@ from reasitic.substrate import (
     green_apply,
     setup_green_fft_grid,
 )
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
 
 
 @pytest.fixture

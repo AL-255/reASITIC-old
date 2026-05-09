@@ -38,8 +38,9 @@ from reasitic.network.analysis import (
 from reasitic.optimise import optimise_square_spiral
 from reasitic.persistence import load_session, save_session
 from reasitic.report import design_report
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
 
 
 @pytest.fixture

@@ -1,7 +1,6 @@
 """Tests for metal-loss quality factor."""
 
 import math
-from pathlib import Path
 
 import pytest
 
@@ -13,8 +12,9 @@ from reasitic import (
 )
 from reasitic.quality import metal_only_q
 from reasitic.units import GHZ_TO_HZ, NH_TO_H, TWO_PI
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
 
 
 @pytest.fixture

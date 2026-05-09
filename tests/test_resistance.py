@@ -1,7 +1,6 @@
 """Tests for DC and AC resistance kernels."""
 
 import math
-from pathlib import Path
 
 import pytest
 
@@ -18,8 +17,9 @@ from reasitic.resistance import (
     skin_depth,
 )
 from reasitic.units import MU_0
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
 
 
 @pytest.fixture

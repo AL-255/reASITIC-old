@@ -1,8 +1,6 @@
 """Tests for the additional shape builders: ring, via, transformer,
 symsq, capacitor, balun."""
 
-from pathlib import Path
-
 import pytest
 
 from reasitic import (
@@ -14,8 +12,9 @@ from reasitic import (
     transformer,
     via,
 )
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
 
 
 @pytest.fixture

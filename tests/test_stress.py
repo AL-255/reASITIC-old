@@ -6,7 +6,6 @@ edge-case frequencies (very low, very high, exactly at f_SR).
 """
 
 import math
-from pathlib import Path
 
 import pytest
 
@@ -22,8 +21,9 @@ from reasitic.inductance import (
     solve_inductance_mna,
 )
 from reasitic.network import linear_freqs, two_port_sweep
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
 
 
 @pytest.fixture

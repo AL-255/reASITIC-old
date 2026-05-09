@@ -61,7 +61,15 @@ myst_heading_anchors = 3
 # other with relative paths like ``./TUTORIAL.md``. In docs/ we re-host
 # them under different filenames, so these resolve at runtime via the
 # parent navigation rather than via direct xrefs. Suppress the noise.
-suppress_warnings = ["myst.xref_missing"]
+suppress_warnings = [
+    "myst.xref_missing",
+    "ref.python",
+    # autodoc + ``:imported-members:`` on the parent package re-document
+    # symbols that are also documented under their defining submodule.
+    "autodoc",
+    "app.add_directive",
+    "docutils",
+]
 
 # AutoSummary: generate stub pages for every public symbol
 autosummary_generate = True

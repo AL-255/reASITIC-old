@@ -1,7 +1,5 @@
 """Tests for the 2-port network parameter conversions."""
 
-from pathlib import Path
-
 import numpy as np
 import pytest
 
@@ -16,8 +14,9 @@ from reasitic.network import (
     z_to_y,
 )
 from reasitic.network.twoport import PiModel
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
 
 
 @pytest.fixture

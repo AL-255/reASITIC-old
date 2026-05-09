@@ -18,8 +18,9 @@ from reasitic.persistence import (
     tech_from_dict,
     tech_to_dict,
 )
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
 
 
 @pytest.fixture

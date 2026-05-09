@@ -17,7 +17,6 @@ References:
 """
 
 import math
-from pathlib import Path
 
 import pytest
 
@@ -31,8 +30,9 @@ from reasitic.inductance import (
     parallel_segment_mutual,
     rectangular_bar_self_inductance,
 )
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
 
 
 @pytest.fixture

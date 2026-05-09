@@ -12,8 +12,9 @@ from reasitic import (
 from reasitic.exports import write_fasthenry, write_fasthenry_file
 from reasitic.geometry import Point, Segment
 from reasitic.inductance import auto_filament_subdivisions
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
 
 
 @pytest.fixture

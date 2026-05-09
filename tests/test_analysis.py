@@ -1,7 +1,6 @@
 """Tests for the high-level network-analysis commands: Pi, Zin, SelfRes."""
 
 import math
-from pathlib import Path
 
 import pytest
 
@@ -14,8 +13,9 @@ from reasitic.network.analysis import (
     self_resonance,
     zin_terminated,
 )
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
 
 
 @pytest.fixture

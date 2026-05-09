@@ -1,7 +1,5 @@
 """Tests for inter-shape mutual inductance and coupling coefficient."""
 
-from pathlib import Path
-
 import pytest
 
 from reasitic import (
@@ -13,8 +11,9 @@ from reasitic import (
     wire,
 )
 from reasitic.inductance.grover import parallel_segment_mutual
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
 
 
 @pytest.fixture

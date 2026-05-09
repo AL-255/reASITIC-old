@@ -1,12 +1,11 @@
-from pathlib import Path
-
 import pytest
 
 from reasitic import parse_tech, parse_tech_file
 from reasitic.tech import TechParseError
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
-_CMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "CMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
+_CMOS = _paths.tech_path("CMOS.tek")
 
 
 @pytest.mark.skipif(not _BICMOS.exists(), reason="BiCMOS.tek not vendored")

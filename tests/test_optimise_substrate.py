@@ -1,7 +1,6 @@
 """Tests for OptSq optimiser and substrate shunt capacitance."""
 
 import math
-from pathlib import Path
 
 import pytest
 
@@ -16,8 +15,9 @@ from reasitic.substrate import (
     shape_shunt_capacitance,
 )
 from reasitic.units import EPS_0
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
 
 
 @pytest.fixture

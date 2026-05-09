@@ -1,0 +1,73 @@
+; Sample BiCMOS Model
+
+<chip>
+
+	chipx = 512	; dimensions of the chip in x direction
+	chipy = 512	; dimensions of the chip in y direction
+	fftx = 128	; x-fft size (must be a power of 2)
+	ffty = 128   	; y-fft size
+	TechFile = BiCMOS.tek
+	TechPath = .
+	freq = .1
+	eddy = 0
+	eddy = 1
+
+<layer> 0 			; p(-) Layer
+	rho = 10		; ohm-cm
+	t   = 800		; microns
+        eps = 11.9
+
+<layer>	1	   		; p(+) layer
+	rho =  .1
+	t = 2
+	eps = 11.9
+
+<layer>	2   			; Oxide Layer
+	rho = 1e10
+	t = 50
+	eps = 4
+
+<metal>  0
+	layer = 1		; in p(+) layer
+	rsh = 35		; sheet resistance (milli-ohm/sq)
+	t = 0.4			; thickness in microns
+	d =  2			; dist from bottom of layer (at surface)
+	name = msub
+	color = blue
+
+<metal> 1 
+	layer = 2
+	rsh = 50
+	t = .8
+	d =  3
+	name = m2
+	color = green
+
+<metal> 2 
+	layer = 2
+	rsh = 20
+	t = 2
+	d =  5
+	name = m3
+	color = red
+<via> 0			; metal 3 to metal 2
+	top = 2		; top metal layer
+	bottom = 1	; bottom metal layer
+	r = 2		; resistance per via
+	width = .75	; width of via
+	space = 1.5	; spacing btwn vias
+	overplot1 = .5	; min spacing to metal layers
+	overplot2 = .5
+	name = via3
+	color = white
+<via> 1			; metal 3 to metal 2
+	top = 1
+	bottom = 0
+	r = 3
+	width = .5
+	space = 1.3
+	overplot1 = .35
+	overplot2 = .35
+	name = via2
+	color = greenish
+

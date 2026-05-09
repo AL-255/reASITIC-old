@@ -1,7 +1,5 @@
 """Tests for the 2-port frequency sweep + 3-port reduction."""
 
-from pathlib import Path
-
 import numpy as np
 import pytest
 
@@ -13,8 +11,9 @@ from reasitic.network import (
     write_touchstone,
     z_to_s_3port,
 )
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
 
 
 @pytest.fixture

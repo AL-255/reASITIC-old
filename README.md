@@ -28,6 +28,7 @@ pip install -e ".[dev]"              # development install
 ```bash
 reasitic --version
 reasitic -t my_tech.tek -c "SQ NAME=L:LEN=200:W=10:S=2:N=3:METAL=m3"
+reasitic-gui -t my_tech.tek                # graphical workspace
 ```
 
 > **Status:** All six phases of the [implementation plan](./PLAN.md)

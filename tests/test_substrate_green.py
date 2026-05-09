@@ -1,7 +1,6 @@
 """Tests for the multi-layer Sommerfeld substrate Green's function."""
 
 import math
-from pathlib import Path
 
 import pytest
 
@@ -12,8 +11,9 @@ from reasitic.substrate import (
     integrate_green_kernel,
 )
 from reasitic.substrate.green import _stack_reflection_coefficient
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
 
 
 @pytest.fixture

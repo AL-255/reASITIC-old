@@ -59,6 +59,7 @@ dev = [
 
 [project.scripts]
 reasitic = "reasitic.cli:main"
+reasitic-gui = "reasitic.gui.__main__:main"
 
 [project.urls]
 Homepage = "https://github.com/AL-255/reASITIC"

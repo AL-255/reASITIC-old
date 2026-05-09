@@ -10,9 +10,10 @@ from reasitic import (
     write_tech,
     write_tech_file,
 )
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
-_CMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "CMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
+_CMOS = _paths.tech_path("CMOS.tek")
 
 
 @pytest.fixture

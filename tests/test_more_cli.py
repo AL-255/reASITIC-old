@@ -5,8 +5,9 @@ from pathlib import Path
 import pytest
 
 from reasitic.cli import Repl
+from tests import _paths
 
-_BICMOS = Path(__file__).resolve().parents[2] / "run" / "tek" / "BiCMOS.tek"
+_BICMOS = _paths.tech_path("BiCMOS.tek")
 
 
 @pytest.fixture

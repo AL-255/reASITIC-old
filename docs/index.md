@@ -18,6 +18,7 @@ tutorial
 cookbook
 faq
 cli
+gui
 ```
 
 ```{toctree}

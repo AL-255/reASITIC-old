@@ -37,3 +37,4 @@ Subpackages
    persistence
    validation
    cli
+   gui

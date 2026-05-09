@@ -355,7 +355,26 @@ Keep the table sorted by Python module path, then by function name.
 | Substrate Green's (incl. Sommerfeld + FFT + eddy) | 12 | 7 | 58% |
 | Shape transforms (Move/Flip/Rotate) | 6 | 4 | 67% |
 | REPL commands | 117 | 117 | 100% |
-| **Total identified C functions** | **643** | ~165 | ~26% |
+| GUI (X11/Mesa front-end → Tk) | 28 | 12 | 43% |
+| **Total identified C functions** | **643** | ~177 | ~28% |
+
+## GUI (X11 / Mesa → Tk)
+
+| C function (decomp) | Address | Python equivalent |
+|---|---|---|
+| `init_x11_and_gl` | `0x0807fc9c` | `reasitic.gui.app.GuiApp.__init__` |
+| `xui_init_resources` | `0x0807ff18` | `reasitic.gui.app.GuiApp.__init__` (toolbar, menu, palettes) |
+| `xui_render_layout_view` | `0x08080b48` | `reasitic.gui.renderer.render_all` |
+| `xui_redraw_substrate_polygons` | `0x0807f0c4` | `reasitic.gui.renderer.draw_polygon` (per-shape loop) |
+| `xui_redraw_substrate_grid` | `0x0807f4dc` | `reasitic.gui.renderer.draw_grid` |
+| `xui_draw_chip_outline` | `0x08082010` | `reasitic.gui.renderer.draw_chip_outline` |
+| `xui_draw_grid_or_ruler` | `0x08081c0c` | `reasitic.gui.renderer.draw_grid` |
+| `xui_draw_zoom_box_around_current_shape` | `0x08081a24` | `reasitic.gui.renderer.draw_selection` |
+| `xui_draw_string_at_world` | `0x08081764` | Tk `Canvas.create_text` (per-shape label) |
+| `xui_blit_pixmap_double_buffer` | `0x08081890` | implicit — Tk double-buffers internally |
+| `view_zoom_to_rectangle` | `0x0807fb18` | `reasitic.gui.viewport.Viewport.fit_bbox` |
+| `cmd_scale_clamp_view` | `0x08081dc4` | `reasitic.gui.viewport.Viewport.zoom_at_screen` |
+| `xui_destroy_window_and_close` | `0x08081d10` | `Tk.destroy()` (handled by `mainloop` exit) |
 
 The plan in [PLAN.md](./PLAN.md) tracks the remaining phases; this
 mapping is the line-item view of what's been moved across.

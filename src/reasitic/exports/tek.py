@@ -52,19 +52,21 @@ def write_tek4014(
     extent_x: float | None = None,
     extent_y: float | None = None,
 ) -> bytes:
-    """Emit a Tek 4014-format escape-code byte stream.
+    r"""Emit a Tek 4014-format escape-code byte stream.
 
-    Tek 4014 graphics: ``\x1d`` enters graphics mode; coordinates
-    are 12-bit (0–4095) sent as four bytes::
+    Tek 4014 graphics: ``\x1d`` (GS) enters graphics mode; coordinates
+    are 12-bit (0..4095) sent as four bytes:
 
-        HiY = 0x20 + (Y >> 7) & 0x1f
-        LoY = 0x60 + (Y & 0x7f) >> 2     # not actually exposed
-        HiX = 0x20 + (X >> 7) & 0x1f
-        LoX = 0x40 + (X & 0x7f) >> 2
+    .. code-block:: text
 
-    The first vector after GS is "dark" (move-to); subsequent
-    vectors are "bright" (line-to) until the next GS. Returns
-    bytes (binary) since Tek 4014 isn't pure ASCII.
+        HiY = 0x20 + ((Y >> 7) & 0x1f)
+        LoY = 0x60 + ((Y >> 2) & 0x1f)
+        HiX = 0x20 + ((X >> 7) & 0x1f)
+        LoX = 0x40 + ((X >> 2) & 0x1f)
+
+    The first vector after GS is "dark" (move-to); subsequent vectors
+    are "bright" (line-to) until the next GS. Returns ``bytes`` since
+    the Tek 4014 stream is not pure ASCII.
     """
     shape_list = list(shapes)
     if not shape_list:

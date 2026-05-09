@@ -1,4 +1,4 @@
-"""Layout / plot file exporters: CIF, Tek, Sonnet."""
+"""Layout / plot file exporters: CIF, Tek, Sonnet, SPICE, FastHenry, GDSII."""
 
 from reasitic.exports.cif import (
     read_cif,
@@ -7,6 +7,12 @@ from reasitic.exports.cif import (
     write_cif_file,
 )
 from reasitic.exports.fasthenry import write_fasthenry, write_fasthenry_file
+from reasitic.exports.gds import (
+    read_gds,
+    read_gds_file,
+    write_gds,
+    write_gds_file,
+)
 from reasitic.exports.sonnet import (
     read_sonnet,
     read_sonnet_file,
@@ -29,12 +35,16 @@ from reasitic.exports.tek import (
 __all__ = [
     "read_cif",
     "read_cif_file",
+    "read_gds",
+    "read_gds_file",
     "read_sonnet",
     "read_sonnet_file",
     "write_cif",
     "write_cif_file",
     "write_fasthenry",
     "write_fasthenry_file",
+    "write_gds",
+    "write_gds_file",
     "write_sonnet",
     "write_sonnet_file",
     "write_spice_broadband",

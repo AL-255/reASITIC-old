@@ -417,12 +417,14 @@ functions** that need no dedicated Python implementation.
 | Three-class DC-resistance accumulator | 1 | 1 | 100% |
 | Multi-shape bounding-box utility | 1 | 1 | 100% |
 | Substrate Green's primitives (γ, Γ per layer) | 3 | 3 | 100% |
+| FFT-conv Green's pipeline (compute_green_function, fft_apply_to_green, rasterize, cap-matrix) | 4 | 4 | 100% |
+| GDSII export / import (gdstk-based) | 0 (new) | 4 | n/a |
 | Eddy-matrix packed index | 1 | 1 | 100% |
 | Trivial helpers subsumed by NumPy/SciPy/stdlib | 31 | 31 | 100% |
 | Shape transforms (Move/Flip/Rotate) | 6 | 4 | 67% |
 | REPL commands | 117 | 117 | 100% |
 | GUI (X11/Mesa front-end → Tk) | 28 | 12 | 43% |
-| **Total identified C functions** | **643** | ~219 | ~34% |
+| **Total identified C functions** | **643** | ~223 | ~35% |
 
 ## GUI (X11 / Mesa → Tk)
 

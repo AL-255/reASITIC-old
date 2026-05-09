@@ -22,8 +22,12 @@ from reasitic.substrate.coupled import (
 )
 from reasitic.substrate.fft_grid import (
     GreenFFTGrid,
+    compute_green_function,
+    fft_apply_to_green,
     green_apply,
+    rasterize_shape,
     setup_green_fft_grid,
+    substrate_cap_matrix,
 )
 from reasitic.substrate.green import (
     coupled_capacitance_per_pair,
@@ -40,16 +44,20 @@ from reasitic.substrate.shunt import (
 __all__ = [
     "GreenFFTGrid",
     "HJCoupledCaps",
+    "compute_green_function",
     "coupled_capacitance_per_pair",
     "coupled_microstrip_caps_hj",
     "coupled_microstrip_to_cap_matrix",
     "even_odd_impedances",
+    "fft_apply_to_green",
     "green_apply",
     "green_function_static",
     "integrate_green_kernel",
     "layer_reflection_coefficient",
     "parallel_plate_cap_per_area",
     "propagation_constant",
+    "rasterize_shape",
     "setup_green_fft_grid",
     "shape_shunt_capacitance",
+    "substrate_cap_matrix",
 ]

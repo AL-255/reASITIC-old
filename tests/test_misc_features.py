@@ -92,8 +92,10 @@ def test_rotate_360_returns_to_start(tech) -> None:
 def test_fft_grid_setup_returns_correct_shape(tech) -> None:
     grid = setup_green_fft_grid(tech, z1_um=5.0, z2_um=5.0, nx=16, ny=16)
     assert isinstance(grid, GreenFFTGrid)
+    # g_grid is the spatial-domain centred slice; g_fft is the
+    # zero-padded (2N, 2N) FFT used for linear convolution.
     assert grid.g_grid.shape == (16, 16)
-    assert grid.g_fft.shape == (16, 16)
+    assert grid.g_fft.shape == (32, 32)
     assert grid.nx == 16
 
 

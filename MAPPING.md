@@ -443,11 +443,14 @@ a renamed Python symbol:
 | Filament-list assembly + impedance-matrix fill (build_filament_list, filament_list_setup, fill_inductance_diagonal/_offdiag, fill_impedance_matrix_triangular, filament_pair_4corner_integration) | 6 | 6 | 100% |
 | Per-segment substrate-cap pipeline (capacitance_setup, capacitance_segment_integral, capacitance_integral_inner_a/b, capacitance_per_segment, analyze_capacitance_polygon, analyze_capacitance_driver) | 7 | 7 | 100% |
 | Spiral / cell-sizing helpers (spiral_FindMaxN, spiral_radius_for_N, spiral_turn_position_recursive, wire_position_periodic_fold, segment_pair_distance_metric) | 5 | 5 | 100% |
+| Shape mutations (shape_terminal_segment_extend_unit, shape_emit_vias_at_layer_transitions) | 2 | 2 | 100% |
+| MNA matrix helpers (node_eq_assemble, node_eq_setup_rhs, node_eq_unpack_forward/_backward) | 4 | 4 | 100% |
+| LMAT subblock + partial-trace helpers (lmat_subblock_assemble, lmat_compute_partial_traces) | 2 | 2 | 100% |
 | Trivial helpers subsumed by NumPy/SciPy/stdlib | 31 | 31 | 100% |
 | Shape transforms (Move/Flip/Rotate) | 6 | 4 | 67% |
 | REPL commands | 117 | 117 | 100% |
 | GUI (X11/Mesa front-end → Tk) | 28 | 12 | 43% |
-| **Total identified C functions** | **643** | ~255 | ~40% |
+| **Total identified C functions** | **643** | ~263 | ~41% |
 
 ## GUI (X11 / Mesa → Tk)
 

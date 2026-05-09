@@ -302,6 +302,145 @@ def shapes_bounding_box(
     return (x_min, y_min, x_max, y_max)
 
 
+def extend_terminal_segment(shape: Shape, *, dx_um: float = 0.0) -> Shape:
+    """Extend the tail of ``shape``'s last polygon along its own axis.
+
+    Mirrors ``shape_terminal_segment_extend_unit`` (decomp
+    ``0x0805b348``). Walks to the last polygon, normalises the last
+    edge's direction vector, then re-projects its endpoint to
+    ``length/2 + dx_um`` along that direction.
+
+    The binary uses this when extending a winding terminal so the
+    last segment leaves the chip with a fixed unit length plus a
+    small ``dx`` offset. Returns a copy; the original is untouched.
+    """
+    if not shape.polygons:
+        return shape
+    new_polys = [
+        Polygon(
+            vertices=list(p.vertices),
+            metal=p.metal,
+            width=p.width,
+            thickness=p.thickness,
+        )
+        for p in shape.polygons
+    ]
+    last_poly = new_polys[-1]
+    if len(last_poly.vertices) < 2:
+        return shape
+    a = last_poly.vertices[-2]
+    b = last_poly.vertices[-1]
+    dx = b.x - a.x
+    dy = b.y - a.y
+    dz = b.z - a.z
+    length = math.sqrt(dx * dx + dy * dy + dz * dz)
+    if length < 1e-12:
+        return shape
+    ux, uy, uz = dx / length, dy / length, dz / length
+    new_length = 0.5 * length + dx_um
+    new_b = Point(
+        a.x + new_length * ux,
+        a.y + new_length * uy,
+        a.z + new_length * uz,
+    )
+    last_poly.vertices[-1] = new_b
+    return Shape(
+        name=shape.name,
+        polygons=new_polys,
+        width=shape.width,
+        spacing=shape.spacing,
+        turns=shape.turns,
+        sides=shape.sides,
+        metal=shape.metal,
+        exit_metal=shape.exit_metal,
+        x_origin=shape.x_origin,
+        y_origin=shape.y_origin,
+        orientation=shape.orientation,
+        phase=shape.phase,
+    )
+
+
+def emit_vias_at_layer_transitions(shape: Shape, tech: Tech) -> Shape:
+    """Insert via polygons between adjacent polygons on different metals.
+
+    Mirrors ``shape_emit_vias_at_layer_transitions`` (decomp
+    ``0x0805ba2c``). Walks the polygon list pair-wise; whenever two
+    adjacent polygons are on different metal layers, looks up the
+    via that bridges them and inserts a single-vertex (zero-extent)
+    via polygon at the midpoint of the metal-to-metal transition.
+
+    The via is placed on the via index of the matching ``Via``
+    record in the tech file (matching ``top``/``bottom`` to the
+    adjacent metal indices). If no via record matches, no insertion
+    is made for that transition.
+
+    Returns a copy; the original is untouched.
+    """
+    if len(shape.polygons) < 2:
+        return shape
+    # Build the via lookup: (top, bottom) → via_index (in tech.vias)
+    via_lookup: dict[tuple[int, int], int] = {}
+    for vidx, v in enumerate(tech.vias):
+        via_lookup[(v.top, v.bottom)] = vidx
+        via_lookup[(v.bottom, v.top)] = vidx
+
+    new_polys: list[Polygon] = []
+    for i, p in enumerate(shape.polygons):
+        new_polys.append(
+            Polygon(
+                vertices=list(p.vertices),
+                metal=p.metal,
+                width=p.width,
+                thickness=p.thickness,
+            )
+        )
+        if i + 1 >= len(shape.polygons):
+            continue
+        nxt = shape.polygons[i + 1]
+        if p.metal == nxt.metal:
+            continue
+        # Different metal layers — emit a via polygon
+        key = (p.metal, nxt.metal)
+        via_idx = via_lookup.get(key)
+        if via_idx is None:
+            continue
+        # Midpoint of the transition: average of last vertex of p and
+        # first vertex of nxt
+        if not p.vertices or not nxt.vertices:
+            continue
+        a = p.vertices[-1]
+        b = nxt.vertices[0]
+        mid = Point(
+            0.5 * (a.x + b.x),
+            0.5 * (a.y + b.y),
+            0.5 * (a.z + b.z),
+        )
+        # Tag the via polygon with a metal index past the metal-layer
+        # count so downstream cap/inductance code can tell it apart
+        new_polys.append(
+            Polygon(
+                vertices=[mid],
+                metal=len(tech.metals) + via_idx,
+                width=tech.vias[via_idx].width,
+                thickness=0.0,
+            )
+        )
+    return Shape(
+        name=shape.name,
+        polygons=new_polys,
+        width=shape.width,
+        spacing=shape.spacing,
+        turns=shape.turns,
+        sides=shape.sides,
+        metal=shape.metal,
+        exit_metal=shape.exit_metal,
+        x_origin=shape.x_origin,
+        y_origin=shape.y_origin,
+        orientation=shape.orientation,
+        phase=shape.phase,
+    )
+
+
 def extend_last_segment_to_chip_edge(shape: Shape, tech: Tech) -> Shape:
     """Push the last segment of ``shape`` out to the nearest chip boundary.
 

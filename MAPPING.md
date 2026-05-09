@@ -422,11 +422,13 @@ functions** that need no dedicated Python implementation.
 | Eddy-matrix packed index | 1 | 1 | 100% |
 | Orthogonal & general-3D segment mutuals | 4 | 4 | 100% |
 | 2-port Y-derived helpers (z_2port_from_y, imag_z_2port_from_y, zin_terminated_2port) | 3 | 3 | 100% |
+| Sommerfeld inner integrand cluster (oscillating + propagation + kernel_a/b) | 4 | 4 | 100% |
+| Filament-pair primitives (mutual_inductance_filament_kernel, wire_axial_separation, wire_separation_periodic) | 3 | 3 | 100% |
 | Trivial helpers subsumed by NumPy/SciPy/stdlib | 31 | 31 | 100% |
 | Shape transforms (Move/Flip/Rotate) | 6 | 4 | 67% |
 | REPL commands | 117 | 117 | 100% |
 | GUI (X11/Mesa front-end → Tk) | 28 | 12 | 43% |
-| **Total identified C functions** | **643** | ~230 | ~36% |
+| **Total identified C functions** | **643** | ~237 | ~37% |
 
 ## GUI (X11 / Mesa → Tk)
 

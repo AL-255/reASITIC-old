@@ -182,6 +182,122 @@ def mutual_inductance_orthogonal_segments(
     return 0.0
 
 
+def mutual_inductance_filament_kernel(
+    a1: Point,
+    a2: Point,
+    b1: Point,
+    b2: Point,
+) -> float:
+    """Per-filament-pair mutual-inductance integrand.
+
+    Mirrors ``mutual_inductance_filament_kernel`` (decomp
+    ``0x08093f68``): computes the un-normalised filament-pair
+    integrand value used inside the Greenhouse summation.
+
+    The binary computes a normalised cosine-of-angle plus the four
+    corner-pair distances; we return the cosine ``û_a · û_b``
+    directly, which is the mathematically clean form of the same
+    quantity. Callers integrate this over the segment lengths to
+    get the mutual inductance — see
+    :func:`mutual_inductance_skew_segments` for the full pipeline.
+
+    Returns:
+        The cosine of the angle between the two filaments, in
+        ``[-1, 1]``. Filaments shorter than the floating-point safety
+        floor return 0.
+    """
+    A1 = _from_points_cm(a1)
+    A2 = _from_points_cm(a2)
+    B1 = _from_points_cm(b1)
+    B2 = _from_points_cm(b2)
+    u_a = A2 - A1
+    u_b = B2 - B1
+    L_a = float(np.linalg.norm(u_a))
+    L_b = float(np.linalg.norm(u_b))
+    if L_a < 1e-15 or L_b < 1e-15:
+        return 0.0
+    return float(np.dot(u_a, u_b) / (L_a * L_b))
+
+
+def wire_axial_separation(
+    a1: Point,
+    a2: Point,
+    *,
+    radius_um: float = 0.0,
+) -> float:
+    """Axial centre-to-centre separation between two filament endpoints.
+
+    Mirrors ``wire_axial_separation`` (decomp ``0x080940dc``):
+    returns ``|B − A| − 2·r`` in **microns**, where ``r`` is the
+    wire radius (or half-thickness). For a zero-radius filament it
+    is just the Euclidean distance between the two endpoints.
+
+    Args:
+        a1, a2:       The two filament endpoints (μm).
+        radius_um:    Wire radius / half-thickness in μm.
+
+    Returns:
+        The axial separation in μm, possibly negative if the wires
+        overlap.
+    """
+    P = _from_points_cm(a1)  # cm
+    Q = _from_points_cm(a2)
+    d_cm = float(np.linalg.norm(Q - P))
+    return d_cm / UM_TO_CM - 2.0 * radius_um
+
+
+def wire_separation_periodic(
+    i: int,
+    j: int,
+    *,
+    width_um: float,
+    spacing_um: float,
+    fold_size: int,
+) -> float:
+    """Periodic-grid separation product for the GMD calculation.
+
+    Mirrors ``wire_separation_periodic`` (decomp ``0x080942ec``).
+    For two indices ``i`` / ``j`` into a folded periodic wire grid:
+
+    1. Reflect each index into ``[0, fold_size]`` by repeated
+       reflection across the centre line.
+    2. Compute the linear position of each folded index.
+    3. Return the **signed** ``√(p_i · p_j)`` of the two positions:
+       positive if both indices lie below the fold centre (or both
+       above), negative if they straddle.
+
+    Used inside the periodic-grid GMD calculation when the spiral's
+    symmetry lets us reduce a full 2-D grid to a 1-D fold.
+
+    Args:
+        i, j:         The two grid indices (1-based, like the
+                      binary).
+        width_um:     Wire width (μm).
+        spacing_um:   Edge-to-edge spacing between turns (μm).
+        fold_size:    The fold radius — indices above are reflected.
+
+    Returns:
+        Signed separation product in μm.
+    """
+    def _fold(idx: int) -> int:
+        while fold_size < idx:
+            idx = (fold_size * 2 - idx) + 1
+        return idx
+
+    i_folded = _fold(i)
+    j_folded = _fold(j)
+    pitch = width_um + spacing_um
+    pos_i = -float(2 * (i_folded - 1)) * pitch
+    pos_j = -float(2 * (j_folded - 1)) * pitch
+    base = math.sqrt(abs(pos_i * pos_j))
+    # Sign: positive if both folded the same way, negative otherwise
+    both_above = i > fold_size and j > fold_size
+    both_below = i <= fold_size and j <= fold_size
+    if both_above or both_below:
+        return base
+    return -base
+
+
 def mutual_inductance_3d_segments(
     seg_a: Segment,
     seg_b: Segment,

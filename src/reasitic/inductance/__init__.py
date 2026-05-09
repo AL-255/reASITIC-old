@@ -26,8 +26,11 @@ from reasitic.inductance.partial import (
 )
 from reasitic.inductance.skew import (
     mutual_inductance_3d_segments,
+    mutual_inductance_filament_kernel,
     mutual_inductance_orthogonal_segments,
     mutual_inductance_skew_segments,
+    wire_axial_separation,
+    wire_separation_periodic,
 )
 
 __all__ = [
@@ -44,6 +47,7 @@ __all__ = [
     "hoer_love_perpendicular_mutual",
     "mohan_modified_wheeler",
     "mutual_inductance_3d_segments",
+    "mutual_inductance_filament_kernel",
     "mutual_inductance_orthogonal_segments",
     "mutual_inductance_skew_segments",
     "parallel_segment_mutual",
@@ -52,4 +56,6 @@ __all__ = [
     "segment_self_inductance",
     "solve_inductance_matrix",
     "solve_inductance_mna",
+    "wire_axial_separation",
+    "wire_separation_periodic",
 ]

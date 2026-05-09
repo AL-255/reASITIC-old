@@ -31,7 +31,11 @@ from reasitic.substrate.fft_grid import (
 )
 from reasitic.substrate.green import (
     coupled_capacitance_per_pair,
+    green_function_kernel_a_oscillating,
+    green_function_kernel_b_reflection,
     green_function_static,
+    green_oscillating_integrand,
+    green_propagation_integrand,
     integrate_green_kernel,
     layer_reflection_coefficient,
     propagation_constant,
@@ -51,7 +55,11 @@ __all__ = [
     "even_odd_impedances",
     "fft_apply_to_green",
     "green_apply",
+    "green_function_kernel_a_oscillating",
+    "green_function_kernel_b_reflection",
     "green_function_static",
+    "green_oscillating_integrand",
+    "green_propagation_integrand",
     "integrate_green_kernel",
     "layer_reflection_coefficient",
     "parallel_plate_cap_per_area",

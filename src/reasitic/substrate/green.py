@@ -80,6 +80,151 @@ def propagation_constant(
     return cmath.sqrt(z2)
 
 
+def green_oscillating_integrand(
+    k_rho: float,
+    omega_rad: float,
+    sigma_a_S_per_m: float,
+    sigma_b_S_per_m: float,
+    layer_thickness_m: float,
+    rho_m: float,
+) -> complex:
+    """Sommerfeld integrand with an oscillating ``cos(k·ρ)`` factor.
+
+    Mirrors ``green_oscillating_integrand`` (decomp ``0x080937cc``)
+    — the ``code *`` plugged into QUADPACK's DQAWF cosine-weighted
+    driver. Combines two layer propagation constants ``γ_a`` /
+    ``γ_b`` (computed via :func:`propagation_constant`) with a
+    ``tanh(γ_a · t)`` boundary factor, then returns the rational
+    expression that — once multiplied by ``cos(k_ρ ρ)`` and
+    integrated over k_ρ — gives the layered-substrate Green's
+    function in the cosine-transform form.
+
+    Args:
+        k_rho:            Radial wavenumber (1/m) — the integration
+                          variable.
+        omega_rad:        Angular frequency (rad/s).
+        sigma_a_S_per_m:  Conductivity of layer A.
+        sigma_b_S_per_m:  Conductivity of layer B.
+        layer_thickness_m: Thickness of the bottom layer (m).
+        rho_m:            Source-field horizontal separation (m).
+    """
+    gamma_a = propagation_constant(k_rho, omega_rad, sigma_a_S_per_m)
+    gamma_b = propagation_constant(k_rho, omega_rad, sigma_b_S_per_m)
+    # Note rho_m only enters via the cosine weighting in the QUADPACK
+    # DQAWF wrapper; the integrand here is the kernel without the
+    # cos factor (DQAWF supplies that).
+    _ = rho_m  # kept for API symmetry with the binary's signature
+    # Boundary-condition factor between layer A and layer B
+    # (cosh / sinh of γ_a × thickness, i.e. tanh)
+    arg = gamma_a * layer_thickness_m
+    if arg.real > 50.0:
+        boundary = 1.0 + 0j
+    elif arg.real < -50.0:
+        boundary = -1.0 + 0j
+    else:
+        boundary = cmath.tanh(arg)
+    # Standard layered-Green's combination:
+    #     I = (k - γ_a · boundary) / (γ_b * (k + γ_a · boundary))
+    # which is the rational expression the binary assembles via its
+    # FPU stack shuffle.
+    num = k_rho - gamma_a * boundary
+    den = gamma_b * (k_rho + gamma_a * boundary)
+    if den == 0:
+        return 0j
+    return num / den
+
+
+def green_propagation_integrand(
+    k_rho: float,
+    omega_rad: float,
+    sigma_a_S_per_m: float,
+    sigma_b_S_per_m: float,
+    layer_thickness_m: float,
+    z_m: float,
+) -> complex:
+    """Sommerfeld integrand with an exponential ``e^{-γ z}`` propagation factor.
+
+    Mirrors ``green_propagation_integrand`` (decomp ``0x08093b34``).
+    Like :func:`green_oscillating_integrand` but with a vertical
+    decay factor for the field point at height ``z`` above the
+    substrate stack rather than a horizontal cosine modulation.
+    """
+    gamma_a = propagation_constant(k_rho, omega_rad, sigma_a_S_per_m)
+    gamma_b = propagation_constant(k_rho, omega_rad, sigma_b_S_per_m)
+    # Vertical decay through the substrate
+    decay = cmath.exp(-2.0 * gamma_a * layer_thickness_m)
+    # Boundary condition factor: (1 + decay) / (1 - decay) inverted
+    # for the propagation form
+    enum = (1.0 + decay) - 1.0  # = decay
+    eden = (1.0 + decay) + 1.0
+    boundary = enum / eden if eden != 0 else 0j
+    # Source-field separation factor
+    arg = -gamma_a * z_m
+    propagation = 0j if arg.real < -50.0 else cmath.exp(arg)
+    # Combine
+    den = gamma_b * (k_rho + gamma_a * boundary)
+    if den == 0:
+        return 0j
+    return (propagation * (k_rho - gamma_a * boundary)) / den
+
+
+def green_function_kernel_a_oscillating(
+    k_rho: float,
+    *,
+    omega_rad: float,
+    sigma_a_S_per_m: float,
+    sigma_b_S_per_m: float,
+    layer_thickness_m: float,
+    z_m: float,
+) -> float:
+    """Green's-function inner kernel with the ``2^{-k h / ln2}`` damping factor.
+
+    Mirrors ``green_function_kernel_a_oscillating`` (decomp
+    ``0x080948d0``). Multiplies :func:`green_oscillating_integrand`
+    by ``exp(-k_ρ z)/k_ρ`` (the ``2^{-k·z / ln 2} / k`` factor in
+    the binary, which is just a clever ``f2xm1 / fscale``-friendly
+    form of ``e^{-k·z}/k``). Returns the **real** part because the
+    QUADPACK driver only consumes that.
+    """
+    if k_rho <= 0:
+        return 0.0
+    integrand = green_oscillating_integrand(
+        k_rho, omega_rad,
+        sigma_a_S_per_m, sigma_b_S_per_m,
+        layer_thickness_m, rho_m=0.0,
+    )
+    decay = math.exp(-k_rho * z_m)
+    return float((integrand * decay / k_rho).real)
+
+
+def green_function_kernel_b_reflection(
+    k_rho: float,
+    *,
+    omega_rad: float,
+    sigma_a_S_per_m: float,
+    sigma_b_S_per_m: float,
+    layer_thickness_m: float,
+    z_m: float,
+) -> float:
+    """Green's-function inner kernel with the substrate reflection factor.
+
+    Mirrors ``green_function_kernel_b_reflection``. Uses the
+    :func:`layer_reflection_coefficient` ``Γ`` instead of the
+    direct-source kernel, giving the *image* contribution to the
+    layered-substrate Green's function. Returns the real part.
+    """
+    if k_rho <= 0:
+        return 0.0
+    integrand = green_oscillating_integrand(
+        k_rho, omega_rad,
+        sigma_a_S_per_m, sigma_b_S_per_m,
+        layer_thickness_m, rho_m=0.0,
+    )
+    R = layer_reflection_coefficient(k_rho, omega_rad, sigma_b_S_per_m)
+    decay = math.exp(-k_rho * z_m)
+    return float((integrand * R * decay / k_rho).real)
+
+
 def layer_reflection_coefficient(
     k_rho: float,
     omega_rad: float,

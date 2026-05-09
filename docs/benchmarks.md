@@ -68,18 +68,24 @@ shapes).
 ## Cross-validation against the legacy binary
 
 `reasitic.validation.binary_runner` drives the original
-`asitic.linux.2.2` binary via `xvfb-run`, captures its `Geom`
-command output, and parses the resulting human-readable text into
-:class:`GeomResult` records. The harness auto-skips when the
-binary or `xvfb-run` isn't available — see
-`tests/test_validation_binary.py`.
+`asitic.linux.2.2` binary **under user-mode QEMU translation**
+(``qemu-i386-static``), captures its command output, and parses
+the resulting human-readable text into :class:`GeomResult`
+records. The QEMU layer is mandatory because native execution
+on modern Linux segfaults inside ``compute_mutual_inductance``
+for AC-frequency analyses (a 1999-era FPU-state ABI mismatch).
+
+The harness auto-skips when the binary, ``xvfb-run``, or
+``qemu-i386-static`` aren't on PATH — see
+`tests/test_validation_binary.py` and the parent repo's
+``BINARY_VALIDATION.md`` for setup instructions.
 
 ### Cross-validated commands
 
-The legacy binary's geometry-only commands work headlessly under
-`xvfb-run`; the numerical commands (`Ind`, `2Port`, `Q`, ...)
-segfault on modern Linux due to library / ABI mismatches. The
-port's cross-validation therefore focuses on the geometry path:
+Under QEMU the binary's geometry-only commands work; the
+numerical commands (`Ind`, `Res`, `Q`, `2Port`) also work but
+have been less heavily tested in this harness. The port's
+cross-validation focuses on the geometry path for stability:
 
 | Binary command | Python equivalent | Validated fields |
 |---|---|---|

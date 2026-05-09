@@ -1,12 +1,17 @@
-"""Cross-checks against the original 1999 ASITIC binary.
+"""Cross-checks against the original 1999 ASITIC binary, run under QEMU.
 
-Most of the binary's numerical commands (``Ind``, ``2Port``, ...) crash
-in headless mode on modern Linux due to legacy library mismatches.
-The geometry-only commands (``Geom``, ``MetArea``, ``ListSegs``) work
-and are the basis of cross-validation here.
+reASITIC's validation harness only supports QEMU user-mode
+execution of the legacy 32-bit binary. Native execution on
+modern Linux segfaults inside ``compute_mutual_inductance`` for
+any AC-frequency analysis (``Res <freq>``, ``Pi <freq>``,
+``2Port``) due to a 1999-era kernel / FPU-state ABI mismatch;
+QEMU's instruction-translation layer dodges the issue.
 
-These tests are skipped automatically if the binary or
-``xvfb-run`` isn't available.
+These tests are skipped automatically if the binary,
+``xvfb-run``, or ``qemu-i386-static`` aren't on PATH. Install
+``qemu-user-static`` (Debian / Ubuntu) or ``qemu-user-static``
+(Fedora / RHEL) to enable them. See the parent repo's
+``BINARY_VALIDATION.md`` for details.
 """
 
 import shutil
@@ -27,7 +32,10 @@ _HAS_XVFB = shutil.which("xvfb-run") is not None
 
 pytestmark = pytest.mark.skipif(
     _RUNNER is None or not _HAS_XVFB,
-    reason="legacy ASITIC binary or xvfb-run not available",
+    reason=(
+        "legacy ASITIC binary, xvfb-run, or qemu-i386-static not "
+        "available — see BINARY_VALIDATION.md in the parent repo"
+    ),
 )
 
 

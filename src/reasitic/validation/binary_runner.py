@@ -123,13 +123,39 @@ def parse_geom_output(text: str) -> GeomResult:
     return result
 
 
+_DEFAULT_QEMU_BINARY = "qemu-i386-static"
+
+
 @dataclass
 class BinaryRunner:
-    """Runs the legacy ``asitic`` binary against a script."""
+    """Runs the legacy ``asitic`` binary under user-mode QEMU.
+
+    The 1999 ASITIC binary is a 32-bit i386 ELF linked against
+    1999-era libstdc++ / libreadline / Mesa libraries (bundled in
+    ``run/libs/``). Native execution on modern Linux works for
+    geometry-only commands but segfaults inside
+    ``compute_mutual_inductance`` (decomp ``0x0804efb0``) for any
+    AC-frequency analysis (``Res <freq>``, ``Pi <freq>``, ``2Port``,
+    ``Eddy on``). The crash is a 1999-era kernel/FPU-state ABI
+    mismatch.
+
+    To make results reproducible across hosts, **reASITIC's
+    validation harness only supports QEMU user-mode execution**.
+    Install ``qemu-user-static`` and the harness picks up
+    ``qemu-i386-static`` automatically; set ``REASITIC_QEMU_USER``
+    to override the QEMU binary. If QEMU is not available, the
+    runner construction raises :class:`BinaryNotFoundError` and
+    every test that depends on it auto-skips.
+
+    The parent ``asitic-re`` repo's ``BINARY_VALIDATION.md``
+    documents how to install QEMU on each major distro and the
+    legacy-Linux containerised path for full reproduction.
+    """
 
     binary: Path
     tech_file: Path
     cwd: Path
+    qemu_user: str
     timeout_s: float = 30.0
     use_xvfb: bool = True
 
@@ -138,12 +164,18 @@ class BinaryRunner:
         cls,
         tech_file: str | Path = "tek/BiCMOS.tek",
         timeout_s: float = 30.0,
+        qemu_user: str | None = None,
     ) -> BinaryRunner:
         """Construct a runner using the legacy binary at ``run/asitic``.
 
         ``tech_file`` is resolved relative to the binary's directory if
         not absolute. ``xvfb-run`` is auto-enabled when no DISPLAY is
         set on the host.
+
+        ``qemu_user`` is the QEMU binary used for translation
+        (defaults to ``$REASITIC_QEMU_USER`` or
+        ``"qemu-i386-static"``). Raises :class:`BinaryNotFoundError`
+        when the QEMU binary isn't on the PATH.
         """
         binary = _default_binary_path()
         cwd = binary.parent  # the run/ directory
@@ -152,11 +184,22 @@ class BinaryRunner:
             tech = cwd / tech
         if not tech.exists():
             raise FileNotFoundError(tech)
+        qemu = qemu_user or os.environ.get(
+            "REASITIC_QEMU_USER", _DEFAULT_QEMU_BINARY
+        )
+        if shutil.which(qemu) is None:
+            raise BinaryNotFoundError(
+                f"QEMU user-mode binary {qemu!r} not found on PATH; "
+                "install ``qemu-user-static`` or set REASITIC_QEMU_USER"
+            )
         use_xvfb = (
             shutil.which("xvfb-run") is not None
             and "DISPLAY" not in os.environ
         )
-        return cls(binary=binary, tech_file=tech, cwd=cwd, timeout_s=timeout_s, use_xvfb=use_xvfb)
+        return cls(
+            binary=binary, tech_file=tech, cwd=cwd,
+            timeout_s=timeout_s, use_xvfb=use_xvfb, qemu_user=qemu,
+        )
 
     def run_script(self, script: str) -> str:
         """Run ``script`` (newline-separated commands) and return stdout."""
@@ -170,6 +213,7 @@ class BinaryRunner:
         argv: list[str] = []
         if self.use_xvfb:
             argv.extend(["xvfb-run", "-a"])
+        argv.append(self.qemu_user)
         argv.extend([str(self.binary), "-t", str(self.tech_file)])
 
         # start_new_session=True isolates us from the SIGQUIT that

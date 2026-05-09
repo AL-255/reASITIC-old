@@ -1,0 +1,23 @@
+=== Inductance kernels ===
+Small spiral: 8 segments
+  compute_self_inductance (small)              72.15 μs
+  solve_inductance_matrix (small, 1×1)        527.17 μs
+  solve_inductance_mna (small, 1×1)           127.22 μs
+
+Large spiral: 32 segments
+  compute_self_inductance (large)               1.01 ms
+  solve_inductance_matrix (large, 1×1)          6.87 ms
+  solve_inductance_mna (large, 1×1)             1.09 ms
+  solve_inductance_matrix (large, 2×1)          8.53 ms
+
+=== Network analysis ===
+  pi_model_at_freq (small)                     85.91 μs
+
+2Port sweep: 100 frequency points (small spiral)
+  two_port_sweep                                6.88 ms
+
+=== Optimisation ===
+  optimise_square_spiral                       48.39 ms
+
+=== Substrate ===
+  setup_green_fft_grid (32x32)                  1.47 ms

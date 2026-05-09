@@ -1,0 +1,2 @@
+```{include} ../COOKBOOK.md
+```

@@ -10,10 +10,15 @@ requires-python = ">=3.10"
 license = "GPL-2.0-only"
 license-files = ["LICENSE"]
 authors = [{ name = "AL-255", email = "thelithcore@gmail.com" }]
-keywords = ["asitic", "rf", "inductor", "spiral", "eda", "planar", "electromagnetic"]
+keywords = [
+    "asitic", "rf", "inductor", "spiral", "eda", "planar",
+    "electromagnetic", "transformer", "balun", "greenhouse",
+    "grover", "rfic", "skin-effect", "touchstone", "spice",
+]
 classifiers = [
-    "Development Status :: 1 - Planning",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
@@ -23,25 +28,47 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering",
     "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
+    "Typing :: Typed",
 ]
 dynamic = ["version"]
-dependencies = []
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+]
 
 [project.optional-dependencies]
+plot = ["matplotlib>=3.7"]
+docs = [
+    "sphinx>=7.3",
+    "furo>=2024.5.6",
+    "myst-parser>=3.0",
+    "sphinx-copybutton>=0.5",
+]
 dev = [
     "pytest>=8",
     "pytest-cov",
     "ruff",
     "mypy",
+    "matplotlib>=3.7",
+    "sphinx>=7.3",
+    "furo>=2024.5.6",
+    "myst-parser>=3.0",
+    "sphinx-copybutton>=0.5",
 ]
+
+[project.scripts]
+reasitic = "reasitic.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/AL-255/reASITIC"
 Source = "https://github.com/AL-255/reASITIC"
 Issues = "https://github.com/AL-255/reASITIC/issues"
+Changelog = "https://github.com/AL-255/reASITIC/blob/main/CHANGELOG.md"
+Documentation = "https://al-255.github.io/reASITIC/"
 
 [tool.hatch.version]
-path = "src/reasitic/__init__.py"
+path = "src/reasitic/_version.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/reasitic"]
@@ -50,7 +77,18 @@ packages = ["src/reasitic"]
 include = [
     "src/reasitic",
     "tests",
+    "examples",
+    "benchmarks",
+    "scripts",
+    "docs",
     "README.md",
+    "TUTORIAL.md",
+    "COOKBOOK.md",
+    "FAQ.md",
+    "CHANGELOG.md",
+    "MAPPING.md",
+    "PLAN.md",
+    "CLI_REFERENCE.md",
     "LICENSE",
     "pyproject.toml",
 ]
@@ -59,15 +97,56 @@ include = [
 minversion = "8.0"
 testpaths = ["tests"]
 addopts = "-ra"
+# To run doctest examples too: pytest --doctest-modules src/reasitic
+
+[tool.coverage.run]
+source = ["src/reasitic"]
+branch = true
+omit = [
+    "*/__main__.py",   # entry point — exercised but its top-level isn't measured
+    "*/cli.py",        # the dispatcher is exercised end-to-end via REPL tests
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+fail_under = 0  # informational, not enforced; raise once we lock in the surface
 
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+extend-exclude = ["examples", "benchmarks", "scripts", "docs"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF", "D"]
+# Allow unicode in math docstrings (μm, ×, ², etc.)
+# D-rule subset: only flag missing docstrings on public symbols (D1xx).
+# Skip D2xx (formatting), D4xx (style) — too prescriptive for a port.
+ignore = [
+    "RUF001", "RUF002", "RUF003",
+    "D200", "D201", "D202", "D203", "D205", "D206", "D207", "D208",
+    "D209", "D210", "D211", "D212", "D213", "D300", "D301",
+    "D400", "D401", "D402", "D403", "D404", "D405", "D406", "D407",
+    "D408", "D409", "D410", "D411", "D412", "D413", "D414", "D415",
+    "D416", "D417", "D418", "D419",
+    "D100",  # missing module docstring (we have them where it matters)
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests don't need pydocstyle docstrings
+"tests/*" = ["D101", "D102", "D103", "D104", "D105", "D106", "D107"]
+# CLI handlers are bound to short docstrings; relax there too
+"src/reasitic/cli.py" = ["D101", "D102", "D107"]
 
 [tool.mypy]
 python_version = "3.10"
 strict = true
 files = ["src/reasitic"]
+
+[[tool.mypy.overrides]]
+module = ["scipy", "scipy.*"]
+ignore_missing_imports = true

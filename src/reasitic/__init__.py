@@ -38,7 +38,9 @@ from reasitic.geometry import (
     Shape,
     balun,
     capacitor,
+    extend_last_segment_to_chip_edge,
     multi_metal_square,
+    polygon_edge_vectors,
     polygon_spiral,
     ring,
     square_spiral,
@@ -55,7 +57,11 @@ from reasitic.inductance import (
     coupling_coefficient,
 )
 from reasitic.quality import metal_only_q
-from reasitic.resistance import compute_ac_resistance, compute_dc_resistance
+from reasitic.resistance import (
+    compute_ac_resistance,
+    compute_dc_resistance,
+    three_class_resistance,
+)
 from reasitic.tech import (
     Tech,
     parse_tech,
@@ -102,16 +108,19 @@ __all__ = [
     "compute_mutual_inductance",
     "compute_self_inductance",
     "coupling_coefficient",
+    "extend_last_segment_to_chip_edge",
     "metal_only_q",
     "multi_metal_square",
     "parse_tech",
     "parse_tech_file",
+    "polygon_edge_vectors",
     "polygon_spiral",
     "ring",
     "square_spiral",
     "summary",
     "symmetric_polygon",
     "symmetric_square",
+    "three_class_resistance",
     "transformer",
     "transformer_3d",
     "via",

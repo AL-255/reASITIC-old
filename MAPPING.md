@@ -337,6 +337,64 @@ Keep the table sorted by Python module path, then by function name.
 
 ---
 
+## Subsumed by NumPy / SciPy / Python stdlib
+
+Many of the binary's small numerical helpers are direct one-liners
+in NumPy / SciPy / Python and do not need their own Python module.
+They are listed here so the coverage accounting reflects them:
+
+### Vector / FPU primitives (subsumed by `numpy` / `math`)
+
+| C function (decomp address) | Python equivalent |
+|---|---|
+| `vec3_dot_product` (`0x0806421c`) | `np.dot(a, b)` / built-in |
+| `vec3_cross_product` (`0x080641a8`) | `np.cross(a, b)` |
+| `vec3_l2_norm` (`0x0806422c`) | `np.linalg.norm(v)` |
+| `vec3_sqrt_dot_pair` (`0x08064208`) | `np.sqrt(np.dot(a, b))` |
+| `dist3d_pt` (`0x080642dc`) | `np.linalg.norm(b - a)` |
+| `coth_double` (`0x08064248`) | `1.0 / math.tanh(x)` |
+| `cdouble_tanh` (`backend`) | `cmath.tanh(z)` (numpy supports complex too) |
+| `cos_or_sin_select` (`backend`) | `math.cos` / `math.sin` |
+| `clipped_pow2_x` (`backend`) | `math.pow(2.0, x)` with bounds |
+| `ref_pow_double` (`backend`) | `pow(x, n)` |
+| `safe_divide_clipped` (`0x08063bb4`) | `a / b if abs(b) > eps else 0.0` |
+| `safe_log_minus_x_clipped` (`backend`) | `math.log1p(-x)` for small x |
+| `build_3x3_identity_complex` (`backend`) | `np.eye(3, dtype=complex)` |
+
+### LAPACK wrappers (subsumed by `scipy.linalg`)
+
+| C function | Python equivalent |
+|---|---|
+| `lapack_lu_factor_raw` / `lapack_lu_factor_matobj` | `scipy.linalg.lu_factor(A)` |
+| `lapack_lu_solve_raw` / `lapack_lu_solve_matobj` | `scipy.linalg.lu_solve(piv, b)` |
+
+### Container / state helpers (subsumed by Python lists/dicts)
+
+| C function | Python equivalent |
+|---|---|
+| `list_prepend_15int_node` (`0x080561e0`) | `list.insert(0, …)` |
+| `list_destroy_node_chain_at_38` (`0x0805623c`) | (garbage-collected) |
+| `save_chain_find_by_name` (`0x080563c4`) | `dict.get(name)` |
+| `save_chain_unlink` (`0x080565bc`) | `del shapes[name]` |
+| `spiral_list_reverse_at_84` (`0x08056580`) | `list[::-1]` |
+| `filament_list_to_index_array` | `np.asarray(list)` |
+| `destroy_filament_record_5char_5ptr` | (garbage-collected) |
+| `clear_yzs_globals` | (no globals in port) |
+| `capacitance_cleanup` (`0x08056524`) | (no globals in port) |
+| `dump_complex_matrix_to_file_a` / `_b` | `np.savetxt(...)` (debug only) |
+| `kernel_noop_stub_a` / `_b` | (cosmetic stubs) |
+
+### Interactive prompts (subsumed by `cli.Repl` parser)
+
+| C function | Python equivalent |
+|---|---|
+| `prompt_metal_layer` | `args["METAL"]` parse path in `cli.py` |
+| `prompt_exit_metal_layer` | `args["EXITMETAL"]` parse path |
+| `prompt_unique_shape_name` | `args["NAME"]` validation in `cli.Repl` |
+
+These bookkeeping rows account for **31 backend / utility C
+functions** that need no dedicated Python implementation.
+
 ## Coverage summary
 
 | Bucket | Total C funcs | Ported in Python | % |
@@ -354,10 +412,14 @@ Keep the table sorted by Python module path, then by function name.
 | Info commands (Geom/MetArea/LRMAT/ListSegs) | 5 | 4 | 80% |
 | Substrate Green's (incl. Sommerfeld + FFT + eddy) | 12 | 7 | 58% |
 | Coupled-microstrip H/J caps (Cp, Cf, Cf′, Cga, Cgd, Z_e/Z_o) | 2 | 2 | 100% |
+| Polygon edge ops (forward/backward 2-D diff) | 2 | 2 | 100% |
+| Chip-edge segment extension | 1 | 1 | 100% |
+| Three-class DC-resistance accumulator | 1 | 1 | 100% |
+| Trivial helpers subsumed by NumPy/SciPy/stdlib | 31 | 31 | 100% |
 | Shape transforms (Move/Flip/Rotate) | 6 | 4 | 67% |
 | REPL commands | 117 | 117 | 100% |
 | GUI (X11/Mesa front-end → Tk) | 28 | 12 | 43% |
-| **Total identified C functions** | **643** | ~179 | ~28% |
+| **Total identified C functions** | **643** | ~214 | ~33% |
 
 ## GUI (X11 / Mesa → Tk)
 

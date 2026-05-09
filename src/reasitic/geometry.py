@@ -222,6 +222,109 @@ class Shape:
         )
 
 
+# Polygon utilities ------------------------------------------------------
+
+
+def polygon_edge_vectors(
+    poly: Polygon,
+    *,
+    direction: str = "forward",
+) -> list[tuple[float, float]]:
+    """Return the per-edge ``(dx, dy)`` vectors for a polygon.
+
+    Mirrors the binary's ``forward_diff_2d_inplace`` (decomp address
+    ``0x08056198``) and ``backward_diff_2d_inplace`` (``0x08056148``)
+    in-place differencing helpers.
+
+    * ``direction="forward"`` returns ``vertices[i+1] - vertices[i]``
+      for ``i in 0..N-2``; matches ``forward_diff_2d_inplace`` after
+      ``-`` sign flip (the binary stores ``arr[i] -= arr[i+1]``, i.e.
+      ``-(next - curr)``; we return the geometric forward edge).
+    * ``direction="backward"`` returns ``vertices[i] - vertices[i-1]``
+      for ``i in 1..N-1``; matches ``backward_diff_2d_inplace``.
+    """
+    if direction not in ("forward", "backward"):
+        raise ValueError(f"direction must be 'forward' or 'backward', got {direction!r}")
+    verts = poly.vertices
+    if len(verts) < 2:
+        return []
+    if direction == "forward":
+        return [
+            (verts[i + 1].x - verts[i].x, verts[i + 1].y - verts[i].y)
+            for i in range(len(verts) - 1)
+        ]
+    return [
+        (verts[i].x - verts[i - 1].x, verts[i].y - verts[i - 1].y)
+        for i in range(1, len(verts))
+    ]
+
+
+def extend_last_segment_to_chip_edge(shape: Shape, tech: Tech) -> Shape:
+    """Push the last segment of ``shape`` out to the nearest chip boundary.
+
+    Mirrors ``shape_extend_last_to_chip_edge`` (decomp ``0x0805b154``).
+    The binary uses this on the export path so a winding's terminal
+    segment sticks out of the chip outline by enough to become a port.
+
+    The decision tree:
+
+    * If the last segment runs in +Y → snap its tail to ``chipy``.
+    * If it runs in -Y → snap its tail to ``0``.
+    * If it runs in +X → snap its tail to ``chipx``.
+    * If it runs in -X → snap its tail to ``0``.
+
+    A copy of the shape is returned; the original is untouched.
+    """
+    if not shape.polygons:
+        return shape
+    chipx = tech.chip.chipx
+    chipy = tech.chip.chipy
+    if chipx <= 0 and chipy <= 0:
+        return shape
+
+    new_polys = [
+        Polygon(
+            vertices=list(p.vertices),
+            metal=p.metal,
+            width=p.width,
+            thickness=p.thickness,
+        )
+        for p in shape.polygons
+    ]
+    last_poly = new_polys[-1]
+    if len(last_poly.vertices) < 2:
+        return shape
+    a = last_poly.vertices[-2]
+    b = last_poly.vertices[-1]
+    dx = b.x - a.x
+    dy = b.y - a.y
+    eps = 1e-10
+    if abs(dy) >= eps:
+        # Vertical segment
+        new_y = chipy if dy > 0 else 0.0
+        last_poly.vertices[-1] = Point(b.x, new_y, b.z)
+    elif abs(dx) <= eps:
+        # Degenerate — leave it
+        return shape
+    else:
+        new_x = chipx if dx > 0 else 0.0
+        last_poly.vertices[-1] = Point(new_x, b.y, b.z)
+    return Shape(
+        name=shape.name,
+        polygons=new_polys,
+        width=shape.width,
+        spacing=shape.spacing,
+        turns=shape.turns,
+        sides=shape.sides,
+        metal=shape.metal,
+        exit_metal=shape.exit_metal,
+        x_origin=shape.x_origin,
+        y_origin=shape.y_origin,
+        orientation=shape.orientation,
+        phase=shape.phase,
+    )
+
+
 # Geometry builders ------------------------------------------------------
 
 

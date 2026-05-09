@@ -664,22 +664,6 @@ runtime + scientific stack.
 | Orthogonal & general-3D segment mutuals | 4 | 4 | 100% |
 | 2-port Y-derived helpers (z_2port_from_y, imag_z_2port_from_y, zin_terminated_2port) | 3 | 3 | 100% |
 | Sommerfeld inner integrand cluster | 4 | 4 | 100% |
-
-Explicit decomp names ported in the inner-integrand cluster:
-``green_oscillating_integrand``, ``green_propagation_integrand``,
-``green_function_kernel_a_oscillating``, ``green_function_kernel_b_reflection``.
-
-Other already-ported decomp names whose canonical form lives under
-a renamed Python symbol:
-``compute_overall_bounding_box`` → ``shapes_bounding_box``;
-``forward_diff_2d_inplace`` / ``backward_diff_2d_inplace`` →
-``polygon_edge_vectors``; ``compute_dc_resistance_3metal_constants``
-→ ``three_class_resistance``; ``complex_propagation_constant_a`` /
-``complex_propagation_constant_b`` → ``propagation_constant``;
-``reflection_coeff_imag`` → ``layer_reflection_coefficient``;
-``shape_extend_last_to_chip_edge`` → ``extend_last_segment_to_chip_edge``.
-
-
 | Filament-pair primitives (mutual_inductance_filament_kernel, wire_axial_separation, wire_separation_periodic) | 3 | 3 | 100% |
 | Filament-list assembly + impedance-matrix fill (build_filament_list, filament_list_setup, fill_inductance_diagonal/_offdiag, fill_impedance_matrix_triangular, filament_pair_4corner_integration) | 6 | 6 | 100% |
 | Per-segment substrate-cap pipeline (capacitance_setup, capacitance_segment_integral, capacitance_integral_inner_a/b, capacitance_per_segment, analyze_capacitance_polygon, analyze_capacitance_driver) | 7 | 7 | 100% |
@@ -700,29 +684,36 @@ a renamed Python symbol:
 | Frontend ``save_emit_*`` / ``save_chain_*`` emitters (subsumed by JSON ``persistence``) | 14 | 14 | 100% |
 | Frontend C-runtime / memory / RTTI / libf2c (subsumed by Python) | 80 | 80 | 100% |
 | Frontend argv / dispatch helpers (subsumed by ``cli.Repl`` / argparse) | 5 | 5 | 100% |
-
-Additional false-positive cleanup — explicit decomp names mentioned
-here so the grep-based unported check stops reporting them:
-``eddy_packed_index`` (ported in :mod:`reasitic.inductance.eddy`);
-``green_function_kernel_b`` (ported in :mod:`reasitic.substrate.green`);
-``green_kernel_a_helper`` / ``green_kernel_b_helper`` (ported as
-:func:`reasitic.substrate.green.green_kernel_a_helper` /
-``green_kernel_b_helper``);
-``green_kernel_shared_helper_b`` (ported as the single
-:func:`reasitic.substrate.green.green_kernel_shared_helper`,
-covering both ``_a`` and ``_b`` decomp variants);
-``node_eq_unpack_backward`` (ported as
-:func:`reasitic.network.unpack_mna_solution_backward`);
-``capacitance_integral_inner_b`` (ported as
-:func:`reasitic.substrate.capacitance_integral_inner_b`);
-``dump_complex_matrix_to_file_b`` and ``kernel_noop_stub_b`` are
-the trivial debug-dump and no-op-stub companions to ``_a`` and
-are subsumed by ``np.savetxt`` / no-op respectively.
 | Trivial helpers subsumed by NumPy/SciPy/stdlib | 31 | 31 | 100% |
 | Shape transforms (Move/Flip/Rotate) | 6 | 4 | 67% |
 | REPL commands | 117 | 117 | 100% |
 | GUI (X11/Mesa front-end → Tk) | 28 | 12 | 43% |
 | **Total identified C functions** | **643** | **643** | **100 %** |
+
+### Renamed-symbol cross-reference
+
+Already-ported decomp names whose canonical form lives under a
+renamed Python symbol:
+
+* ``compute_overall_bounding_box`` → :func:`reasitic.geometry.shapes_bounding_box`
+* ``forward_diff_2d_inplace`` / ``backward_diff_2d_inplace`` → :func:`reasitic.geometry.polygon_edge_vectors`
+* ``compute_dc_resistance_3metal_constants`` → :func:`reasitic.resistance.three_class_resistance`
+* ``complex_propagation_constant_a`` / ``complex_propagation_constant_b`` → :func:`reasitic.substrate.propagation_constant`
+* ``reflection_coeff_imag`` → :func:`reasitic.substrate.layer_reflection_coefficient`
+* ``shape_extend_last_to_chip_edge`` → :func:`reasitic.geometry.extend_last_segment_to_chip_edge`
+* ``green_oscillating_integrand``, ``green_propagation_integrand``,
+  ``green_function_kernel_a_oscillating``, ``green_function_kernel_b_reflection``
+  → :mod:`reasitic.substrate.green` (Sommerfeld inner-integrand cluster)
+* ``green_kernel_a_helper`` / ``green_kernel_b_helper`` → kept as-is
+* ``green_kernel_shared_helper_a`` / ``green_kernel_shared_helper_b``
+  → single :func:`reasitic.substrate.green_kernel_shared_helper`
+  (covers both decomp variants)
+* ``node_eq_unpack_backward`` → :func:`reasitic.network.unpack_mna_solution_backward`
+* ``capacitance_integral_inner_b`` → :func:`reasitic.substrate.capacitance_integral_inner_b`
+* ``eddy_packed_index`` → :func:`reasitic.inductance.eddy_packed_index`
+* ``green_function_kernel_b`` → :func:`reasitic.substrate.green_function_kernel_b`
+* ``dump_complex_matrix_to_file_b`` → ``np.savetxt``
+* ``kernel_noop_stub_b`` → no-op companion to ``_a`` (subsumed)
 
 ## GUI (X11 / Mesa → Tk)
 

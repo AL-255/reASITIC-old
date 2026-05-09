@@ -39,3 +39,13 @@ coverage.xml
 .idea/
 *.swp
 .DS_Store
+
+# Regenerated binary artifacts from the ASITIC binary
+# (CIF, GDS, S2P, raw analysis logs). The JSON ground truth in
+# tests/data/validation/ stays tracked, but the per-shape layouts
+# and per-case analysis bundles are derivative outputs of the
+# UC-Berkeley-licensed binary and are reproduced on demand by
+# scripts/regen_validation_artifacts.py in the parent asitic-re
+# repo. See TESTSET.md there for the workflow.
+tests/data/validation/layouts/
+tests/data/validation/analysis/

@@ -1,0 +1,136 @@
+{
+  "name": "cap_80x80_m3_m2",
+  "build_command": "CAPACITOR NAME=C1:LEN=80:WID=80:METAL1=m3:METAL2=m2:XORG=0:YORG=0",
+  "shape_name": "C1",
+  "tech": "BiCMOS",
+  "geom": {
+    "name": "C1",
+    "kind": "User defined",
+    "length_um": null,
+    "width_um": null,
+    "metal": null,
+    "total_length_um": 160.0,
+    "total_area_um2": 12800.0,
+    "location": [
+      0.0,
+      0.0
+    ],
+    "n_segments": 2,
+    "spiral_l1_um": null,
+    "spiral_l2_um": null,
+    "spiral_spacing_um": null,
+    "spiral_turns": null,
+    "radius_um": null,
+    "n_sides": null,
+    "primary_width_um": null,
+    "secondary_width_um": null,
+    "primary_turns": null,
+    "secondary_turns": null
+  },
+  "layout": {
+    "cif": "layouts/cap_80x80_m3_m2.cif",
+    "gds": "layouts/cap_80x80_m3_m2.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 12800.0,
+    "ind_dc_nh": 0.0915111,
+    "res_dc_ohm": 0.07,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      0.115034,
+      0.761857
+    ],
+    "q": [
+      8.214018,
+      41.07009
+    ],
+    "lrmat_l_h": [
+      8.753e-11,
+      8.592e-11
+    ],
+    "lrmat_r_ohm": [
+      0.0804,
+      0.0999
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          6.837,
+          6.837,
+          6.838
+        ],
+        "L_nh": 0.0875,
+        "R_ohm": 0.0804,
+        "Cs1_ff": 37.2,
+        "Rs1_ohm": 1580.0,
+        "Cs2_ff": 46.3,
+        "Rs2_ohm": 839.0,
+        "f_res_ghz": 88.23
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          26.635,
+          26.364,
+          27.006
+        ],
+        "L_nh": 0.0862,
+        "R_ohm": 0.0984,
+        "Cs1_ff": 27.2,
+        "Rs1_ohm": 1240.0,
+        "Cs2_ff": 36.0,
+        "Rs2_ohm": 947.0,
+        "f_res_ghz": 104.0
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 83.216,
+        "cap_r_ohm": 570.042
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 63.145,
+        "cap_r_ohm": 536.194
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 8.26,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 41.49,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "CAPACITOR NAME=C1:LEN=80:WID=80:METAL1=m3:METAL2=m2:XORG=0:YORG=0",
+      "MetArea C1",
+      "Ind C1",
+      "Res C1",
+      "ResHF C1 1.0",
+      "Q C1 1.0",
+      "Pi2 C1 1.0",
+      "Cap C1 1.0",
+      "LRMAT C1 1.0",
+      "ResHF C1 5.0",
+      "Q C1 5.0",
+      "Pi2 C1 5.0",
+      "Cap C1 5.0",
+      "LRMAT C1 5.0",
+      "2Port C1 1.0 10.0 1.0 S polar slow cap_80x80_m3_m2.s2p"
+    ],
+    "errors": [
+      "Pi2 C1 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 C1 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/cap_80x80_m3_m2.stable.log",
+    "sweep_log": "analysis/cap_80x80_m3_m2.sweep.log",
+    "s2p": "analysis/cap_80x80_m3_m2.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 4
+}

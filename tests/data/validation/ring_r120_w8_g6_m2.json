@@ -1,0 +1,136 @@
+{
+  "name": "ring_r120_w8_g6_m2",
+  "build_command": "RING NAME=RG2:RAD=120:W=8:GAP=6:METAL=m2:XORG=100:YORG=100",
+  "shape_name": "RG2",
+  "tech": "BiCMOS",
+  "geom": {
+    "name": "RG2",
+    "kind": "Ring",
+    "length_um": null,
+    "width_um": null,
+    "metal": null,
+    "total_length_um": 711.17,
+    "total_area_um2": 5689.32,
+    "location": [
+      100.0,
+      100.0
+    ],
+    "n_segments": 15,
+    "spiral_l1_um": null,
+    "spiral_l2_um": null,
+    "spiral_spacing_um": null,
+    "spiral_turns": null,
+    "radius_um": null,
+    "n_sides": null,
+    "primary_width_um": null,
+    "secondary_width_um": null,
+    "primary_turns": null,
+    "secondary_turns": null
+  },
+  "layout": {
+    "cif": "layouts/ring_r120_w8_g6_m2.cif",
+    "gds": "layouts/ring_r120_w8_g6_m2.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 5689.324019,
+    "ind_dc_nh": 0.588198,
+    "res_dc_ohm": 4.444784,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      4.458587,
+      4.600472
+    ],
+    "q": [
+      0.831482,
+      4.157408
+    ],
+    "lrmat_l_h": [
+      5.805e-10,
+      5.786e-10
+    ],
+    "lrmat_r_ohm": [
+      4.446,
+      4.5647
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          0.818,
+          0.819,
+          0.82
+        ],
+        "L_nh": 0.581,
+        "R_ohm": 4.44,
+        "Cs1_ff": 63.5,
+        "Rs1_ohm": 602.0,
+        "Cs2_ff": 54.8,
+        "Rs2_ohm": 705.0,
+        "f_res_ghz": 26.2
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          3.799,
+          3.836,
+          3.951
+        ],
+        "L_nh": 0.579,
+        "R_ohm": 4.45,
+        "Cs1_ff": 47.8,
+        "Rs1_ohm": 547.0,
+        "Cs2_ff": 41.4,
+        "Rs2_ohm": 643.0,
+        "f_res_ghz": 30.24
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 118.282,
+        "cap_r_ohm": 324.412
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 88.833,
+        "cap_r_ohm": 295.306
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 5.5,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 26.24,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "RING NAME=RG2:RAD=120:W=8:GAP=6:METAL=m2:XORG=100:YORG=100",
+      "MetArea RG2",
+      "Ind RG2",
+      "Res RG2",
+      "ResHF RG2 1.0",
+      "Q RG2 1.0",
+      "Pi2 RG2 1.0",
+      "Cap RG2 1.0",
+      "LRMAT RG2 1.0",
+      "ResHF RG2 5.0",
+      "Q RG2 5.0",
+      "Pi2 RG2 5.0",
+      "Cap RG2 5.0",
+      "LRMAT RG2 5.0",
+      "2Port RG2 1.0 10.0 1.0 S polar slow ring_r120_w8_g6_m2.s2p"
+    ],
+    "errors": [
+      "Pi2 RG2 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 RG2 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/ring_r120_w8_g6_m2.stable.log",
+    "sweep_log": "analysis/ring_r120_w8_g6_m2.sweep.log",
+    "s2p": "analysis/ring_r120_w8_g6_m2.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 4
+}

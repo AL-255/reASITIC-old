@@ -1,0 +1,136 @@
+{
+  "name": "mmsq_200x12x3x2p5_m3_to_m2_offset",
+  "build_command": "MMSQ NAME=MM2:LEN=200:W=12:S=3:N=2.5:METAL=m3:EXIT=m2:XORG=200:YORG=200",
+  "shape_name": "MM2",
+  "tech": "BiCMOS",
+  "geom": {
+    "name": "MM2",
+    "kind": "User defined",
+    "length_um": null,
+    "width_um": null,
+    "metal": null,
+    "total_length_um": 3304.0,
+    "total_area_um2": 39648.0,
+    "location": [
+      200.0,
+      200.0
+    ],
+    "n_segments": 20,
+    "spiral_l1_um": null,
+    "spiral_l2_um": null,
+    "spiral_spacing_um": null,
+    "spiral_turns": null,
+    "radius_um": null,
+    "n_sides": null,
+    "primary_width_um": null,
+    "secondary_width_um": null,
+    "primary_turns": null,
+    "secondary_turns": null
+  },
+  "layout": {
+    "cif": "layouts/mmsq_200x12x3x2p5_m3_to_m2_offset.cif",
+    "gds": "layouts/mmsq_200x12x3x2p5_m3_to_m2_offset.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 39648.0,
+    "ind_dc_nh": 6.61758,
+    "res_dc_ohm": 9.636667,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      9.738342,
+      10.385173
+    ],
+    "q": [
+      4.314716,
+      21.573579
+    ],
+    "lrmat_l_h": [
+      6.817e-09,
+      6.722e-09
+    ],
+    "lrmat_r_ohm": [
+      10.3317,
+      15.0095
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          3.803,
+          3.506,
+          3.901
+        ],
+        "L_nh": 7.15,
+        "R_ohm": 10.9,
+        "Cs1_ff": 103.0,
+        "Rs1_ohm": 1200.0,
+        "Cs2_ff": 217.0,
+        "Rs2_ohm": 453.0,
+        "f_res_ghz": 5.85
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          -4.337,
+          -1.938,
+          -5.686
+        ],
+        "L_nh": -13.7,
+        "R_ohm": -1.31,
+        "Cs1_ff": 44.5,
+        "Rs1_ohm": 1090.0,
+        "Cs2_ff": 126.0,
+        "Rs2_ohm": 418.0,
+        "f_res_ghz": null
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 318.494,
+        "cap_r_ohm": 330.207
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 167.365,
+        "cap_r_ohm": 300.88
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 12.39,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 59.2,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "MMSQ NAME=MM2:LEN=200:W=12:S=3:N=2.5:METAL=m3:EXIT=m2:XORG=200:YORG=200",
+      "MetArea MM2",
+      "Ind MM2",
+      "Res MM2",
+      "ResHF MM2 1.0",
+      "Q MM2 1.0",
+      "Pi2 MM2 1.0",
+      "Cap MM2 1.0",
+      "LRMAT MM2 1.0",
+      "ResHF MM2 5.0",
+      "Q MM2 5.0",
+      "Pi2 MM2 5.0",
+      "Cap MM2 5.0",
+      "LRMAT MM2 5.0",
+      "2Port MM2 1.0 10.0 1.0 S polar slow mmsq_200x12x3x2p5_m3_to_m2_offset.s2p"
+    ],
+    "errors": [
+      "Pi2 MM2 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 MM2 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/mmsq_200x12x3x2p5_m3_to_m2_offset.stable.log",
+    "sweep_log": "analysis/mmsq_200x12x3x2p5_m3_to_m2_offset.sweep.log",
+    "s2p": "analysis/mmsq_200x12x3x2p5_m3_to_m2_offset.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 4
+}

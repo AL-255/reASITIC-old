@@ -1,0 +1,136 @@
+{
+  "name": "balun_200x8x3x3_m3_m2_secondary",
+  "build_command": "BALUN NAME=BL:LEN=200:W1=8:S=3:N=3:METAL=m3:METAL2=m2:XORG=0:YORG=0",
+  "shape_name": "BL-S",
+  "tech": "BiCMOS",
+  "geom": {
+    "name": "BL-S:BL-P",
+    "kind": "Transformer",
+    "length_um": null,
+    "width_um": null,
+    "metal": null,
+    "total_length_um": 658.0,
+    "total_area_um2": 5264.0,
+    "location": [
+      11.0,
+      22.0
+    ],
+    "n_segments": 8,
+    "spiral_l1_um": 178.0,
+    "spiral_l2_um": 22.0,
+    "spiral_spacing_um": 3.0,
+    "spiral_turns": null,
+    "radius_um": null,
+    "n_sides": null,
+    "primary_width_um": 8.0,
+    "secondary_width_um": 8.0,
+    "primary_turns": 1.0,
+    "secondary_turns": 2.0
+  },
+  "layout": {
+    "cif": "layouts/balun_200x8x3x3_m3_m2_secondary.cif",
+    "gds": "layouts/balun_200x8x3x3_m3_m2_secondary.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 5264.0,
+    "ind_dc_nh": 0.41468,
+    "res_dc_ohm": 1.645,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      1.66523,
+      1.880535
+    ],
+    "q": [
+      1.583898,
+      7.919491
+    ],
+    "lrmat_l_h": [
+      4.469e-10,
+      4.628e-10
+    ],
+    "lrmat_r_ohm": [
+      1.6517,
+      1.8415
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          1.698,
+          1.699,
+          1.7
+        ],
+        "L_nh": 0.447,
+        "R_ohm": 1.65,
+        "Cs1_ff": 47.9,
+        "Rs1_ohm": 633.0,
+        "Cs2_ff": 32.6,
+        "Rs2_ohm": 994.0,
+        "f_res_ghz": 34.42
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          7.515,
+          7.682,
+          7.856
+        ],
+        "L_nh": 0.462,
+        "R_ohm": 1.79,
+        "Cs1_ff": 37.9,
+        "Rs1_ohm": 582.0,
+        "Cs2_ff": 26.5,
+        "Rs2_ohm": 915.0,
+        "f_res_ghz": 38.0
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 80.458,
+        "cap_r_ohm": 387.139
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 64.184,
+        "cap_r_ohm": 355.891
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 5.29,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 25.91,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "BALUN NAME=BL:LEN=200:W1=8:S=3:N=3:METAL=m3:METAL2=m2:XORG=0:YORG=0",
+      "MetArea BL-S",
+      "Ind BL-S",
+      "Res BL-S",
+      "ResHF BL-S 1.0",
+      "Q BL-S 1.0",
+      "Pi2 BL-S 1.0",
+      "Cap BL-S 1.0",
+      "LRMAT BL-S 1.0",
+      "ResHF BL-S 5.0",
+      "Q BL-S 5.0",
+      "Pi2 BL-S 5.0",
+      "Cap BL-S 5.0",
+      "LRMAT BL-S 5.0",
+      "2Port BL-S 1.0 10.0 1.0 S polar slow balun_200x8x3x3_m3_m2_secondary.s2p"
+    ],
+    "errors": [
+      "Pi2 BL-S 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 BL-S 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/balun_200x8x3x3_m3_m2_secondary.stable.log",
+    "sweep_log": "analysis/balun_200x8x3x3_m3_m2_secondary.sweep.log",
+    "s2p": "analysis/balun_200x8x3x3_m3_m2_secondary.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 4
+}

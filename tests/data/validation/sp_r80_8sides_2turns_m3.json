@@ -1,0 +1,136 @@
+{
+  "name": "sp_r80_8sides_2turns_m3",
+  "build_command": "SP NAME=P2:RADIUS=80:SIDES=8:W=6:S=2:N=2:METAL=m3:XORG=200:YORG=200",
+  "shape_name": "P2",
+  "tech": "BiCMOS",
+  "geom": {
+    "name": "P2",
+    "kind": "Polygon spiral",
+    "length_um": null,
+    "width_um": 6.0,
+    "metal": null,
+    "total_length_um": 834.02,
+    "total_area_um2": 5004.12,
+    "location": [
+      200.0,
+      200.0
+    ],
+    "n_segments": 16,
+    "spiral_l1_um": null,
+    "spiral_l2_um": null,
+    "spiral_spacing_um": 2.0,
+    "spiral_turns": 2.0,
+    "radius_um": 80.0,
+    "n_sides": 8,
+    "primary_width_um": null,
+    "secondary_width_um": null,
+    "primary_turns": null,
+    "secondary_turns": null
+  },
+  "layout": {
+    "cif": "layouts/sp_r80_8sides_2turns_m3.cif",
+    "gds": "layouts/sp_r80_8sides_2turns_m3.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 5004.124394,
+    "ind_dc_nh": 0.964167,
+    "res_dc_ohm": 2.780069,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      2.802251,
+      3.034621
+    ],
+    "q": [
+      2.179096,
+      10.895479
+    ],
+    "lrmat_l_h": [
+      9.585e-10,
+      9.626e-10
+    ],
+    "lrmat_r_ohm": [
+      2.797,
+      3.1762
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          2.15,
+          2.15,
+          2.152
+        ],
+        "L_nh": 0.958,
+        "R_ohm": 2.8,
+        "Cs1_ff": 35.6,
+        "Rs1_ohm": 624.0,
+        "Cs2_ff": 29.7,
+        "Rs2_ohm": 768.0,
+        "f_res_ghz": 27.24
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          8.762,
+          8.949,
+          9.424
+        ],
+        "L_nh": 0.963,
+        "R_ohm": 3.01,
+        "Cs1_ff": 30.1,
+        "Rs1_ohm": 572.0,
+        "Cs2_ff": 25.1,
+        "Rs2_ohm": 700.0,
+        "f_res_ghz": 29.59
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 65.285,
+        "cap_r_ohm": 343.958
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 55.022,
+        "cap_r_ohm": 314.723
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 6.11,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 33.18,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "SP NAME=P2:RADIUS=80:SIDES=8:W=6:S=2:N=2:METAL=m3:XORG=200:YORG=200",
+      "MetArea P2",
+      "Ind P2",
+      "Res P2",
+      "ResHF P2 1.0",
+      "Q P2 1.0",
+      "Pi2 P2 1.0",
+      "Cap P2 1.0",
+      "LRMAT P2 1.0",
+      "ResHF P2 5.0",
+      "Q P2 5.0",
+      "Pi2 P2 5.0",
+      "Cap P2 5.0",
+      "LRMAT P2 5.0",
+      "2Port P2 1.0 10.0 1.0 S polar slow sp_r80_8sides_2turns_m3.s2p"
+    ],
+    "errors": [
+      "Pi2 P2 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 P2 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/sp_r80_8sides_2turns_m3.stable.log",
+    "sweep_log": "analysis/sp_r80_8sides_2turns_m3.sweep.log",
+    "s2p": "analysis/sp_r80_8sides_2turns_m3.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 4
+}

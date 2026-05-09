@@ -1,0 +1,136 @@
+{
+  "name": "sq_300x12x3x4_m3_quarter_turn",
+  "build_command": "SQ NAME=SQT:LEN=300:W=12:S=3:N=4.25:METAL=m3:EXIT=m2:XORG=0:YORG=0",
+  "shape_name": "SQT",
+  "tech": "BiCMOS",
+  "geom": {
+    "name": "SQT",
+    "kind": "Square spiral",
+    "length_um": null,
+    "width_um": 12.0,
+    "metal": null,
+    "total_length_um": 4149.95,
+    "total_area_um2": 49777.04,
+    "location": [
+      0.0,
+      0.0
+    ],
+    "n_segments": 19,
+    "spiral_l1_um": 300.0,
+    "spiral_l2_um": 300.0,
+    "spiral_spacing_um": 3.0,
+    "spiral_turns": 4.25,
+    "radius_um": null,
+    "n_sides": null,
+    "primary_width_um": null,
+    "secondary_width_um": null,
+    "primary_turns": null,
+    "secondary_turns": null
+  },
+  "layout": {
+    "cif": "layouts/sq_300x12x3x4_m3_quarter_turn.cif",
+    "gds": "layouts/sq_300x12x3x4_m3_quarter_turn.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 49777.041893,
+    "ind_dc_nh": 7.46965,
+    "res_dc_ohm": 7.22,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      7.375022,
+      7.983524
+    ],
+    "q": [
+      6.500444,
+      32.502219
+    ],
+    "lrmat_l_h": [
+      7.464e-09,
+      7.365e-09
+    ],
+    "lrmat_r_ohm": [
+      7.7263,
+      10.5821
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          5.265,
+          5.377,
+          5.966
+        ],
+        "L_nh": 7.5,
+        "R_ohm": 6.98,
+        "Cs1_ff": 230.0,
+        "Rs1_ohm": 634.0,
+        "Cs2_ff": 209.0,
+        "Rs2_ohm": 708.0,
+        "f_res_ghz": 3.83
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          2.095,
+          2.545,
+          8.505
+        ],
+        "L_nh": 11.0,
+        "R_ohm": -42.5,
+        "Cs1_ff": 98.6,
+        "Rs1_ohm": 562.0,
+        "Cs2_ff": 101.0,
+        "Rs2_ohm": 660.0,
+        "f_res_ghz": 4.83
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 437.378,
+        "cap_r_ohm": 333.856
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 191.558,
+        "cap_r_ohm": 302.638
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 16.37,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 81.86,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "SQ NAME=SQT:LEN=300:W=12:S=3:N=4.25:METAL=m3:EXIT=m2:XORG=0:YORG=0",
+      "MetArea SQT",
+      "Ind SQT",
+      "Res SQT",
+      "ResHF SQT 1.0",
+      "Q SQT 1.0",
+      "Pi2 SQT 1.0",
+      "Cap SQT 1.0",
+      "LRMAT SQT 1.0",
+      "ResHF SQT 5.0",
+      "Q SQT 5.0",
+      "Pi2 SQT 5.0",
+      "Cap SQT 5.0",
+      "LRMAT SQT 5.0",
+      "2Port SQT 1.0 10.0 1.0 S polar slow sq_300x12x3x4_m3_quarter_turn.s2p"
+    ],
+    "errors": [
+      "Pi2 SQT 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 SQT 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/sq_300x12x3x4_m3_quarter_turn.stable.log",
+    "sweep_log": "analysis/sq_300x12x3x4_m3_quarter_turn.sweep.log",
+    "s2p": "analysis/sq_300x12x3x4_m3_quarter_turn.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 4
+}

@@ -9,15 +9,128 @@
     "length_um": null,
     "width_um": 10.0,
     "metal": null,
-    "total_length_um": 1101.27,
-    "total_area_um2": 11018.81,
-    "location": [200.0, 200.0],
+    "total_length_um": 1216.76,
+    "total_area_um2": 12148.22,
+    "location": [
+      200.0,
+      200.0
+    ],
     "n_segments": 10,
     "spiral_l1_um": 170.0,
     "spiral_l2_um": 170.0,
     "spiral_spacing_um": 3.0,
-    "spiral_turns": 2.0
+    "spiral_turns": 2.0,
+    "radius_um": null,
+    "n_sides": null,
+    "primary_width_um": null,
+    "secondary_width_um": null,
+    "primary_turns": null,
+    "secondary_turns": null
+  },
+  "layout": {
+    "cif": "layouts/sq_170x10x3x2_m3.cif",
+    "gds": "layouts/sq_170x10x3x2_m3.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 12148.215655,
+    "ind_dc_nh": 1.21842,
+    "res_dc_ohm": 2.711,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      2.751903,
+      2.930723
+    ],
+    "q": [
+      2.823884,
+      14.119419
+    ],
+    "lrmat_l_h": [
+      1.222e-09,
+      1.217e-09
+    ],
+    "lrmat_r_ohm": [
+      2.7936,
+      3.3398
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          2.735,
+          2.74,
+          2.745
+        ],
+        "L_nh": 1.22,
+        "R_ohm": 2.79,
+        "Cs1_ff": 74.1,
+        "Rs1_ohm": 651.0,
+        "Cs2_ff": 57.9,
+        "Rs2_ohm": 664.0,
+        "f_res_ghz": 16.73
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          9.119,
+          9.788,
+          11.219
+        ],
+        "L_nh": 1.23,
+        "R_ohm": 2.82,
+        "Cs1_ff": 53.6,
+        "Rs1_ohm": 547.0,
+        "Cs2_ff": 42.9,
+        "Rs2_ohm": 681.0,
+        "f_res_ghz": 19.63
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 131.838,
+        "cap_r_ohm": 332.2
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 96.045,
+        "cap_r_ohm": 303.04
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 9.91,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 28.41,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "SQ NAME=A:LEN=170:W=10:S=3:N=2:METAL=m3:EXIT=m2:XORG=200:YORG=200",
+      "MetArea A",
+      "Ind A",
+      "Res A",
+      "ResHF A 1.0",
+      "Q A 1.0",
+      "Pi2 A 1.0",
+      "Cap A 1.0",
+      "LRMAT A 1.0",
+      "ResHF A 5.0",
+      "Q A 5.0",
+      "Pi2 A 5.0",
+      "Cap A 5.0",
+      "LRMAT A 5.0",
+      "2Port A 1.0 10.0 1.0 S polar slow sq_170x10x3x2_m3.s2p"
+    ],
+    "errors": [
+      "Pi2 A 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 A 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/sq_170x10x3x2_m3.stable.log",
+    "sweep_log": "analysis/sq_170x10x3x2_m3.sweep.log",
+    "s2p": "analysis/sq_170x10x3x2_m3.s2p"
   },
   "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
-  "schema_version": 1
+  "schema_version": 4
 }

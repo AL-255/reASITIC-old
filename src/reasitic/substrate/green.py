@@ -449,9 +449,22 @@ def _stack_reflection_coefficient(tech: Tech, k_rho: float) -> float:
         return 0.0
     if k_rho <= 0:
         return 0.0
-    # Layered stack: layer 0 = top (under metal), layer N-1 = bulk.
-    # We assume a perfect ground below the bulk.
-    R = 1.0  # ground at the bottom = +1 reflection
+    # NOTE: the ASITIC C path (``reflection_coeff_imag`` at
+    # ``asitic_kernel.c:13090``) does **not** use a static-limit
+    # stack-composition formula. It evaluates a single-layer
+    # frequency-dependent Fresnel coefficient
+    # ``Γ = (k − γ) / (k + γ)`` with ``γ = sqrt(k² + j·const·σ·ω)``
+    # and integrates the full Sommerfeld kernel
+    # (``green_function_kernel_b_reflection`` at ``:13446``). At
+    # ω → 0 the C coefficient collapses to zero — the C model has
+    # no static stack reflection.
+    #
+    # Until the Sommerfeld pipeline is ported faithfully, this
+    # function remains a quasi-static *stub* with the original
+    # multi-layer recursion. Sign and iteration choices here are
+    # not C-grounded; callers needing physical static reflection
+    # values should not rely on this.
+    R = 1.0  # stub initial value; see note above
     for upper, lower in zip(tech.layers[:-1], tech.layers[1:], strict=False):
         if upper.eps <= 0 or lower.eps <= 0:
             continue
@@ -468,7 +481,7 @@ def green_function_static(
     z2_um: float,
     tech: Tech,
 ) -> float:
-    """Quasi-static substrate Green's function value, in 1/(F·m).
+    """Quasi-static substrate Green's function value, in V/C.
 
     ``rho_um`` is the lateral separation; ``z1_um`` / ``z2_um`` are
     the two source heights above the substrate. The result has units
@@ -486,8 +499,17 @@ def green_function_static(
           \\bigl( \\frac{1}{r_+} + R_\\text{stack}(\\rho)\\,\\frac{1}{r_-} \\bigr)
 
     where ``r_± = sqrt(ρ² + (z₁ ∓ z₂)²)``.
+
+    For ``rho_um → 0`` and same-layer pairs (``z₁ = z₂``) the direct
+    1/r_+ term diverges. Callers that need a singular self-term
+    (e.g. a same-tile diagonal in the per-segment cap matrix) should
+    use :func:`rect_tile_self_inv_r` to compute the analytical
+    finite-rectangle ⟨1/r⟩ instead. This function regularises the
+    singular point with a 1 µm floor so it stays finite, but the
+    floor is conservative (much smaller than typical tile sizes) and
+    will overshoot the diagonal value if used as-is.
     """
-    rho_m = max(rho_um, 1e-6) * UM_TO_M
+    rho_m = max(rho_um, 1.0) * UM_TO_M
     z1_m = z1_um * UM_TO_M
     z2_m = z2_um * UM_TO_M
     r_plus = math.sqrt(rho_m**2 + (z1_m - z2_m) ** 2)
@@ -496,6 +518,52 @@ def green_function_static(
     k_eff = 1.0 / max(rho_m, 1e-30)
     R_stack = _stack_reflection_coefficient(tech, k_eff)
     return (1.0 / r_plus + R_stack / r_minus) / (4.0 * math.pi * EPS_0)
+
+
+def rect_tile_self_inv_r(width_um: float, length_um: float) -> float:
+    """Average of ``1/r`` over a uniformly-charged rectangular tile.
+
+    Returns the finite, non-singular self-overlap integral
+
+    .. math::
+
+        \\langle 1/r \\rangle_\\text{self}
+          = \\frac{1}{(ab)^2}
+            \\int_0^a\\!\\int_0^a\\!\\int_0^b\\!\\int_0^b
+              \\frac{1}{\\sqrt{(x-x')^2 + (y-y')^2}}
+              \\,dx\\,dx'\\,dy\\,dy'
+
+    in units of **1/m**. Multiplied by ``1/(4πε₀)`` it gives the
+    average potential per unit charge for the tile, which is the
+    correct diagonal entry of the MoM potential matrix.
+
+    Closed form (Nabors-White 1991, Walker 1990):
+
+    .. math::
+
+        \\frac{4}{3 a^2 b^2}\\, \\bigl[
+            -a^3 - b^3 + (a^2+b^2)^{3/2}
+            + 3 a^2 b \\sinh^{-1}(b/a)
+            + 3 a b^2 \\sinh^{-1}(a/b)
+        \\bigr]
+
+    Both ``width_um`` and ``length_um`` are in **microns**.
+    """
+    if width_um <= 0 or length_um <= 0:
+        return 0.0
+    a = width_um * UM_TO_M
+    b = length_um * UM_TO_M
+    a2 = a * a
+    b2 = b * b
+    sum2 = a2 + b2
+    integral = (4.0 / 3.0) * (
+        -a * a * a
+        - b * b * b
+        + math.sqrt(sum2) * sum2
+        + 3.0 * a2 * b * math.asinh(b / a)
+        + 3.0 * a * b2 * math.asinh(a / b)
+    )
+    return integral / (a2 * b2)
 
 
 def coupled_capacitance_per_pair(

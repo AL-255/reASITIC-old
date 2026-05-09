@@ -306,28 +306,36 @@ def spiral_y_at_freq(
     y_p1: complex | None = None,
     y_p2: complex | None = None,
     include_substrate: bool = True,
+    use_segment_cap: bool = False,
+    n_div: int = 2,
 ) -> np.ndarray:
     """Build the 2-port Y matrix for ``shape`` at ``freq_ghz``.
 
-    * ``y_p1`` / ``y_p2`` — explicit shunt admittances at port 1 / 2.
-      Each defaults to ``None``, in which case the value is filled in
-      from the substrate stub (or zero if ``include_substrate=False``).
-    * ``include_substrate`` — when True (the default) and the user
-      didn't pass an explicit shunt admittance, half of the substrate
-      shunt capacitance from :func:`shape_shunt_capacitance` is
-      attributed to each port (the standard Pi-model split).
+    Default series leg is ``Z_s = R + jωL``; default shunts come
+    from the parallel-plate-plus-fringe approximation in
+    :func:`reasitic.substrate.shape_shunt_capacitance`. Setting
+    ``use_segment_cap=True`` switches the shunt path to the
+    per-segment Maxwell cap matrix reduced via
+    :func:`reasitic.substrate.shape_pi_capacitances` — this routes
+    through ``analyze_capacitance_driver`` and is closer to the
+    binary's ``analyze_narrow_band_2port`` (``asitic_kernel.c:1465``)
+    pipeline. The diagonal of the underlying P matrix now uses the
+    analytical rectangular self-tile term, but the layered-stack
+    reflection coefficient is still a quasi-static stub — see
+    TODO.md §3 — so the segment-cap shunt magnitudes can disagree
+    with physical intuition (e.g. metal-layer ordering) until the
+    Sommerfeld pipeline is ported faithfully.
 
-    Series impedance is ``R(f) + jωL``. Substrate-loss conductance is
-    not modelled in this stub.
+    Args:
+        y_p1 / y_p2:        Explicit shunt admittances overriding
+            the substrate solve.
+        include_substrate:  When False, both shunts default to zero.
+        use_segment_cap:    Opt-in to the segment-cap reduction.
+        n_div:              Per-segment subdivision forwarded to
+            the cap solver.
 
-    A Pi-aggregator on the per-segment Maxwell cap matrix is exposed
-    separately as
-    :func:`reasitic.substrate.shape_pi_capacitances`, but it routes
-    through ``analyze_capacitance_driver`` whose underlying P matrix
-    needs the substrate Green's-function rework in TODO.md §3 before
-    its values are physically meaningful for spirals. Wiring the
-    full ``analyze_narrow_band_2port`` path here is therefore gated
-    on §3.
+    Substrate-loss conductance (the imaginary frequency-dependent
+    term in the binary's complex P matrix) is not modelled here.
     """
     L_nH = compute_self_inductance(shape)
     R = compute_ac_resistance(shape, tech, freq_ghz)
@@ -337,15 +345,21 @@ def spiral_y_at_freq(
         raise ValueError("series impedance is zero (zero L and zero R)")
     if (y_p1 is None or y_p2 is None) and include_substrate:
         # Avoid a circular import; reach for substrate only when needed.
-        from reasitic.substrate import shape_shunt_capacitance
+        if use_segment_cap:
+            from reasitic.substrate import shape_pi_capacitances
 
-        C_total_F = shape_shunt_capacitance(shape, tech)
-        # Standard Pi-split: each port carries half the shunt cap.
-        Y_sub = 1j * omega * (C_total_F * 0.5)
+            C_p1, C_p2, _ = shape_pi_capacitances(shape, tech, n_div=n_div)
+            Y_sub_p1 = 1j * omega * C_p1
+            Y_sub_p2 = 1j * omega * C_p2
+        else:
+            from reasitic.substrate import shape_shunt_capacitance
+
+            C_total_F = shape_shunt_capacitance(shape, tech)
+            Y_sub_p1 = Y_sub_p2 = 1j * omega * (C_total_F * 0.5)
     else:
-        Y_sub = 0j
+        Y_sub_p1 = Y_sub_p2 = 0j
     if y_p1 is None:
-        y_p1 = Y_sub
+        y_p1 = Y_sub_p1
     if y_p2 is None:
-        y_p2 = Y_sub
+        y_p2 = Y_sub_p2
     return pi_to_y(PiModel(freq_ghz=freq_ghz, Z_s=Z_s, Y_p1=y_p1, Y_p2=y_p2))

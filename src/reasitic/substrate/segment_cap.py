@@ -33,8 +33,13 @@ from dataclasses import dataclass
 import numpy as np
 
 from reasitic.geometry import Segment, Shape
-from reasitic.substrate.green import green_function_static
+from reasitic.substrate.green import (
+    _stack_reflection_coefficient,
+    green_function_static,
+    rect_tile_self_inv_r,
+)
 from reasitic.tech import Tech
+from reasitic.units import EPS_0, UM_TO_M
 
 
 @dataclass
@@ -101,6 +106,34 @@ def _segment_area_um2(seg: Segment) -> float:
     return float(L * max(seg.width, 1.0))
 
 
+def _self_tile_potential(
+    tile_width_um: float,
+    tile_length_um: float,
+    z_um: float,
+    tech: Tech,
+) -> float:
+    """V/C for a same-tile pair (rho ≈ 0, same metal layer).
+
+    The MoM diagonal entry: combines the analytical finite-rectangle
+    self-overlap of ``1/r`` (direct image) with the substrate-image
+    contribution at separation ``2z`` (which is finite and uses the
+    standard 1/r kernel). Cures the singularity of
+    :func:`green_function_static` for same-layer same-position pairs.
+    """
+    direct = rect_tile_self_inv_r(tile_width_um, tile_length_um) / (
+        4.0 * math.pi * EPS_0
+    )
+    z_m = z_um * UM_TO_M
+    if z_m <= 0:
+        return direct
+    r_minus = 2.0 * z_m
+    tile_size_m = math.sqrt(tile_width_um * tile_length_um) * UM_TO_M
+    k_eff = 1.0 / max(tile_size_m, 1e-30)
+    R_stack = _stack_reflection_coefficient(tech, k_eff)
+    reflection = R_stack / r_minus / (4.0 * math.pi * EPS_0)
+    return direct + reflection
+
+
 def capacitance_segment_integral(
     seg_a: Segment,
     seg_b: Segment,
@@ -116,12 +149,17 @@ def capacitance_segment_integral(
     and ``n_div`` across its width, then averages the static
     multi-layer Green's function over all tile-pair separations.
 
-    Returns the average potential per unit charge (in V/C) for a
-    uniform charge distribution on each segment.
+    Same-tile pairs (``rho ≈ 0`` and same metal layer) use the
+    analytical finite-rectangle self-overlap from
+    :func:`_self_tile_potential` instead of the singular point
+    Green's function — without this, the diagonal of the per-segment
+    P matrix overshoots the off-diagonals by ~7 orders of magnitude
+    and ``inv(P)`` produces unusably small / nonphysical values.
 
-    The lateral coordinates use segment endpoints; the vertical
-    height ``z`` of each segment is taken from the centre of its
-    metal layer (``metal.d + 0.5 * metal.t``).
+    Returns the average potential per unit charge (in V/C) for a
+    uniform charge distribution on each segment. The vertical height
+    ``z`` of each segment is taken from the centre of its metal
+    layer (``metal.d + 0.5 * metal.t``).
     """
     if n_div <= 0:
         raise ValueError("n_div must be positive")
@@ -136,7 +174,18 @@ def capacitance_segment_integral(
     dx, dy = cx_a - cx_b, cy_a - cy_b
     rho_um = math.sqrt(dx * dx + dy * dy)
 
+    same_layer = abs(z_a - z_b) < 1e-9
+    is_self = seg_a is seg_b or (
+        same_layer
+        and abs(seg_a.a.x - seg_b.a.x) < 1e-9
+        and abs(seg_a.a.y - seg_b.a.y) < 1e-9
+        and abs(seg_a.b.x - seg_b.b.x) < 1e-9
+        and abs(seg_a.b.y - seg_b.b.y) < 1e-9
+    )
+
     if n_div == 1:
+        if is_self:
+            return _self_tile_potential(seg_a.width, seg_a.length, z_a, tech)
         return green_function_static(rho_um, z_a, z_b, tech)
 
     # Subdivide both segments along their length and average
@@ -146,6 +195,11 @@ def capacitance_segment_integral(
         return green_function_static(rho_um, z_a, z_b, tech)
     ts = [(i + 0.5) / n_div for i in range(n_div)]
     accum = 0.0
+    if is_self:
+        # Tile dimensions for the self-term: width × (length / n_div)
+        tile_w = seg_a.width
+        tile_l = L_a / n_div
+        self_tile_v = _self_tile_potential(tile_w, tile_l, z_a, tech)
     for t1 in ts:
         x1 = seg_a.a.x + t1 * (seg_a.b.x - seg_a.a.x)
         y1 = seg_a.a.y + t1 * (seg_a.b.y - seg_a.a.y)
@@ -153,7 +207,11 @@ def capacitance_segment_integral(
             x2 = seg_b.a.x + t2 * (seg_b.b.x - seg_b.a.x)
             y2 = seg_b.a.y + t2 * (seg_b.b.y - seg_b.a.y)
             r = math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
-            accum += green_function_static(r, z_a, z_b, tech)
+            if is_self and t1 == t2:
+                # Same tile within a self-pair → use analytical self-term
+                accum += self_tile_v
+            else:
+                accum += green_function_static(r, z_a, z_b, tech)
     return accum / (n_div * n_div)
 
 

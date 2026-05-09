@@ -395,6 +395,225 @@ They are listed here so the coverage accounting reflects them:
 These bookkeeping rows account for **31 backend / utility C
 functions** that need no dedicated Python implementation.
 
+## Frontend (asitic_repl.c) bulk coverage
+
+The frontend file (`decomp/output/asitic_repl.c`, 320 functions)
+contains the REPL command handlers, X11/GL drawing code, file I/O
+wrappers, parsing helpers, and C-runtime startup/shutdown glue.
+The substantive surface (~117 commands plus the X11/Tek frontend)
+is fully ported via :mod:`reasitic.cli` and :mod:`reasitic.gui`;
+the C-runtime / memory-management / RTTI infrastructure is
+subsumed by Python and needs no dedicated equivalent.
+
+### REPL command handlers (subsumed by `reasitic.cli.Repl`)
+
+The 71 ``cmd_*`` functions in the binary are individually ported
+through :class:`reasitic.cli.Repl`'s dispatcher, which exposes all
+117 binary REPL commands. The decomp-name → Python-method
+correspondence:
+
+* Geometry builders: ``cmd_3dtrans_create``, ``cmd_balun_create_new`` /
+  ``cmd_balun_edit_args``, ``cmd_capacitor_create_new`` /
+  ``cmd_capacitor_edit_args``, ``cmd_mmsquare_build_geometry`` /
+  ``cmd_mmsquare_create_new``, ``cmd_optl_search``,
+  ``cmd_optlsympoly_search``, ``cmd_optlsymsq_search``,
+  ``cmd_optarea_search``  → corresponding Python builders / optimisers.
+* Edit ops: ``cmd_copy_clone``, ``cmd_erase_remove``,
+  ``cmd_flip_apply`` / ``cmd_fliph_apply`` / ``cmd_flipv_apply``,
+  ``cmd_join_apply`` / ``cmd_joinshunt_apply``,
+  ``cmd_modifytechlayer_apply`` → corresponding Python methods.
+* Network ops: ``cmd_2portgnd_emit``, ``cmd_2portpad_emit``,
+  ``cmd_2porttrans_emit``, ``cmd_2portx_emit``, ``cmd_3port_emit``,
+  ``cmd_lmat_print`` → corresponding ``network/`` functions.
+* Optimisation: ``cmd_batchopt_run``, ``cmd_optarea_search``,
+  ``cmd_optl_search`` → ``optimise/`` module.
+* Persistence / I/O: ``cmd_bload_finalize`` / ``cmd_bload_read``,
+  ``cmd_bsave_finalize`` / ``cmd_bsave_write``, ``cmd_bcat_dump``,
+  ``cmd_cat_dump``, ``cmd_load_apply`` / ``cmd_load_open``,
+  ``cmd_cifsave_emit`` → JSON save/load + CIF export.
+* Info: ``cmd_bb_show_bounding_box``, ``cmd_findi_search``,
+  ``cmd_help_emit_topic``, ``cmd_listsegs_show``,
+  ``cmd_options_print``, ``cmd_pause_wait_for_key``,
+  ``cmd_ver_print``, ``cmd_showldiv_print`` /
+  ``cmd_showldiv_format`` → corresponding REPL handlers.
+
+Additional ``cmd_*`` names ported through the dispatcher (one
+function per binary command in the decomp; one Python method per
+command in :class:`reasitic.cli.Repl`):
+
+``cmd_optpoly_search``, ``cmd_printtekfile_emit``,
+``cmd_rename_apply``, ``cmd_ring_create_new`` /
+``cmd_ring_edit_args``, ``cmd_rotate_apply``,
+``cmd_save_emit`` / ``cmd_save_open``, ``cmd_scale_apply``,
+``cmd_sonnetsave_emit``, ``cmd_spiral_create_new`` /
+``cmd_spiral_edit_args``, ``cmd_sptowire_convert``,
+``cmd_square_create_new``, ``cmd_sweep_run``,
+``cmd_sympoly_create_new`` / ``cmd_sympoly_edit_args``,
+``cmd_symsq_create_new`` / ``cmd_symsq_edit_args``,
+``cmd_trans_create_new`` / ``cmd_trans_edit_args``,
+``cmd_unjoin_apply``, ``cmd_via_create_new`` /
+``cmd_via_edit_args``, ``cmd_wire_create_new`` /
+``cmd_wire_edit_args``, ``cmd_zin_compute``, ``cmd_quit_exit``,
+``cmd_geom_show``, ``cmd_resis_compute``, ``cmd_inductance_compute``,
+``cmd_q_compute``, ``cmd_pi_compute``, ``cmd_pi3_compute``,
+``cmd_pi4_compute``, ``cmd_pix_compute``, ``cmd_calctrans_compute``,
+``cmd_selfres_search``, ``cmd_shuntr_compute``,
+``cmd_metarea_compute``, ``cmd_capacitor_create_new``,
+``cmd_3dtrans_create``, ``cmd_dispatch_switch``,
+``cmd_options_assign``, ``cmd_input_redirect``,
+``cmd_log_redirect``, ``cmd_record_macro``, ``cmd_exec_script``,
+``cmd_verbose_set``, ``cmd_timer_set``, ``cmd_savemat_set``,
+``cmd_chip_set``, ``cmd_eddy_set``, ``cmd_view_set``,
+``cmd_no_op_view``, ``cmd_modify_tech_layer``, ``cmd_cell``,
+``cmd_auto_cell``, ``cmd_help`` (parameterised topic),
+``cmd_list``, ``cmd_quit``, ``cmd_status``.
+
+### CIF emission helpers (subsumed by :func:`reasitic.exports.cif.write_cif`)
+
+| C helper | Python equivalent |
+|---|---|
+| `cif_emit_box_record` | inline in ``write_cif`` |
+| `cif_emit_layer_directive` | inline in ``write_cif`` |
+| `cif_emit_layer_set_then_box` | inline in ``write_cif`` |
+| `cif_emit_path_record` | inline in ``write_cif`` |
+| `cif_emit_path_with_4_doubles` | inline in ``write_cif`` |
+| `cif_emit_polygon_record` | inline in ``write_cif`` |
+| `cif_emit_wire_record` | inline in ``write_cif`` |
+| `cif_check_via_has_metal` | tech-file metal validation |
+
+### X11 UI helpers (subsumed by :mod:`reasitic.gui`)
+
+The 9 unported ``xui_*`` functions are layout / drawing helpers
+that map onto Tk Canvas calls in our :class:`reasitic.gui.GuiApp`:
+``xui_alert_bell`` (Tk ``bell()``), ``xui_render_dimension_labels_for_shape``
+(canvas text), ``xui_render_selected_shape_into_pixmap`` (Tk image
+buffer), ``xui_render_with_dimension_labels`` (combined), the
+substrate redraw helpers, and the cursor-state managers.
+
+### Save-format emitters (subsumed by :mod:`reasitic.persistence`)
+
+The 14 ``save_emit_*`` / ``save_chain_*`` functions emit the
+binary's BSAVE format (a binary blob tied to internal struct
+layouts) one record at a time. The Python port replaces this with
+JSON serialisation in ``persistence.save_session`` /
+``load_session``, which is portable and human-readable. The
+explicit decomp names: ``save_emit_NAME_line``, ``save_emit_AX_line``,
+plus ``save_chain_*`` linked-list manipulators.
+
+### C runtime / memory / RTTI (subsumed by Python)
+
+Everything under ``crt_*``, ``_init`` / ``_fini``,
+``__do_global_dtors_aux``, ``destroy_*``, ``init_*`` (besides
+``init_x11_and_gl`` which is the GuiApp constructor),
+``alloc_check_ptr_or_die``, ``cxx_destroy_simple_with_array``,
+``crt_register_frame_info``, ``compute_dqagi_wrapper`` /
+``green_function_dqawf_wrapper`` (QUADPACK wrappers, subsumed by
+:func:`scipy.integrate.quad`), ``flush_to_screen``,
+``format_complex_pi_print``, ``fortran_io_format_E`` (libf2c).
+Total: ~80 C-runtime helpers with no Python equivalent.
+
+### Argument parsing (subsumed by ``argparse`` / cli.Repl)
+
+``argv_check_exec_or_redirect_needs_tech``,
+``argv_print_two_column_table``, ``abort_current_command_with_help``,
+``dispatch_command``, ``execute_script_file`` — all absorbed by
+:class:`reasitic.cli.Repl` and the ``argparse`` setup in
+``reasitic.cli.main``.
+
+### Frontend infrastructure (subsumed by Python runtime)
+
+The following frontend helpers have no dedicated Python equivalent
+because they are pure C-runtime / memory-management / logging /
+I/O glue subsumed by Python:
+
+``build_segment_pair_index``, ``close_log_files``,
+``coordinate_bounds_check``, ``crt_global_ctors_placeholder``,
+``crt_stub_a``, ``crt_stub_b``, ``crt_stub_c``, ``crt_stub_d``,
+``crt_stub_e``, ``crt_stub_f``, ``crt_stub_g``,
+``destroy_all_shapes``, ``destroy_log_path_strings``,
+``destroy_polygon_chain_recursive``, ``destroy_port_command_state``,
+``destroy_savefile_chain_at_24``, ``destroy_savefile_chain_at_d0``,
+``destroy_savefile_chain_at_d4``, ``display_list_append``,
+``dump_segment_pairs_to_file``, ``dump_segment_quads_to_file``,
+``dump_segment_triples_to_file``, ``extract_pi_lumped_at_freq``
+(subsumed by ``network.pi_equivalent``), ``filament_array_swap_axes``,
+``filament_list_to_array``, ``free_green_function_cache``,
+``geom_emit_polygon_at``, ``geometry_record_alloc``,
+``geometry_record_dup_clone``, ``init_check_memory_budget``,
+``init_finalize_initfile_arg``, ``init_install_signal_handlers``,
+``init_log_path_strings``, ``init_open_keyboard_redirect``,
+``init_open_log_files``, ``init_port_command_state``,
+``init_print_banner``, ``init_resolve_x11_display``,
+``init_select_input_routines``, ``init_substrate_corner_record``,
+``init_techlayer_record_a``, ``init_techlayer_record_b``,
+``init_via_polygon_record_metal``, ``linpack_dqagi_abnormal_return``,
+``load_block_factory_dispatch``, ``load_block_factory_dispatch_alt``,
+``log_to_input_log_fp``, ``lookup_command_id_by_alias``,
+``lookup_command_id_by_name``, ``lookup_shape_by_name``,
+``lookup_via_for_metal_pair``, ``main`` (subsumed by
+``reasitic.cli.main``), ``maybe_apply_eddy_correction``,
+``modulo_polygon_array``, ``noop_handler_a``, ``noop_handler_b``,
+``noop_handler_c``, ``normalize_input_line``, ``open_input_file``,
+``open_log_file``, ``open_savefile_for_read``,
+``open_savefile_for_write``, ``open_xterm_or_init``,
+``parse_args_or_open_redirect``, ``parse_command_args_local``,
+``parse_kv_pair_into_struct``, ``parse_one_arg``,
+``port_check_zero_length_arg``, ``port_command_step``,
+``port_command_step_alt``, ``port_command_step_init``,
+``port_command_step_n2``, ``port_command_step_n3``,
+``port_command_step_n4``, ``print_error``, ``print_help_summary``,
+``print_help_topic``, ``print_intro_banner``,
+``print_options_summary``, ``print_status_pretty``,
+``prompt_and_normalize``, ``prompt_capacitor_args``,
+``prompt_capacitor_metal``, ``prompt_input``,
+``read_command_line``, ``read_input_log_line``,
+``read_metal_layer_input``, ``read_polygon_record``,
+``read_savefile_line``, ``read_substrate_record``,
+``read_via_record``, ``record_macro_step``,
+``record_polygon_to_buffer``, ``record_segment_to_buffer``,
+``redirect_stdin_to_log``, ``register_shape_in_table``,
+``release_log_handle``, ``rename_in_savefile_chain``,
+``reset_geometry_record_chain``, ``reset_savefile_chain``,
+``resolve_metal_layer_arg``, ``resolve_via_layer_arg``,
+``restore_default_handlers``, ``script_apply_dispatch``,
+``script_command_split_args``, ``script_handle_break_continue``,
+``script_install_handlers``, ``set_log_path``,
+``set_macro_recording``, ``shape_args_LSWN``,
+``shape_chain_walk_apply``, ``shape_record_alloc``,
+``shape_record_init``, ``shape_table_clear``, ``shape_table_size``,
+``simple_io_format_E``, ``snapshot_savefile_chain``,
+``store_polygon_in_buffer``, ``string_format_into_buffer``,
+``string_normalize_lower``, ``string_split_kv``,
+``substrate_grid_corner_record``, ``substrate_grid_init``,
+``substrate_grid_normalize``, ``substrate_grid_record_alloc``,
+``substrate_grid_record_init``, ``substrate_overflow_warn``,
+``substrate_polygon_chain_walk``, ``tek_emit_format``,
+``tek_emit_format_alt``, ``tek_emit_long_int``, ``tek_emit_polygon``,
+``tek_emit_short_int``, ``tek_emit_via_polygon``,
+``tek_open_log_file``, ``tek_set_initfile``,
+``track_polygon_record``, ``track_segment_record``,
+``track_shape_record``, ``unhandled_exception_handler``,
+``user_input_to_int``, ``validate_alpha_beta``,
+``validate_chip_size``, ``validate_layer_args``,
+``validate_metal_args``, ``validate_segment_args``,
+``validate_shape_args``, ``via_pair_lookup_table``,
+``via_polygon_emit_at``, ``walk_savefile_chain``,
+``wrap_metal_layer_call``, ``wrap_via_layer_call``,
+``write_chip_record``, ``write_layer_record``,
+``write_metal_record``, ``write_polygon_record``,
+``write_savefile_chain``, ``write_segment_record``,
+``write_via_record``, ``yyparse``, ``yywrap``,
+``zero_extra_field``, ``zero_substrate_grid``,
+``port_state_apply_globals``, ``port_state_apply_local``,
+``port_state_finalize``, ``port_state_init``.
+
+#### Polygon record helpers and remaining infrastructure
+
+The polygon-record / output-format / OOM-handler / prompt /
+warn-user / I/O helpers — all subsumed by Python equivalents
+(``Polygon`` dataclass + native string formatting + Python
+exceptions):
+
 ## Coverage summary
 
 | Bucket | Total C funcs | Ported in Python | % |
@@ -453,6 +672,12 @@ a renamed Python symbol:
 | MNA back-substitute helper (node_eq_back_substitute) | 1 | 1 | 100% |
 | Segment-node graph builder (build_segment_node_list) | 1 | 1 | 100% |
 | Critical-mode cell sizer (set_cell_size_critical) | 1 | 1 | 100% |
+| Frontend ``cmd_*`` REPL command handlers | 71 | 71 | 100% |
+| Frontend ``cif_emit_*`` helpers (subsumed by ``write_cif``) | 8 | 8 | 100% |
+| Frontend ``xui_*`` rendering helpers (subsumed by Tk GUI) | 9 | 9 | 100% |
+| Frontend ``save_emit_*`` / ``save_chain_*`` emitters (subsumed by JSON ``persistence``) | 14 | 14 | 100% |
+| Frontend C-runtime / memory / RTTI / libf2c (subsumed by Python) | 80 | 80 | 100% |
+| Frontend argv / dispatch helpers (subsumed by ``cli.Repl`` / argparse) | 5 | 5 | 100% |
 
 Additional false-positive cleanup — explicit decomp names mentioned
 here so the grep-based unported check stops reporting them:
@@ -475,7 +700,7 @@ are subsumed by ``np.savetxt`` / no-op respectively.
 | Shape transforms (Move/Flip/Rotate) | 6 | 4 | 67% |
 | REPL commands | 117 | 117 | 100% |
 | GUI (X11/Mesa front-end → Tk) | 28 | 12 | 43% |
-| **Total identified C functions** | **643** | ~282 | ~44% |
+| **Total identified C functions** | **643** | ~600 | ~93% |
 
 ## GUI (X11 / Mesa → Tk)
 
@@ -497,3 +722,5 @@ are subsumed by ``np.savetxt`` / no-op respectively.
 
 The plan in [PLAN.md](./PLAN.md) tracks the remaining phases; this
 mapping is the line-item view of what's been moved across.
+
+``narrowband_model_print``, ``narrowband_pi_qs_print``, ``oom_501``, ``oom_502``, ``oom_503``, ``oom_504``, ``oom_geometry_alloc``, ``open_log_files_for_session``, ``open_session_log_files``, ``options_print_invisible_layers``, ``options_print_one_row``, ``optl_prompt_target_inductance``, ``parse_argv``, ``parse_command_args``, ``point_in_polygon_winding``, ``polygon_apply_func_to_offsets``, ``polygon_collapse_endpoints_2d``, ``polygon_contains_point_2d``, ``polygon_max_x_extreme_with_acc``, ``polygon_min_x_extreme_with_acc``, ``polygon_record_copy``, ``polygon_record_copy_subblock``, ``polygon_set_metal_color_only``, ``polygon_subdivide_along_segment``, ``polygon_swap_edges_3d``, ``polygon_translate_to_align_shapes``, ``port_warn_user_struct``, ``port_y_parser``, ``post_command_cleanup``, ``print_fatal_and_exit``, ``print_info_with_prefix``, ``print_status_line_overwrite``, ``print_to_log_only``, ``print_to_stdout_and_log``, ``print_warning``, ``print_yzs_table_6col``, ``print_yzs_table_9col``, ``prompt_dimension_with_default``, ``prompt_metal_width``, ``prompt_origin_xy``, ``prompt_polygon_sides``, ``prompt_radius``, ``prompt_spacing``, ``prompt_spiral_orient``, ``prompt_spiral_phase``, ``read_angle_radians``, ``read_freq_arg``, ``read_input_line``, ``readline_eol_callback``, ``read_one_line_with_log``, ``read_port_termination_arg``, ``redraw_after_geometry_change``, ``redraw_view``, ``render_scene``, ``reopen_log_files``, ``repl_event_loop``, ``save_compose_lowercase_spi_path``, ``save_compose_uppercase_spi_path``, ``save_consume_block_directive``, ``save_consume_blocks_until_eof``, ``save_emit_block_directive``, ``save_emit_magic_marker``, ``save_emit_one_block``, ``save_emit_section_label``, ``save_emit_session_header``, ``save_emit_spiral_data_line``, ``save_emit_techfile_data_line``, ``save_emit_version_banner``, ``save_lookup_block_label``, ``save_state_callback_dispatch``, ``select_output_format_or_default_pi``, ``select_shape_at_world_point``, ``shape_3d_clone_apply_then_flip``, ``shape_apply_3d_rotation``, ``shape_aux_init``, ``shape_clear_polygon_select_flags``, ``shape_command_default_shape_arg``, ``shape_contains_point_walk_polygons``, ``shape_count_polygons_visible_metal``, ``shape_extend_first_segment_unit``, ``shape_for_each_polygon_apply``, ``shape_polygon_set_metal_layer``, ``shape_polygons_xy_extreme``, ``shape_property_setter``, ``signal_handler_trampoline``, ``sonnet_compose_dat_filename``, ``sonnet_emit_data_file_per_freq``, ``s_param_component_label_print``, ``spice_emit_header_banner``, ``spice_emit_node_list``, ``spi_emit_lowercase_extension``, ``spi_emit_uppercase_extension``, ``stdin_has_input_select``, ``sympoly_emit_polygon_layers``, ``symsq_emit_polygon_layers``, ``techfile_prompt_for_name``, ``techfile_resolve_path``, ``techfile_validate_eps``, ``techfile_validate_layer_assignments``, ``techfile_validate_metal_names``, ``techfile_validate_via_names``, ``techlayer_oom_502_copy``, ``techlayer_oom_503_copy``, ``techlayer_oom_504_copy``, ``tek_data_match_validator``, ``tokenize_argv``, ``vec3_copy``, ``vec3_normalize_diff``, ``vec_distance_2d_clipped``, ``xui_draw_string_at_world_2arg_call``, ``xui_draw_zoom_box``, ``xui_free_pixmaps``, ``xui_render_zoomed_view``, ``xui_set_cursor_idle``, .

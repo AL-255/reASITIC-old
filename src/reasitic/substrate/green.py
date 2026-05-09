@@ -422,10 +422,65 @@ def layer_reflection_coefficient(
         \\Gamma(k_\\rho) = \\frac{k_\\rho - \\gamma(k_\\rho)}
                                  {k_\\rho + \\gamma(k_\\rho)}
 
-    where ``γ`` is :func:`propagation_constant`.
+    where ``γ`` is :func:`propagation_constant`. Verified against
+    the C decomp:
+
+    * line 13100: ``local_24 = k * k`` (sets up ``z = k²``)
+    * line 13101: ``local_2c = DAT_080ceb40 * 7.895683520871488e-06 * omega``
+      (imaginary part of γ²; ``DAT_080ceb40`` is the substrate
+      conductivity σ at this layer, and ``7.895683520871488e-06``
+      is ``2π·μ₀`` in SI — see :data:`TWO_PI_MU0`)
+    * line 13105: ``sqrt(complex)`` evaluates ``γ = √(k² + j·2π·μ₀·σ·ω)``
+    * lines 13106-13110: builds ``(k − γ)`` and ``(k + γ)`` then
+      complex-divides to give Γ; the C narrows the return to
+      ``Γ.imag``.
+
+    At the static limit ``ω → 0`` (or ``σ → 0``), ``γ → k`` and
+    therefore ``Γ → 0`` — the C model has no static stack
+    reflection.
     """
     gamma = propagation_constant(k_rho, omega_rad, sigma_S_per_m)
     return (k_rho - gamma) / (k_rho + gamma)
+
+
+def green_layer_tanh_factor(k_rho: float, dz_um: float) -> float:
+    """Layered-Green's tanh boundary factor: ``tanh(k_ρ · Δz)``.
+
+    Mirrors the inner ``(2^x − 1) / (2^x + 1) × sign`` computation
+    that ``green_function_kernel_a`` (decomp ``0x0808cc90``, lines
+    9630-9669) performs three times for different layer-boundary
+    distances. The C builds it via the x87 ``f2xm1`` / ``fscale``
+    instructions that compute ``2^x − 1`` directly:
+
+    .. code-block:: c
+
+        lVar15 = k_rho * (g_capacitance_options[p3] - z_obs);  // = k·Δz
+        lVar11 = 1.4426950408889634 * -ABS(lVar15 + lVar15);   // = -2|k·Δz|/ln(2)
+        // f2xm1+fscale: lVar14 = 2^lVar11 - 1 = exp(-2|k·Δz|) - 1
+        lVar11 = 1.0; if (-lVar15 < 0.0) lVar11 = -1.0;        // sign of Δz
+        dVar1 = (lVar14 / (lVar14 + 2.0)) * lVar11;
+
+    Algebraically with ``u = exp(−2|k·Δz|)``::
+
+        (u − 1) / ((u − 1) + 2) = (u − 1) / (u + 1) = −tanh(|k·Δz|)
+
+    Multiplied by ``sign(Δz)``, the result is ``tanh(k_ρ · Δz)`` —
+    the standard layered-substrate tanh boundary factor at one
+    interface. The C-side magic constants (``0x080c8080 = -1.0``,
+    ``0x080c8090 = 2.0``, ``0x080c80d0 = 0.0``,
+    ``0x1.71547652b82fep+0 = 1.4426950408889634 = 1/ln 2``) are
+    included in the rodata at the listed addresses.
+
+    Args:
+        k_rho:  radial wavenumber in 1/m.
+        dz_um:  signed layer-boundary distance in microns
+            (sign carries through to the tanh).
+
+    Returns:
+        ``tanh(k_ρ · Δz)``. Approaches 0 for ``k·Δz → 0`` and
+        ``±1`` for large ``|k·Δz|``.
+    """
+    return math.tanh(k_rho * dz_um * UM_TO_M)
 
 
 def _stack_reflection_coefficient(tech: Tech, k_rho: float) -> float:

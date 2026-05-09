@@ -12,6 +12,9 @@ from reasitic.substrate import (
 )
 from reasitic.substrate.green import (
     _stack_reflection_coefficient,
+    green_layer_tanh_factor,
+    layer_reflection_coefficient,
+    propagation_constant,
     rect_tile_self_inv_r,
 )
 from tests import _paths
@@ -153,3 +156,99 @@ class TestRectTileSelfInvR:
         v_unit = rect_tile_self_inv_r(1.0e6, 1.0e6)
         # 10 µm = 1e-5 m → scale factor 1e5
         assert v_10um == pytest.approx(v_unit * 1.0e5, rel=1e-12)
+
+
+# Sommerfeld primitives (C-grounded) -----------------------------------
+
+
+class TestGreenLayerTanhFactor:
+    """The tanh boundary factor decoded from green_function_kernel_a.
+
+    Decomp ``0x0808cc90`` (lines 9630-9669) computes
+    ``(2^x − 1) / (2^x + 1) × sign`` three times for different
+    layer-boundary distances. The pattern simplifies to
+    ``tanh(k_ρ · Δz)``. These tests pin the primitive's behaviour
+    against directly-decoded C properties.
+    """
+
+    def test_zero_dz_returns_zero(self):
+        """``Δz = 0`` ⇒ tanh(0) = 0 — the C path computes
+        ``2^0 − 1 = 0`` so the factor vanishes."""
+        assert green_layer_tanh_factor(1.0e6, 0.0) == 0.0
+
+    def test_zero_k_returns_zero(self):
+        assert green_layer_tanh_factor(0.0, 5.0) == 0.0
+
+    def test_sign_tracks_dz(self):
+        """The C ``sign = (-lVar15 < 0) ? -1 : +1`` tracks the sign
+        of ``Δz``. tanh is odd, so sign of result == sign of Δz."""
+        v_pos = green_layer_tanh_factor(1.0e6, 5.0)
+        v_neg = green_layer_tanh_factor(1.0e6, -5.0)
+        assert v_pos > 0
+        assert v_neg < 0
+        assert v_pos == pytest.approx(-v_neg, rel=1e-12)
+
+    def test_saturates_at_one(self):
+        """Large ``k·Δz`` ⇒ ``tanh → ±1``. The C sets
+        ``dVar4 = 1e+15`` when the argument exceeds the magic
+        threshold ``500``, so the saturation is explicit there."""
+        # k * dz = 1e6 * 1e-3 m = 1e3 → tanh(1e3) ≈ 1.0
+        # (use a moderate k_rho × dz product to avoid overflow)
+        v = green_layer_tanh_factor(1.0e8, 100.0)
+        assert v == pytest.approx(1.0, rel=1e-9)
+
+    def test_units_match_decomp(self):
+        """``k_ρ`` is in 1/m and ``dz`` in microns; the function
+        converts dz internally. Verify against an external tanh."""
+        k_rho = 1.0e5  # 1/m
+        dz_um = 10.0
+        # k · Δz in dimensionless: 1e5 / m × 10 µm × 1e-6 m/µm = 1.0
+        expected = math.tanh(1.0)
+        assert green_layer_tanh_factor(k_rho, dz_um) == pytest.approx(expected, rel=1e-12)
+
+
+class TestSommerfeldReflectionCoefficient:
+    """Single-layer ``Γ = (k − γ) / (k + γ)`` from reflection_coeff_imag.
+
+    Decomp ``0x08093eb8`` builds ``γ = √(k² + j·2π·μ₀·σ·ω)`` then
+    forms ``(k − γ) / (k + γ)`` and returns the imaginary part.
+    """
+
+    def test_zero_omega_returns_zero(self):
+        """ω = 0 ⇒ γ = k ⇒ Γ = 0. The C model has no static stack
+        reflection — it relies entirely on the conductivity-induced
+        ω-dependent part for substrate coupling."""
+        gamma = layer_reflection_coefficient(
+            k_rho=1.0e6, omega_rad=0.0, sigma_S_per_m=10.0,
+        )
+        assert gamma == 0j
+
+    def test_zero_sigma_returns_zero(self):
+        """σ = 0 (perfect dielectric) ⇒ γ = k ⇒ Γ = 0."""
+        gamma = layer_reflection_coefficient(
+            k_rho=1.0e6, omega_rad=2.0 * math.pi * 1.0e9, sigma_S_per_m=0.0,
+        )
+        assert gamma == 0j
+
+    def test_perfect_conductor_limit(self):
+        """For very high σ, γ → ∞ and Γ → -1 (perfect electric
+        ground reflection). σ = 10⁹ S/m at f = 1 GHz gives
+        ``2π·μ₀·σ·ω`` ≈ 5×10¹⁰ ≫ k², so γ.real ≈ γ.imag ≈ √(σω/2)
+        and Γ → −1 with a small ``2k/γ`` correction."""
+        gamma = layer_reflection_coefficient(
+            k_rho=1.0e3, omega_rad=2.0 * math.pi * 1.0e9, sigma_S_per_m=1.0e9,
+        )
+        assert gamma.real == pytest.approx(-1.0, abs=2e-3)
+
+    def test_propagation_constant_real_part_at_omega_zero(self):
+        """Decomp lines 13100-13105: ``γ = sqrt(k² + j·...)``. At
+        ω=0 the imaginary part is zero so γ = k (real)."""
+        gamma = propagation_constant(k_rho=1.5e6, omega_rad=0.0, sigma_S_per_m=10.0)
+        assert gamma == complex(1.5e6, 0.0)
+
+    def test_propagation_constant_imag_part_grows_with_omega(self):
+        """Higher ω at fixed σ should give a larger imaginary part
+        of γ (the substrate becomes more lossy)."""
+        g_low = propagation_constant(1.0e6, 2.0 * math.pi * 1.0e8, 10.0)
+        g_hi = propagation_constant(1.0e6, 2.0 * math.pi * 1.0e10, 10.0)
+        assert abs(g_hi.imag) > abs(g_low.imag)

@@ -1,0 +1,73 @@
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "reASITIC"
+description = "Reverse-engineered implementation of ASITIC, a planar RF inductor design tool."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "GPL-2.0-only"
+license-files = ["LICENSE"]
+authors = [{ name = "AL-255", email = "thelithcore@gmail.com" }]
+keywords = ["asitic", "rf", "inductor", "spiral", "eda", "planar", "electromagnetic"]
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dynamic = ["version"]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "pytest-cov",
+    "ruff",
+    "mypy",
+]
+
+[project.urls]
+Homepage = "https://github.com/AL-255/reASITIC"
+Source = "https://github.com/AL-255/reASITIC"
+Issues = "https://github.com/AL-255/reASITIC/issues"
+
+[tool.hatch.version]
+path = "src/reasitic/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/reasitic"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/reasitic",
+    "tests",
+    "README.md",
+    "LICENSE",
+    "pyproject.toml",
+]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+files = ["src/reasitic"]

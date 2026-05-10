@@ -15,7 +15,7 @@ implementation in `src/reasitic/geometry.py`.
 | `Ring` | `cmd_ring_build_geometry @ 0805b450` | done | ring_r80_w10_g4_m3, ring_r120_w8_g6_m2 |
 | `MMSquare` | `cmd_mmsquare_build_geometry @ 0805af5c` | done | 2/2 |
 | `Symmetric square` | `cmd_symsq_build_geometry @ 08059854` | done | 3/3 (266 polys all match) |
-| `Symmetric polygon` | `cmd_sympoly_build_geometry @ 0805a45c` | broken | 0/2 |
+| `Symmetric polygon` | `cmd_sympoly_build_geometry @ 0805a45c` | not started | 0/2 |
 | `Transformer` | `cmd_trans_build_geometry @ 080576d4` | done (primary full; secondary M3+M2 full, VIA3 ~3µm off) | 2/2 |
 | `Balun` (3D Transformer) | `cmd_balun_build_geometry @ 0805bc74` | done | 2/2 (46 polys all match) |
 | `Via` | `cmd_via_build_geometry @ 08057b78` | covered indirectly | (no standalone golden) |
@@ -439,9 +439,29 @@ Symmetric polygon spiral — the polygon equivalent of `cmd_symsq`,
 1914 bytes. Builds two polygon-spiral arms that meet at the
 centre with the same ILEN-based centre-tap bridge.
 
-**Python status (broken):** `symmetric_polygon` builds two
-half-radius polygon spirals at offset positions. Signature
-doesn't accept `ilen`. Same gaps as `symmetric_square`.
+**Python status (NOT STARTED).** SYMPOLY's structure is the
+N-gon analog of SYMSQ — instead of square U-rings, each ring
+is a partial N-gon (sides/2 + 1 segments per half). The
+overall topology still has:
+
+* a centre-tap "bridge" structure at the top (analog of SYMSQ's
+  centre-U but using polygon-spiral chamfer geometry)
+* nested polygon rings (each a partial N-gon opening at top
+  for bottom-half rings, opening at bottom for top-half rings)
+* stubs/slants connecting adjacent rings across the centre
+* via clusters + M2 chamfered trace (same as SYMSQ)
+
+A faithful port should follow the SYMSQ pattern but use the
+polygon-spiral side computation (cos/sin angles per side) for
+each ring. The ILEN parameter is explicit in SYMPOLY's CLI
+(unlike BALUN which derives it).
+
+Suggested approach for next session:
+
+1. Extract a generic `_polygon_partial_ring(centre, R_outer, R_inner, sides, start_angle, end_angle)` helper.
+2. Compose centre-tap + ring-N + ring-N-1 + ... like SYMSQ.
+3. Validate against `sympoly_r100_8sides_3turns` (smaller case)
+   and `sympoly_r120_8sides_2turns`.
 
 ## Resume here (2026-05-09 round 2)
 

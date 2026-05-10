@@ -141,6 +141,8 @@ class Shape:
     # ``(x_origin + radius - pitch_radial/4, y_origin + radius - pitch_radial/2)``
     # for the binary's coord convention). Default 0.0 = "not a polygon spiral".
     radius: float = 0.0
+    # SYMSQ / SYMPOLY specific: centre-tap span (ASITIC's ILEN parameter).
+    ilen: float = 0.0
 
     def segments(self) -> list[Segment]:
         """Flat list of every polygon edge in the shape."""
@@ -990,6 +992,8 @@ def layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
     if shape.kind == "transformer_secondary" or shape.kind == "transformer_primary":
         # Polygons already laid out & adjusted; stored on the shape.
         return list(shape.polygons)
+    if shape.kind == "symsq":
+        return _symsq_layout_polygons(shape, tech)
     if shape.kind == "polygon_spiral":
         return _polygon_spiral_layout_polygons(shape, tech)
     if shape.kind == "ring":
@@ -1684,6 +1688,76 @@ def _trans_extend_primary_lead(
     return out
 
 
+def _symsq_u_ring_polygons(
+    *,
+    outer_x_min: float, outer_x_max: float,
+    outer_top_y: float, arm_bottom_y: float,
+    W: float,
+    open_side: str,
+    metal_rec: Metal,
+) -> list[Polygon]:
+    """Three-polygon "U" ring with chamfered inner corners.
+
+    The SYMSQ output is a stack of these U-rings. Each U has:
+
+    * a "top" horizontal segment (chamfered inward at both ends)
+    * two vertical arms (chamfered at the corner where they meet
+      the top)
+
+    ``open_side="bottom"`` means the U opens downward (centre-U
+    convention; arms hang down from a horizontal top). For the
+    outer ring, mini-loop, etc., these are open at the TOP — pass
+    ``open_side="top"`` and the helper internally swaps the y
+    semantics so ``outer_top_y`` becomes the "outer-bottom" of the
+    flipped U and ``arm_bottom_y`` becomes its arm-top.
+
+    Each polygon is a 4-corner trapezoid; the inner corner that
+    abuts the open side has ``W`` shaved off both x and y so the
+    next ring can fit.
+    """
+    inner_x_min = outer_x_min + W
+    inner_x_max = outer_x_max - W
+    if open_side == "bottom":
+        outer_y = outer_top_y
+        inner_y = outer_top_y - W
+        arm_outer_y = arm_bottom_y
+        arm_inner_y = arm_bottom_y
+    elif open_side == "top":
+        outer_y = arm_bottom_y          # bottom of the U (now its outer)
+        inner_y = arm_bottom_y + W      # one W up, the inner-bottom
+        arm_outer_y = outer_top_y       # top of the U arms (no chamfer)
+        arm_inner_y = outer_top_y       # same y (no chamfer)
+    else:
+        raise ValueError("open_side must be 'top' or 'bottom'")
+
+    # Left arm
+    left = [
+        (outer_x_min, arm_outer_y),
+        (outer_x_min, outer_y),
+        (inner_x_min, inner_y),
+        (inner_x_min, arm_inner_y),
+    ]
+    # Top (or bottom for open_top)
+    top = [
+        (outer_x_min, outer_y),
+        (outer_x_max, outer_y),
+        (inner_x_max, inner_y),
+        (inner_x_min, inner_y),
+    ]
+    # Right arm
+    right = [
+        (outer_x_max, outer_y),
+        (outer_x_max, arm_outer_y),
+        (inner_x_max, arm_inner_y),
+        (inner_x_max, inner_y),
+    ]
+    return [
+        _polygon_record_to_poly(left, metal_rec, W),
+        _polygon_record_to_poly(top, metal_rec, W),
+        _polygon_record_to_poly(right, metal_rec, W),
+    ]
+
+
 def _symsq_centre_arm_polygons(
     L: float, W: float, ilen: float,
     x_origin: float, y_origin: float,
@@ -1743,6 +1817,173 @@ def _symsq_centre_arm_polygons(
     ]
 
 
+def _symsq_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
+    """CIF-equivalent polygons for a SYMSQ centre-tapped square.
+
+    Mirrors ``cmd_symsq_build_geometry`` (decomp ``0x08059854``).
+    Currently handles **N=2 only** (the simplest case) — the
+    state-machine logic for N≥3 (where additional nested U-rings
+    fill in between outer and centre) is a follow-up.
+
+    Output layers:
+
+    * M3 (15 polys): centre-U + outer ring + inner mini-loop +
+      upper inner ring + 2-poly stub on left + 1-poly slant on right
+    * M3 + M2 box pads (2 each, 4 total): via overlap pads
+    * M2 (1 poly): chamfered diagonal trace connecting the two pads
+    * VIA3 (18 polys): two 3×3 via clusters
+
+    All formulas decoded by linear regression across the three
+    SYMSQ golden cases — see ``docs/asitic_geometry_c.md`` for
+    derivations.
+    """
+    L = shape.length
+    W = shape.width
+    S = shape.spacing
+    ILEN = getattr(shape, "ilen", 0.0) or 0.0
+    if L <= 0 or W <= 0:
+        return []
+    pitch = W + S
+    X = shape.x_origin
+    Y = shape.y_origin
+    metal_rec = tech.metals[shape.metal]
+    # Exit / via metal: shape.exit_metal if set, otherwise next metal down
+    exit_idx = shape.exit_metal if shape.exit_metal is not None else shape.metal - 1
+    if exit_idx < 0 or exit_idx >= len(tech.metals):
+        # No exit; emit M3-only structure
+        exit_idx = shape.metal
+    exit_metal_rec = tech.metals[exit_idx]
+
+    polys: list[Polygon] = []
+
+    # 1) Centre-U at the top
+    polys.extend(_symsq_centre_arm_polygons(L, W, ILEN, X, Y, metal_rec))
+
+    # 2) Outer ring (bottom-half U opening at top)
+    polys.extend(_symsq_u_ring_polygons(
+        outer_x_min=X, outer_x_max=X + L,
+        outer_top_y=Y + L * 0.5, arm_bottom_y=Y + ILEN * 0.5,
+        W=W, open_side="top", metal_rec=metal_rec,
+    ))
+
+    # 3) Inner mini-loop (smaller U opening at top, nested inside outer)
+    polys.extend(_symsq_u_ring_polygons(
+        outer_x_min=X + pitch, outer_x_max=X + L - pitch,
+        outer_top_y=Y + L * 0.5, arm_bottom_y=Y + ILEN * 0.5 + pitch,
+        W=W, open_side="top", metal_rec=metal_rec,
+    ))
+
+    # 4) Upper inner ring (U opening at bottom, inside the centre-U)
+    polys.extend(_symsq_u_ring_polygons(
+        outer_x_min=X + pitch, outer_x_max=X + L - pitch,
+        outer_top_y=Y + L + ILEN * 0.5 - pitch,
+        arm_bottom_y=Y + L * 0.5 + ILEN,
+        W=W, open_side="bottom", metal_rec=metal_rec,
+    ))
+
+    # 5) ILEN-stub on left (2 polys, each ILEN/2 tall — only emitted
+    #    by the C state machine for N=2; for N≥3 the gap is filled
+    #    by additional nested rings)
+    n_int = int(round(shape.turns))
+    if n_int == 2 and ILEN > 0:
+        stub_x0 = X + pitch
+        stub_x1 = X + pitch + W
+        stub_mid = Y + L * 0.5 + ILEN * 0.5
+        for y0, y1 in [(Y + L * 0.5, stub_mid), (stub_mid, Y + L * 0.5 + ILEN)]:
+            polys.append(_polygon_record_to_poly(
+                [(stub_x0, y0), (stub_x0, y1), (stub_x1, y1), (stub_x1, y0)],
+                metal_rec, W,
+            ))
+
+    # 6) Slanted right-side transition (1 poly)
+    if n_int == 2 and ILEN > 0:
+        # Decoded from gold case 1: vertices in CIF order are
+        # (X+L-pitch, U_arm_bot)
+        # (X+L,        Y+L/2)
+        # (X+L-W,      Y+L/2)
+        # (X+L-pitch-W, U_arm_bot)
+        u_arm_bot = Y + L * 0.5 + ILEN
+        slant = [
+            (X + L - pitch, u_arm_bot),
+            (X + L, Y + L * 0.5),
+            (X + L - W, Y + L * 0.5),
+            (X + L - pitch - W, u_arm_bot),
+        ]
+        polys.append(_polygon_record_to_poly(slant, metal_rec, W))
+
+    # 7) Via clusters with M3 + M2 overlap pads. The C uses
+    #    lookup_via_for_metal_pair (asitic_repl.c:??) — formulas
+    #    decoded from gold:
+    #
+    #    Pad 1 (right-arm-base, above the centre-U's right arm):
+    #      cx = X + L - W/2
+    #      cy = U_arm_bot + pad_h/2
+    #
+    #    Pad 2 (lower-spiral-attachment, below the inner mini-loop):
+    #      cx = X + L - pitch - W/2
+    #      cy = Y + L/2 - pad_h/2
+    #
+    #    Pad size = W × (n_vias × via_w + (n_vias-1) × via_s + 2 × overplot)
+    if exit_idx != shape.metal:
+        via_rec, via_idx = None, -1
+        for i, v in enumerate(tech.vias):
+            if {v.top, v.bottom} == {shape.metal, exit_idx}:
+                via_rec, via_idx = v, i
+                break
+        if via_rec is not None:
+            overplot = max(via_rec.overplot1, via_rec.overplot2)
+            vp = via_rec.width + via_rec.space
+            n_vias = max(1, int(math.floor((W - 2.0 * overplot + via_rec.space) / vp)))
+            cluster_span = n_vias * via_rec.width + (n_vias - 1) * via_rec.space
+            pad_h = cluster_span + 2.0 * overplot
+            u_arm_bot = Y + L * 0.5 + ILEN
+            pad_centers = [
+                (X + L - W * 0.5, u_arm_bot + pad_h * 0.5),
+                (X + L - pitch - W * 0.5, Y + L * 0.5 - pad_h * 0.5),
+            ]
+            via_metal = len(tech.metals) + via_idx
+            half_w = W * 0.5
+            half_h = pad_h * 0.5
+            for cx, cy in pad_centers:
+                pad_corners = [
+                    (cx - half_w, cy - half_h), (cx + half_w, cy - half_h),
+                    (cx + half_w, cy + half_h), (cx - half_w, cy + half_h),
+                ]
+                # M2 box and M3 box at same corners (different layers)
+                polys.append(_polygon_record_to_poly(pad_corners, exit_metal_rec, W))
+                polys.append(_polygon_record_to_poly(pad_corners, metal_rec, W))
+                # Via cells: n_vias × n_vias grid centred at (cx, cy)
+                cell0_x = cx - cluster_span * 0.5
+                cell0_y = cy - cluster_span * 0.5
+                for i in range(n_vias):
+                    for j in range(n_vias):
+                        x0 = cell0_x + i * vp
+                        y0 = cell0_y + j * vp
+                        polys.append(_closed_poly(
+                            [(x0, y0), (x0 + via_rec.width, y0),
+                             (x0 + via_rec.width, y0 + via_rec.width),
+                             (x0, y0 + via_rec.width)],
+                            z=0.0, metal=via_metal,
+                            width=via_rec.width, thickness=0.0,
+                        ))
+
+            # 8) M2 chamfered transition trace from pad 1 down-and-left
+            #    to pad 2's region. CIF vertex order in the gold:
+            #      (XORG+L,         U_arm_bot)   # right-end at pad 1
+            #      (XORG+L-pitch,   Y+L/2)       # slanted to outer corner
+            #      (XORG+L-pitch-W, Y+L/2)       # left-end inner of pad-2 region
+            #      (XORG+L-W,       U_arm_bot)   # back up to pad 1's left edge
+            trace = [
+                (X + L, u_arm_bot),
+                (X + L - pitch, Y + L * 0.5),
+                (X + L - pitch - W, Y + L * 0.5),
+                (X + L - W, u_arm_bot),
+            ]
+            polys.append(_polygon_record_to_poly(trace, exit_metal_rec, W))
+
+    return polys
+
+
 def _trans_extend_secondary_lead(
     polys: list[Polygon], pitch: float,
 ) -> list[Polygon]:
@@ -1778,56 +2019,48 @@ def symmetric_square(
     turns: float,
     tech: Tech,
     metal: int | str = 0,
+    primary_metal: int | str | None = None,
+    exit_metal: int | str | None = None,
     bridge_metal: int | str | None = None,
+    ilen: float = 0.0,
     x_origin: float = 0.0,
     y_origin: float = 0.0,
 ) -> Shape:
     """Build a symmetric centre-tapped square spiral (``SymSq``).
 
-    A SymSq has two interleaved square coils joined at the centre.
-    This implementation builds it as one inductor whose polygon list
-    contains both arms; the centre-tap routing is left implicit (no
-    explicit bridge segment is emitted).
+    Mirrors ``cmd_symsq_build_geometry`` (decomp ``0x08059854``).
 
-    Mirrors ``cmd_symsq_build_geometry`` (``asitic_repl.c:0x08059854``).
+    The geometry is decoded by piece in
+    :func:`_symsq_layout_polygons`; this builder just wires the
+    arguments through. Currently full CIF parity is reached for
+    ``turns=2`` (the simplest case); ``turns≥3`` is a follow-up.
+
+    Args:
+        length: outer side length L (μm).
+        width:  metal trace width W (μm).
+        spacing: edge-to-edge gap S between turns (μm).
+        turns: integer turn count N (only N=2 fully supported).
+        ilen: centre-tap span (ASITIC's ``ILEN`` parameter).
+        metal / primary_metal: trace metal layer.
+        exit_metal: layer used for the centre-tap M2 trace + via
+            cluster connection.
+        x_origin / y_origin: lower-left of the LxL bbox in μm.
     """
-    if bridge_metal is None:
-        bridge_metal = metal
-    arm_a = square_spiral(
-        f"{name}_a",
-        length=length * 0.5,
-        width=width,
-        spacing=spacing,
-        turns=turns,
-        tech=tech,
-        metal=metal,
-        x_origin=x_origin - length * 0.25,
-        y_origin=y_origin,
-    )
-    arm_b = square_spiral(
-        f"{name}_b",
-        length=length * 0.5,
-        width=width,
-        spacing=spacing,
-        turns=turns,
-        tech=tech,
-        metal=metal,
-        x_origin=x_origin + length * 0.25,
-        y_origin=y_origin,
-        phase=math.pi,
-    )
+    if primary_metal is not None:
+        metal = primary_metal
+    metal_idx = _resolve_metal(tech, metal).index
+    exit_idx: int | None = None
+    if exit_metal is not None:
+        exit_idx = _resolve_metal(tech, exit_metal).index
+    elif bridge_metal is not None:
+        exit_idx = _resolve_metal(tech, bridge_metal).index
     return Shape(
         name=name,
-        polygons=arm_a.polygons + arm_b.polygons,
-        width=width,
-        length=length,
-        spacing=spacing,
-        turns=turns,
-        sides=4,
-        metal=arm_a.metal,
-        x_origin=x_origin,
-        y_origin=y_origin,
-        kind="symmetric_square",
+        polygons=[],
+        width=width, length=length, spacing=spacing, turns=turns,
+        sides=4, metal=metal_idx, exit_metal=exit_idx,
+        x_origin=x_origin, y_origin=y_origin,
+        ilen=ilen, kind="symsq",
     )
 
 

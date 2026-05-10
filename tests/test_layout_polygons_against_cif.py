@@ -233,6 +233,37 @@ def _assert_same_polygons(actual, expected, *, tol: float = 0.01) -> None:
             "M3",
             0.02,
         ),
+        # SYMSQ N=2 — full vertex-for-vertex parity
+        (
+            "symsq_150x8x2x2_m3_m2",
+            lambda tech: reasitic.symmetric_square(
+                "Y3", length=150, width=8, spacing=2, turns=2,
+                ilen=15, tech=tech, metal="m3", exit_metal="m2",
+                x_origin=100, y_origin=100,
+            ),
+            "M3",
+            0.02,
+        ),
+        (
+            "symsq_150x8x2x2_m3_m2",
+            lambda tech: reasitic.symmetric_square(
+                "Y3", length=150, width=8, spacing=2, turns=2,
+                ilen=15, tech=tech, metal="m3", exit_metal="m2",
+                x_origin=100, y_origin=100,
+            ),
+            "M2",
+            0.02,
+        ),
+        (
+            "symsq_150x8x2x2_m3_m2",
+            lambda tech: reasitic.symmetric_square(
+                "Y3", length=150, width=8, spacing=2, turns=2,
+                ilen=15, tech=tech, metal="m3", exit_metal="m2",
+                x_origin=100, y_origin=100,
+            ),
+            "VIA3",
+            0.02,
+        ),
     ],
 )
 def test_layout_polygons_match_cif_goldens(stem, shape_factory, layer, tol, tech):

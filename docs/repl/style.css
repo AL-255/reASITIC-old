@@ -60,8 +60,9 @@ header nav a {
 header nav a:hover { text-decoration: underline; }
 
 main {
+  --output-width: 380px;
   display: grid;
-  grid-template-columns: 320px 1fr 380px;
+  grid-template-columns: 320px 1fr var(--output-width);
   gap: 0.9rem;
   padding: 0.9rem;
   height: calc(100vh - 105px);
@@ -72,6 +73,61 @@ main {
     grid-template-columns: 1fr;
     height: auto;
   }
+  .output-resizer { display: none !important; }
+}
+
+/* Drag handle for the right-hand output panel. The handle covers the
+   ENTIRE grid gap (0.9rem) between the layout panel and the output panel,
+   plus a few extra pixels of buffer on each side, so the user can grab it
+   anywhere in the visible space between the two panels. App.js wires the
+   mousedown handler and writes the new value into ``--output-width``. */
+.output { position: relative; }
+.output-resizer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  /* Span the full grid gap. ``main`` has ``column-gap: 0.9rem`` (14.4 px);
+     this stretches an extra ~6 px past it on each side for hit tolerance. */
+  left: -1.3rem;
+  width: 1.7rem;
+  cursor: col-resize;
+  background: transparent;
+  z-index: 5;
+}
+/* Always-visible centre bar — purely a visual affordance so users can
+   see there's something to grab. Lights up + grows on hover / drag. */
+.output-resizer::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 3px;
+  height: 44px;
+  background: var(--border);
+  border-radius: 1.5px;
+  pointer-events: none;
+  transition: background 0.15s ease, width 0.15s ease, height 0.15s ease;
+}
+.output-resizer:hover::before {
+  background: var(--accent);
+  width: 4px;
+  height: 64px;
+}
+.output-resizer.dragging::before {
+  background: var(--accent-2);
+  width: 4px;
+  height: 100%;
+}
+/* Faint coloured strip on hover/drag so the entire hit zone is visible,
+   not just the centre bar. */
+.output-resizer:hover,
+.output-resizer.dragging {
+  background: rgba(90, 169, 255, 0.06);
+}
+body.dragging-resizer {
+  cursor: col-resize !important;
+  user-select: none;
 }
 
 .panel {
@@ -194,6 +250,25 @@ button.primary:hover:not(:disabled) {
   font-size: 0.78rem;
 }
 
+/* The ASITIC `Create` command line that reproduces the current geometry.
+   Tab-friendly: selectable, monospaced, soft accent-blue. Sits between
+   the canvas and the dimensions strip. */
+.create-cmd {
+  margin: 0.5rem 0 0;
+  padding: 0.35rem 0.55rem;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0.3rem;
+  color: var(--accent-2);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+  user-select: all;
+  cursor: text;
+}
+
 .legend {
   display: flex;
   gap: 0.6rem;
@@ -216,16 +291,155 @@ button.primary:hover:not(:disabled) {
 }
 .output-head h2 { border: none; padding-bottom: 0; margin-bottom: 0; }
 
-.output-tabs { display: flex; gap: 0.3rem; }
+.output-tabs {
+  display: flex;
+  gap: 0.3rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  max-width: 100%;
+}
 .tab {
   padding: 0.3rem 0.6rem;
   font-size: 0.78rem;
   background: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
 .tab.active {
   background: var(--bg-3);
   border-color: var(--accent);
   color: var(--accent-2);
+}
+.tab-close {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  line-height: 0.85rem;
+  text-align: center;
+  border-radius: 0.2rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tab-close:hover {
+  background: var(--bad);
+  color: #fff;
+}
+
+/* Per-tab header inside a dynamic analysis pane. */
+.analysis-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.analysis-head .analysis-title {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--accent-2);
+}
+.analysis-head .live-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin: 0;
+  cursor: pointer;
+}
+.analysis-head .live-toggle input {
+  width: auto;
+  margin: 0;
+}
+.analysis-head .live-rerun {
+  padding: 0.2rem 0.55rem;
+  font-size: 0.72rem;
+}
+.analysis-head .live-stale {
+  color: var(--warn);
+  font-size: 0.72rem;
+}
+.analysis-out {
+  flex: 1;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  padding: 0.7rem;
+  overflow: auto;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  min-height: 150px;
+}
+.analysis-out.error { border-left: 3px solid var(--bad); color: #fecaca; }
+
+/* Sweep tab — table of |Sij| values + SVG plot of |S11| / |S21|. */
+.sweep-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 0.6rem;
+}
+.sweep-table-wrap {
+  flex: 0 0 auto;
+  max-height: 220px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+}
+.sweep-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+.sweep-table th,
+.sweep-table td {
+  padding: 0.22rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.sweep-table tbody tr:last-child td { border-bottom: none; }
+.sweep-table thead th {
+  color: var(--muted);
+  background: var(--bg-2);
+  position: sticky;
+  top: 0;
+  font-weight: 500;
+  z-index: 1;
+}
+.sweep-table th:first-child,
+.sweep-table td:first-child { text-align: left; }
+.sweep-resonance {
+  color: var(--warn);
+  font-size: 0.78rem;
+  font-family: var(--mono);
+}
+.sweep-plot {
+  width: 100%;
+  height: 220px;
+  flex: 0 0 auto;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+}
+.sweep-plot.lrq-sweep-plot {
+  /* Three stacked mini-panels need more vertical room. */
+  height: 360px;
+}
+.sweep-plot text {
+  font-family: var(--mono);
+  font-size: 9px;
 }
 
 .tab-pane {

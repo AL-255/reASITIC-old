@@ -218,6 +218,7 @@
     <div class="actions">
       <button data-action="lrq" disabled>L · R · Q</button>
       <button data-action="pi" disabled>Pi-model</button>
+      <button data-action="lrq_sweep" disabled>Sweep L · R · Q</button>
       <button data-action="sweep" disabled>Sweep S-params</button>
       <button data-action="s2p" disabled>Export .s2p</button>
       <button data-action="spice" disabled>Export SPICE</button>
@@ -237,15 +238,18 @@
       <div class="legend" id="legend"></div>
     </div>
     <svg id="canvas" viewBox="-100 -100 200 200" preserveAspectRatio="xMidYMid meet"></svg>
+    <p class="create-cmd" id="create-cmd" title="The ASITIC CLI command that builds this shape — copy/paste into the original ASITIC REPL.">—</p>
     <p class="dims" id="dims">No shape yet.</p>
   </section>
 
-  <section class="panel output">
+  <section class="panel output" id="output-panel">
+    <div class="output-resizer" id="output-resizer" title="Drag to resize"></div>
     <div class="output-head">
       <h2>Output</h2>
-      <div class="output-tabs">
-        <button class="tab active" data-tab="results">Results</button>
-        <button class="tab" data-tab="repl">Python REPL</button>
+      <div class="output-tabs" id="output-tabs">
+        <button class="tab active" data-tab="results" data-static="1">Results</button>
+        <button class="tab" data-tab="repl" data-static="1">Python REPL</button>
+        <!-- Analysis-driven tabs are inserted here at runtime. -->
       </div>
     </div>
 
@@ -274,7 +278,10 @@ print("L =", round(reasitic.compute_self_inductance(shape), 4), "nH")
   <span class="version" id="version"></span>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js"></script>
+<!-- Pyodide is loaded inside docs/repl/worker.js so its synchronous
+     Python calls don't block the main thread (and can be terminated by
+     ``worker.terminate()`` when an operation exceeds the per-call 3 s
+     timeout enforced in app.js). -->
 <script src="draw.js"></script>
 <script src="app.js"></script>
 </body>

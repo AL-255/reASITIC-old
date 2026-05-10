@@ -465,6 +465,36 @@ def analyze_sweep(f1: float, f2: float, step: float) -> dict:
     }
 
 
+def analyze_lrq_sweep(f1: float, f2: float, step: float) -> dict:
+    """L · R · Q vs frequency across a linear sweep.
+
+    Returned arrays are aligned with ``freqs_ghz``. ``L_nH`` is the
+    geometry-only self-inductance (constant across the sweep) and
+    ``R_dc_ohm`` likewise; ``R_ac_ohm`` and ``Q`` use the same
+    frequency-aware primitives as :func:`analyze_lrq`.
+    """
+    sh, tech = _require()
+    if step <= 0:
+        raise ValueError("Sweep step must be > 0")
+    if f2 <= f1:
+        raise ValueError("Sweep f2 must be > f1")
+    fs = list(linear_freqs(f1, f2, step))
+
+    L = reasitic.compute_self_inductance(sh)
+    R_dc = reasitic.compute_dc_resistance(sh, tech)
+    L_arr = [L for _ in fs]
+    R_dc_arr = [R_dc for _ in fs]
+    R_ac_arr = [reasitic.compute_ac_resistance(sh, tech, f) for f in fs]
+    Q_arr = [reasitic.metal_only_q(sh, tech, f) for f in fs]
+    return {
+        "freqs_ghz": fs,
+        "L_nH": L_arr,
+        "R_dc_ohm": R_dc_arr,
+        "R_ac_ohm": R_ac_arr,
+        "Q": Q_arr,
+    }
+
+
 def export_s2p(f1: float, f2: float, step: float) -> str:
     sh, tech = _require()
     fs = linear_freqs(f1, f2, step)

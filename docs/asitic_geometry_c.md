@@ -15,7 +15,7 @@ implementation in `src/reasitic/geometry.py`.
 | `Ring` | `cmd_ring_build_geometry @ 0805b450` | done | ring_r80_w10_g4_m3, ring_r120_w8_g6_m2 |
 | `MMSquare` | `cmd_mmsquare_build_geometry @ 0805af5c` | done | 2/2 |
 | `Symmetric square` | `cmd_symsq_build_geometry @ 08059854` | done | 3/3 (266 polys all match) |
-| `Symmetric polygon` | `cmd_sympoly_build_geometry @ 0805a45c` | done (M3+M2 spiral); via-cluster pad widths outstanding | 2/2 |
+| `Symmetric polygon` | `cmd_sympoly_build_geometry @ 0805a45c` | done (M3+M2+VIA3 full parity) | 2/2 |
 | `Transformer` | `cmd_trans_build_geometry @ 080576d4` | done (primary full; secondary M3+M2+VIA3 full) | 2/2 |
 | `Balun` (3D Transformer) | `cmd_balun_build_geometry @ 0805bc74` | done | 2/2 (46 polys all match) |
 | `Via` | `cmd_via_build_geometry @ 08057b78` | done | nx × ny array, top + bottom pad + via squares (no standalone golden) |
@@ -517,34 +517,74 @@ the first and second `lookup_via_for_metal_pair` calls per
 transition; they offset the via-cluster centre by `± pad_h/2`
 in Y from the chamfer corner.
 
-### Outstanding: pad width formula
+### Pad-width algorithm (DECODED 2026-05-10)
 
-`lookup_via_for_metal_pair → geom_emit_polygon_at` emits a
-polygon of dimensions `(n_vias·via_w + (n_vias-1)·via_s) ²` =
-`7.5 × 7.5` for our cases, but the gold's pads are:
+The pad-width mystery — `8.91`, `10.82`, `34.91`, `38.96` — turned
+out to come from the CIF emitter, not the build-geometry function.
+After tracing `cif_check_via_has_metal @ 0808b4e8` and
+`cif_emit_path_with_4_doubles @ 0808b450` end-to-end:
 
-* `sympoly_r120_8sides_2turns` — case 6 outward, single via
-  transition: pre-shift = 38.96 × 8.5, post-shift = 10.82 × 8.5.
-* `sympoly_r100_8sides_3turns` — case 4 inward (trans 2):
-  pre-shift = 10.82 × 8.5, post-shift = 8.91 × 8.49. Case 6
-  outward (trans 5): pre-shift = 34.91 × 8.49, post-shift =
-  10.82 × 8.5.
+1. `lookup_via_for_metal_pair → geom_emit_polygon_at` emits ONE
+   polygon record per via cluster, with bbox dims
+   `(n_vias·via_w + (n_vias-1)·via_s) ²` = `7.5 × 7.5` for the
+   BiCMOS via3 / W=10 case.
+2. `cif_emit_layer_set_then_box` is the CIF emitter for via
+   cluster polygons. Before emitting the M2/M3 box and the VIA3
+   sub-grid, it calls `cif_check_via_has_metal` to find a
+   "containing" metal polygon — walking the shape's polygon
+   linked-list from `*(int *)(shape + 0xa8)` and breaking at the
+   FIRST polygon `iVar1` that satisfies all four containment
+   conditions:
 
-Patterns observed:
+   ```
+   iVar1.xmin <= cluster.xmin
+   iVar1.xmax >= cluster.xmax
+   iVar1.ymin <= cluster.ymin
+   iVar1.ymax >= cluster.ymax
+   ```
 
-* Y dimension (8.50) = `n_vias·via_w + (n_vias-1)·via_s + 2·overplot`
-  — matches the standard cluster-pad-with-overplot formula.
-* Most pads' X dimension = `W / cos(π/sides) = 10.82` (the
-  trace's radial extent).
-* Pre-shift wide pad on outward transitions: 38.96 (r120) /
-  34.91 (r100), satisfying `≈ (3W+2S)/cos(π/sides)` only for
-  r120; r100's 34.91 doesn't match that formula. The width
-  appears to depend on R or angle in some way not yet decoded.
+   The walk includes polygons emitted AFTER the cluster (the
+   linked-list is built in display order; later transitions
+   place spiral polygons that come after the cluster pad in
+   emit order).
 
-The Python port emits the spiral / slant / stub polygons (which
-account for all `P` records of the gold) but skips the box pads.
-The `test_layout_polygons_against_cif` harness skips B-records
-for SYMPOLY cases via the `include_boxes=False` flag.
+3. `cif_emit_path_with_4_doubles` then computes the pad's M2/M3
+   box dimensions:
+
+   ```
+   pad_w = 2 · min(|container.xmin - cluster.xmin|,
+                   |container.xmax - cluster.xmax|)
+         + cluster.x_extent
+   pad_h = 2 · min(|container.ymin - cluster.ymin|,
+                   |container.ymax - cluster.ymax|)
+         + cluster.y_extent
+   ```
+
+   where `cluster.{x,y}_extent` = `n_vias·via_w + (n_vias-1)·via_s`
+   (the via grid extent stored at polygon offset `0x30`).
+
+So the pad reaches symmetrically from the cluster centre out to
+the container's nearest edge in each axis. The pad WIDTH varies
+between `8.5` (when min_diff = overplot = 0.5) and several tens
+of µm (when the container is a long polygon along the slant
+direction).
+
+Verified for all 6 cluster pads in the two SYMPOLY golden cases:
+
+| Case | Cluster | Container | min_x | min_y | Predicted | Gold |
+|---|---|---|---|---|---|---|
+| r120/N=2 trans3 cluster1 | wide pre-shift | HT1 outer-ring left segment | 15.73 | 0.50 | 38.96 × 8.50 | 38.96 × 8.50 |
+| r120/N=2 trans3 cluster2 | narrow post-shift | HT4 bot-outer left segment | 1.66 | 0.50 | 10.82 × 8.50 | 10.82 × 8.50 |
+| r100/N=3 trans2 clusterA | narrow pre-shift | HT3 inner-ring segment | 1.66 | 0.50 | 10.82 × 8.50 | 10.82 × 8.50 |
+| r100/N=3 trans2 clusterB | narrow post-shift | HT1 outer-ring segment | 0.71 | 0.50 | 8.92 × 8.48 | 8.91 × 8.49 |
+| r100/N=3 trans5 clusterC | wide pre-shift | HT1 outer-ring left segment | 13.71 | 0.50 | 34.92 × 8.48 | 34.91 × 8.49 |
+| r100/N=3 trans5 clusterD | narrow post-shift | HT6 bot-outer left segment | 1.66 | 0.50 | 10.82 × 8.50 | 10.82 × 8.50 |
+
+The Python port (`_sympoly_layout_polygons`) implements this
+algorithm directly: build the spiral / slant / stub polygons
+first, then for each via cluster, find the first containing
+polygon and compute pad dims. M3 + M2 + VIA3 layers all match
+vertex-for-vertex. Tests no longer skip B-records.
 
 ## Resume here (2026-05-09 round 2)
 

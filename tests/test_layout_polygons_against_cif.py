@@ -374,19 +374,33 @@ def _assert_same_polygons(actual, expected, *, tol: float = 0.01) -> None:
             "M2",
             0.02,
         ),
+        (
+            "sympoly_r120_8sides_2turns",
+            lambda tech: reasitic.symmetric_polygon(
+                "YP2", radius=120, width=10, spacing=3, turns=2,
+                ilen=20, sides=8, tech=tech,
+                primary_metal="m3", exit_metal="m2",
+                x_origin=200, y_origin=200,
+            ),
+            "VIA3",
+            0.02,
+        ),
+        (
+            "sympoly_r100_8sides_3turns",
+            lambda tech: reasitic.symmetric_polygon(
+                "YP1", radius=100, width=10, spacing=3, turns=3,
+                ilen=20, sides=8, tech=tech,
+                primary_metal="m3", exit_metal="m2",
+                x_origin=200, y_origin=200,
+            ),
+            "VIA3",
+            0.02,
+        ),
     ],
 )
 def test_layout_polygons_match_cif_goldens(stem, shape_factory, layer, tol, tech):
-    # SYMPOLY's via-cluster M2/M3 pad widths follow a still-undecoded
-    # rule (10.82 narrow / 38.96 wide / 8.91 / 34.91), so we compare
-    # only the polygon ring/slant/stub records, not box pads. The C
-    # state machine cmd_sympoly_build_geometry does emit pads via
-    # lookup_via_for_metal_pair → geom_emit_polygon_at, but the
-    # geom_emit_polygon_at-encoded width (= n_vias * via_w +
-    # (n_vias-1) * via_s = 7.5) doesn't match any of the gold values.
-    include_boxes = not stem.startswith("sympoly_")
     _assert_same_polygons(
         _layout_set(shape_factory(tech), tech, layer),
-        _cif_polygons(stem, layer, include_boxes=include_boxes),
+        _cif_polygons(stem, layer),
         tol=tol,
     )

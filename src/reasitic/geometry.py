@@ -2708,14 +2708,113 @@ def _sympoly_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
             rec, W,
         ))
 
-    # Via clusters: not yet emitted. The gold has M2/M3 box pads and
-    # VIA3 squares at every via-cluster transition; pad widths follow
-    # a still-unknown rule (10.82 = W/cos(π/N) for narrow,
-    # (3W+2S)/cos(π/N) ≈ 38.96 for one of the outward-step pre-shift
-    # pads, plus a third 8.91 case). Spiral parity stands on its own;
-    # the pads are documented as outstanding work.
-    _ = cluster_centres  # reserved for follow-up
-    _ = exit_rec
+    # Via clusters: emit M2/M3 box pad + nx × ny via squares per
+    # via-cluster transition. The pad WIDTH/HEIGHT depend on the
+    # CONTAINING polygon's bbox per the C's CIF emitter logic
+    # (cif_check_via_has_metal + cif_emit_path_with_4_doubles).
+    #
+    # Algorithm decoded from the C:
+    #
+    #   1. The cluster's "base" polygon emitted by geom_emit_polygon_at
+    #      has dims (n_vias·via_w + (n_vias-1)·via_s) ²
+    #      (= 7.5 × 7.5 for BiCMOS via3 / W=10).
+    #   2. cif_check_via_has_metal walks the shape's polygon list and
+    #      finds the FIRST polygon whose bbox CONTAINS the cluster's
+    #      base bbox (in linked-list / emit order, regardless of which
+    #      side of the cluster).
+    #   3. cif_emit_path_with_4_doubles computes:
+    #        pad_w = 2 · min(|container.xmin - cluster.xmin|,
+    #                        |container.xmax - cluster.xmax|)
+    #              + cluster.x_extent
+    #        pad_h = 2 · min(|container.ymin - cluster.ymin|,
+    #                        |container.ymax - cluster.ymax|)
+    #              + cluster.y_extent
+    #
+    # The pad reaches symmetrically from the cluster centre out to the
+    # container's nearest edge in each axis. M2 + M3 pads are emitted
+    # at the same dims; the via squares form an n_vias × n_vias grid
+    # at the cluster centre with pitch = via_w + via_s.
+    if exit_idx != primary_idx and cluster_centres:
+        via_rec, via_idx = None, -1
+        for i, v in enumerate(tech.vias):
+            if {v.top, v.bottom} == {primary_idx, exit_idx}:
+                via_rec, via_idx = v, i
+                break
+        if via_rec is not None:
+            overplot = max(via_rec.overplot1, via_rec.overplot2)
+            vp = via_rec.width + via_rec.space
+            n_vias = max(1, int(math.floor(
+                (W - 2.0 * overplot + via_rec.space) / vp,
+            )))
+            grid_extent = n_vias * via_rec.width + (n_vias - 1) * via_rec.space
+            half_grid = grid_extent * 0.5
+            via_metal = len(tech.metals) + via_idx
+
+            def _bbox(poly: Polygon) -> tuple[float, float, float, float]:
+                xs = [v.x for v in poly.vertices[:-1]]
+                ys = [v.y for v in poly.vertices[:-1]]
+                return (min(xs), min(ys), max(xs), max(ys))
+
+            for raw_x, raw_y, sign in cluster_centres:
+                # Cluster centre = chamfer + (0, ± grid_extent/2 + overplot).
+                pad_h_default = grid_extent + 2.0 * overplot
+                cx_world = raw_x + dx_shift
+                cy_world = raw_y + dy_shift + sign * pad_h_default * 0.5
+
+                # Cluster's "base" bbox = grid_extent × grid_extent
+                # centred on (cx, cy). cif_check_via_has_metal compares
+                # against this size (NOT the final pad size).
+                cb_xmin = cx_world - half_grid
+                cb_ymin = cy_world - half_grid
+                cb_xmax = cx_world + half_grid
+                cb_ymax = cy_world + half_grid
+
+                # Find FIRST containing polygon among the spiral / slant
+                # / stub polys we've already built.
+                container_bbox: tuple[float, float, float, float] | None = None
+                for p in polys:
+                    bx0, by0, bx1, by1 = _bbox(p)
+                    if (bx0 <= cb_xmin and bx1 >= cb_xmax and
+                            by0 <= cb_ymin and by1 >= cb_ymax):
+                        container_bbox = (bx0, by0, bx1, by1)
+                        break
+
+                if container_bbox is not None:
+                    bx0, by0, bx1, by1 = container_bbox
+                    min_x = min(abs(bx0 - cb_xmin), abs(bx1 - cb_xmax))
+                    min_y = min(abs(by0 - cb_ymin), abs(by1 - cb_ymax))
+                    pad_w = 2.0 * min_x + grid_extent
+                    pad_h = 2.0 * min_y + grid_extent
+                else:
+                    # No container: fall back to grid + overplot (shouldn't
+                    # hit in valid layouts, since the C errors out then).
+                    pad_w = grid_extent + 2.0 * overplot
+                    pad_h = grid_extent + 2.0 * overplot
+
+                half_w = pad_w * 0.5
+                half_h = pad_h * 0.5
+                pad = [
+                    (cx_world - half_w, cy_world - half_h),
+                    (cx_world + half_w, cy_world - half_h),
+                    (cx_world + half_w, cy_world + half_h),
+                    (cx_world - half_w, cy_world + half_h),
+                ]
+                polys.append(_polygon_record_to_poly(pad, exit_rec, W))
+                polys.append(_polygon_record_to_poly(pad, primary_rec, W))
+                # nx × ny via grid at cluster centre.
+                cell0_x = cx_world - half_grid
+                cell0_y = cy_world - half_grid
+                for i in range(n_vias):
+                    for j in range(n_vias):
+                        x0 = cell0_x + i * vp
+                        y0 = cell0_y + j * vp
+                        polys.append(_closed_poly(
+                            [(x0, y0), (x0 + via_rec.width, y0),
+                             (x0 + via_rec.width, y0 + via_rec.width),
+                             (x0, y0 + via_rec.width)],
+                            z=0.0, metal=via_metal,
+                            width=via_rec.width, thickness=0.0,
+                        ))
 
     return polys
 

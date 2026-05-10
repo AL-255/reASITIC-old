@@ -40,26 +40,40 @@ def test_ring_default_sides(tech) -> None:
 # Via --------------------------------------------------------------------
 
 
-def test_via_endpoints_span_both_metals(tech) -> None:
+def test_via_emits_pad_polygons_on_both_metals(tech) -> None:
+    """C-faithful: cmd_via_build_geometry emits a polygon record at
+    the via shape's origin tagged with both metal-layer colours, which
+    CIF/GDS expanders write as a top-metal pad, a bottom-metal pad, and
+    nx × ny VIA squares. The Python form returns these as separate
+    polygons on the shape (top metal first, then bottom, then via grid).
+    """
     v = via("V1", tech=tech, via_index=0, x_origin=0.0, y_origin=0.0)
-    seg = v.polygons[0].vertices
-    # Two endpoints, one at the bottom-metal z and one at the top-metal z
-    assert len(seg) == 2
     via_rec = tech.vias[0]
-    bot_z = tech.metals[via_rec.bottom].d + tech.metals[via_rec.bottom].t * 0.5
-    top_z = tech.metals[via_rec.top].d + tech.metals[via_rec.top].t * 0.5
-    zs = sorted(p.z for p in seg)
-    assert zs[0] == pytest.approx(min(bot_z, top_z))
-    assert zs[1] == pytest.approx(max(bot_z, top_z))
+    # First two polys are the M2/M3 pad rectangles at the two metal
+    # indices; remaining are nx × ny via squares.
+    pad_metals = {v.polygons[0].metal, v.polygons[1].metal}
+    assert pad_metals == {via_rec.top, via_rec.bottom}
+    assert len(v.polygons) >= 3  # 2 pads + at least 1 via square
 
 
 def test_via_array_dimensions(tech) -> None:
+    """The cluster bbox spans ``nx · via_w + (nx-1) · via_s`` ×
+    ``ny · via_w + (ny-1) · via_s`` (decoded from
+    cmd_via_build_geometry @ :4091-4095).
+    """
     v = via("V1", tech=tech, via_index=0, nx=3, ny=2)
     via_rec = tech.vias[0]
     expected_w = via_rec.width * 3 + via_rec.space * 2
-    expected_t = via_rec.width * 2 + via_rec.space * 1
-    assert v.polygons[0].width == pytest.approx(expected_w)
-    assert v.polygons[0].thickness == pytest.approx(expected_t)
+    expected_h = via_rec.width * 2 + via_rec.space * 1
+    # First pad polygon's bbox should equal the cluster span.
+    pad_verts = v.polygons[0].vertices
+    xs = [p.x for p in pad_verts[:-1]]
+    ys = [p.y for p in pad_verts[:-1]]
+    assert (max(xs) - min(xs)) == pytest.approx(expected_w)
+    assert (max(ys) - min(ys)) == pytest.approx(expected_h)
+    # nx × ny via squares emitted (= 6 here)
+    via_squares = [p for p in v.polygons if p.metal >= len(tech.metals)]
+    assert len(via_squares) == 3 * 2
 
 
 def test_via_invalid_index_raises(tech) -> None:

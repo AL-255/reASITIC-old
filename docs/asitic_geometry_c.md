@@ -18,7 +18,7 @@ implementation in `src/reasitic/geometry.py`.
 | `Symmetric polygon` | `cmd_sympoly_build_geometry @ 0805a45c` | done (M3+M2 spiral); via-cluster pad widths outstanding | 2/2 |
 | `Transformer` | `cmd_trans_build_geometry @ 080576d4` | done (primary full; secondary M3+M2 full, VIA3 ~3µm off) | 2/2 |
 | `Balun` (3D Transformer) | `cmd_balun_build_geometry @ 0805bc74` | done | 2/2 (46 polys all match) |
-| `Via` | `cmd_via_build_geometry @ 08057b78` | covered indirectly | (no standalone golden) |
+| `Via` | `cmd_via_build_geometry @ 08057b78` | done | nx × ny array, top + bottom pad + via squares (no standalone golden) |
 
 ## Common Record Model
 

@@ -1420,38 +1420,76 @@ def via(
 ) -> Shape:
     """Build a via cluster of size ``nx`` × ``ny`` at ``(x, y)``.
 
-    Mirrors ``cmd_via_build_geometry`` (``asitic_repl.c:3934``).
-    The via record references both metal layers (``top``, ``bottom``)
-    via the via-table entry at ``via_index``.
+    Mirrors ``cmd_via_build_geometry`` (decomp ``0x08057b78``):
+    emits one polygon record at the shape's origin with X-extent
+    ``nx · via_w + (nx-1) · via_s`` and Y-extent
+    ``ny · via_w + (ny-1) · via_s``. The polygon is tagged with
+    both metal-layer colours (top via table[cc] and bottom via
+    table[d0]) so the CIF/GDS emitter expands it to:
+
+    * an M2 box pad covering the array
+    * an M3 box pad at the same position
+    * ``nx × ny`` VIA squares of size ``via_w × via_w`` spaced
+      by ``via_s + via_w`` in a regular grid
+
+    The Python form returns a Shape carrying all three layer
+    polygons directly (the C's "polygon record references both
+    metals + emits a grid" is decoded into individual records).
     """
     if via_index < 0 or via_index >= len(tech.vias):
         raise ValueError(f"no via at index {via_index}")
     v = tech.vias[via_index]
     top_metal = tech.metals[v.top]
     bot_metal = tech.metals[v.bottom]
-    z_top = top_metal.d + top_metal.t * 0.5
-    z_bot = bot_metal.d + bot_metal.t * 0.5
-    # A via is represented as a single z-direction segment between
-    # the two metal layers' centres. Width × thickness encode the
-    # contact dimensions.
-    a = Point(x_origin, y_origin, z_bot)
-    b = Point(x_origin, y_origin, z_top)
-    metal_idx = len(tech.metals) + via_index  # via "metal" index continues past metals
-    poly = Polygon(
-        vertices=[a, b],
-        metal=metal_idx,
-        width=v.width * nx + v.space * (nx - 1),
-        thickness=v.width * ny + v.space * (ny - 1),
-    )
+    via_metal_idx = len(tech.metals) + via_index
+
+    # Cluster span (decoded from cmd_via_build_geometry @ :4091-4095):
+    #   local_c4 = via_w * ny + via_s * (ny - 1)   -> Y span
+    #   local_dc = via_w * nx + via_s * (nx - 1)   -> X span
+    span_x = v.width * nx + v.space * max(0, nx - 1)
+    span_y = v.width * ny + v.space * max(0, ny - 1)
+    half_x = span_x * 0.5
+    half_y = span_y * 0.5
+
+    # Pad corners centred on (x_origin, y_origin).
+    pad = [
+        (x_origin - half_x, y_origin - half_y),
+        (x_origin + half_x, y_origin - half_y),
+        (x_origin + half_x, y_origin + half_y),
+        (x_origin - half_x, y_origin + half_y),
+    ]
+
+    polys: list[Polygon] = []
+    polys.append(_polygon_record_to_poly(pad, top_metal, span_x))
+    polys.append(_polygon_record_to_poly(pad, bot_metal, span_x))
+
+    # Lay out the nx × ny via grid. Each via is a via_w × via_w
+    # square; cell pitch = via_w + via_s.
+    pitch = v.width + v.space
+    cell0_x = x_origin - half_x
+    cell0_y = y_origin - half_y
+    for i in range(nx):
+        for j in range(ny):
+            x0 = cell0_x + i * pitch
+            y0 = cell0_y + j * pitch
+            polys.append(_closed_poly(
+                [(x0, y0), (x0 + v.width, y0),
+                 (x0 + v.width, y0 + v.width),
+                 (x0, y0 + v.width)],
+                z=0.0, metal=via_metal_idx,
+                width=v.width, thickness=0.0,
+            ))
+
     return Shape(
         name=name,
-        polygons=[poly],
+        polygons=polys,
         width=v.width,
         length=0.0,
         spacing=v.space,
         turns=1.0,
         sides=1,
-        metal=metal_idx,
+        metal=top_metal.index,
+        exit_metal=bot_metal.index,
         x_origin=x_origin,
         y_origin=y_origin,
         kind="via",

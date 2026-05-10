@@ -53,7 +53,7 @@ Keep the table sorted by Python module path, then by function name.
 | `square_spiral` | partial | `cmd_square_build_geometry` | `0x08056670` | Simple-case port; no exit-metal transition or 3D mirroring |
 | `polygon_spiral` | partial | `cmd_spiral_build_geometry` | `0x08057248` | Polygon-spiral with N sides |
 | `wire` | port | `cmd_wire_build_geometry` | `0x08057998` | Single straight rectangle |
-| `via` | partial | `cmd_via_build_geometry` | `0x08057b78` | Via cluster as a single z-segment between two metal layers |
+| `via` | done | `cmd_via_build_geometry` | `0x08057b78` | Via cluster: emits top-metal pad + bottom-metal pad + nx × ny via squares (matches the C's polygon record + CIF expansion) |
 | `ring` | port | `cmd_ring_build_geometry` (case 22) | — | Implemented as a single-turn polygon spiral |
 | `transformer` | partial | `cmd_trans_build_geometry` | `0x080576d4` | Two interleaved square coils |
 | `transformer_3d` | partial | `cmd_3dtrans_build_geometry` | `0x08057d40` | Two co-axial square coils on different metals + via |

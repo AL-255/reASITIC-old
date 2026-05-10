@@ -14,7 +14,7 @@ implementation in `src/reasitic/geometry.py`.
 | `Polygon spiral` | `cmd_spiral_build_geometry @ 08057248` | done | 3 sp_*_m{2,3} cases |
 | `Ring` | `cmd_ring_build_geometry @ 0805b450` | done | ring_r80_w10_g4_m3, ring_r120_w8_g6_m2 |
 | `MMSquare` | `cmd_mmsquare_build_geometry @ 0805af5c` | done | 2/2 |
-| `Symmetric square` | `cmd_symsq_build_geometry @ 08059854` | broken | 0/3 |
+| `Symmetric square` | `cmd_symsq_build_geometry @ 08059854` | N=2 done; N≥3 partial | 1/3 |
 | `Symmetric polygon` | `cmd_sympoly_build_geometry @ 0805a45c` | broken | 0/2 |
 | `Transformer` | `cmd_trans_build_geometry @ 080576d4` | done (primary full; secondary M3+M2 full, VIA3 ~3µm off) | 2/2 |
 | `Balun` (3D Transformer) | `cmd_3dtrans_build_geometry @ 08057d40` | broken | 0/2 |
@@ -360,11 +360,64 @@ secondary.linked_list[0xb4] = shape;
 
 So once SYMSQ is fully ported, BALUN is essentially free.
 
-**Python status (centre-U done; main spiral TODO).**
-`_symsq_centre_arm_polygons` matches the gold for all three
-cases. The main spiral structure (12 polygons across 6
-sub-pieces) needs `shape_aux_init` and `symsq_emit_polygon_layers`
-ported, plus the state machine that orchestrates them.
+**Python status: N=2 done, N≥3 partial.** All 38 polygons
+of `symsq_150x8x2x2_m3_m2` (the smallest case, N=2) match the
+gold vertex-for-vertex. Implementation:
+
+- `_symsq_u_ring_polygons(open_side='top'|'bottom')` —
+  generic chamfered "U" ring used for centre-U, outer ring,
+  inner mini-loop, and upper inner ring.
+- `_symsq_layout_polygons` — assembles everything for N=2.
+
+Verified per layer for case 1:
+
+| Layer | Gold | Py | Match |
+|---|---|---|---|
+| M3 | 17 | 17 | ✓ |
+| M2 | 3 | 3 | ✓ |
+| VIA3 | 18 | 18 | ✓ |
+
+### Generalising to N ≥ 3
+
+For N=3 (cases `symsq_200x10x3x3` and `symsq_300x12x4x3`), the
+M3 piece count grows because additional nested rings appear at
+both top and bottom. Decoded the per-ring formulas (verified
+against case 2 vertical sides):
+
+* Top ring k (k = 0..N−1):
+  ```
+  outer_top_y   = YORG + L + ILEN/2 − k·pitch
+  arm_bottom_y  = YORG + L/2 + ILEN
+  outer_x_min   = XORG + k·pitch
+  outer_x_max   = XORG + L − k·pitch
+  ```
+  k=0 is the centre-U (full-L wide); k=1..N-1 are nested
+  inner rings opening at bottom.
+
+* Bottom ring k (k = 0..N−1):
+  ```
+  outer_top_y   = YORG + L/2          (the arm-top side)
+  arm_bottom_y  = YORG + ILEN/2 + k·pitch
+  outer_x_min   = XORG + k·pitch
+  outer_x_max   = XORG + L − k·pitch
+  ```
+  k=0 is the outermost ring; k=1..N-1 are nested mini-loops
+  opening at top.
+
+* Stubs: each turn, the C state machine alternates which side
+  gets a 2-poly stub (ILEN/2 each). For N=2 it's on the left
+  at offset `X+pitch`. For N=3 it's on the right at offset
+  `X+L-pitch-W` (verified from case 2: y=200-210, y=210-220).
+  Pattern needs more cases to nail.
+
+* Slant transitions and via-cluster positions need similar
+  generalization. The C state machine (cases 0-7 in
+  cmd_symsq_build_geometry) emits exactly the right pieces in
+  exactly the right order; a direct port would handle all N
+  uniformly. Current pragmatic path: extend
+  `_symsq_layout_polygons` to loop over k = 0..N-1 for the
+  top/bottom rings + emit per-ring stubs/slants based on a
+  small alternation table.
 
 ## `cmd_sympoly_build_geometry` (`0x0805a45c`)
 

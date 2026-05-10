@@ -579,13 +579,50 @@ Implemented as `_trans_extend_primary_lead` and
 `_trans_extend_secondary_lead` in `geometry.py`. TRANS primary
 now full M3+M2+VIA3 match; secondary M3+M2 full match.
 
-**TRANS secondary VIA3 still off by ~3 µm.** Cluster center
-is at `(152, 86)` in py vs `(155, 89)` in gold — diff of
-exactly `S = 3` in both x and y. Likely the secondary's last
-polygon (post-flip) presents its terminal corner at a
-different position than the via-cluster placer assumes. Needs
-investigation into how the C trans handles the
-secondary-specific via cluster center.
+**TRANS secondary VIA3 still off — full investigation 2026-05-10.**
+
+What I see when I run `transformer(..., which="secondary")` against
+the gold:
+
+* M2/M3 box pad (8 × 8 at world `(152, 86)`): MATCHES gold exactly.
+* 9 VIA3 squares: my grid centre is at `(152, 86)` (concentric with
+  the pad) but the gold's grid is at `(157.25, 91.25)`. Diff is
+  `(+5.25, +5.25) = (grid_span_x, grid_span_y)` where
+  `grid_span = n_vias·via_w + (n_vias-1)·via_s = 3·0.75 + 2·1.5 = 5.25`
+  for the BiCMOS via3 tech (NOT `S = 3` as previously documented).
+
+Pre-flip, my cluster centre is at `(48, 130)` (last polygon's mid-x,
+max-y minus W/2). After dual-flip about axes `(200, 216)` it lands at
+`(152, 86)` for the pad. The via grid SHOULD also land at `(152, 86)`
+since both come from the same polygon list which is mirrored together.
+
+But the gold's via grid is at `(157.25, 91.25)` — meaning the
+PRE-FLIP via grid was at `(48 - 5.25, 130 - 5.25) = (42.75, 124.75)`,
+shifted from the pad centre by exactly `(-grid_span, -grid_span)`.
+
+The C's `cmd_square_build_geometry @ 3580` calls
+`lookup_via_for_metal_pair(metal, exit_metal, W, ..., x = local_28 *
+local_134 + local_dc, y = local_28 * local_138 + local_d4, 0, 0)` to
+place the via cluster, where:
+
+* `local_dc, local_d4` = chamfer corner of the LAST polygon
+* `local_28 = W` (= shape width)
+* `local_134, local_138 ∈ {-1, 0, +1}` selected by `uVar19` (last side)
+* For uVar19=3 (left side): `(local_134, local_138) = (1, 0)` → via
+  centre = `(chamfer_x + W, chamfer_y)`.
+
+So the C uses the chamfer corner offset by `(±W, 0)` or `(0, ±W)` per
+last side, NOT the centre of the last polygon. My `_square_access_polygons`
+puts the cluster at `(mid_x, max_y - W/2)` for last_side=3, which
+matches the M2/M3 pad position but not the via-grid position.
+
+Empirical fix: the secondary's via grid needs to be offset from my
+computed `(48, 130)` by `(-grid_span, -grid_span)` pre-flip. After
+the dual flip this lands at `(157.25, 91.25)` matching gold. The
+deeper port of the chamfer-based placement is outstanding — see
+`cmd_square_build_geometry @ 3580-3645` for the full state machine
+(cases 0, 1, 2, 3 of uVar19 each with their own pad-and-trace
+emission code that I haven't fully decoded).
 
 **Useful primitives now available**:
 

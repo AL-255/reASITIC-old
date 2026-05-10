@@ -172,43 +172,87 @@ def build_shape(spec: dict) -> dict:
     if tech is None:
         raise RuntimeError("Load a tech file first.")
 
-    kind = spec.get("kind", "square_spiral")
-    name = spec.get("name", "L1")
-    metal = spec.get("metal") or (tech.metals[-1].name or 0)
-    exit_metal = spec.get("exit_metal") or None
-    width = float(spec.get("width", 10.0))
-    length = float(spec.get("length", 170.0))
-    spacing = float(spec.get("spacing", 3.0))
-    turns = float(spec.get("turns", 2.0))
-    sides = int(spec.get("sides", 8))
-    radius = float(spec.get("radius", 100.0))
-    x_origin = float(spec.get("x_origin", 0.0))
-    y_origin = float(spec.get("y_origin", 0.0))
-    phase = float(spec.get("phase", 0.0))
-    orient = float(spec.get("orient", 0.0))
-    # Optional rectangular / inner-bound params (ignored when 0 / unset).
-    wid_opt = spec.get("wid")
-    ilen_opt = spec.get("ilen")
-    iwid_opt = spec.get("iwid")
-    w2_opt = spec.get("w2")
+    # ``spec`` comes through PyProxy.toPy from JS, so missing / hidden
+    # inputs arrive as ``None`` (JS ``undefined``) rather than absent
+    # keys. ``dict.get(..., default)`` therefore returns ``None`` and a
+    # bare ``float(None)`` crashes. _f / _i / _opt_str centralise the
+    # None-tolerant defaulting.
+    def _f(key, default):
+        v = spec.get(key, default)
+        if v is None:
+            return float(default)
+        try:
+            f = float(v)
+        except (TypeError, ValueError):
+            return float(default)
+        # NaN appears when the user blanks a hidden input; treat as
+        # "not set" so we fall back to the shape's natural default.
+        return float(default) if (f != f) else f
+
+    def _i(key, default):
+        v = spec.get(key, default)
+        if v is None:
+            return int(default)
+        try:
+            return int(float(v))
+        except (TypeError, ValueError):
+            return int(default)
+
+    def _opt(key):
+        v = spec.get(key)
+        if v is None or v == "":
+            return None
+        return v
+
+    kind = spec.get("kind", "square_spiral") or "square_spiral"
+    name = spec.get("name", "L1") or "L1"
+    metal = _opt("metal") or (tech.metals[-1].name or 0)
+    exit_metal = _opt("exit_metal")
+    width = _f("width", 10.0)
+    length = _f("length", 170.0)
+    spacing = _f("spacing", 3.0)
+    turns = _f("turns", 2.0)
+    sides = _i("sides", 8)
+    radius = _f("radius", 100.0)
+    x_origin = _f("x_origin", 0.0)
+    y_origin = _f("y_origin", 0.0)
+    phase = _f("phase", 0.0)
+    orient = _f("orient", 0.0)
+    # Optional rectangular / inner-bound params. ``_opt_pos`` returns
+    # ``None`` when the value is missing / blank / NaN / non-positive, so
+    # callers can treat "value present and meaningful" as "is not None".
+    def _opt_pos(key):
+        v = spec.get(key)
+        if v is None or v == "":
+            return None
+        try:
+            f = float(v)
+        except (TypeError, ValueError):
+            return None
+        if f != f or f <= 0:  # NaN or non-positive
+            return None
+        return f
+
+    wid_opt = _opt_pos("wid")
+    ilen_opt = _opt_pos("ilen")
+    iwid_opt = _opt_pos("iwid")
+    w2_opt = _opt_pos("w2")
     # CAP plates: ``metal_top`` (new UI) falls back to ``metal`` (legacy /
     # test-fixture compat). ``metal_bottom`` is required by the C and is
     # always passed by the UI / tests.
-    metal_top = spec.get("metal_top") or None
-    metal_bottom = spec.get("metal_bottom") or None
+    metal_top = _opt("metal_top")
+    metal_bottom = _opt("metal_bottom")
     # BALUN bridge / transition layer: ``metal_transition`` is the new UI
     # name; ``secondary_metal`` is the legacy alias still used by
     # tests/test_repl_layout_match.py.
     metal_transition = (
-        spec.get("metal_transition")
-        or spec.get("secondary_metal")
-        or None
+        _opt("metal_transition") or _opt("secondary_metal")
     )
     # Combine ORIENT (degrees, ASITIC convention) with PHASE (radians)
     # into the single ``phase`` argument the Python builder accepts.
     total_phase = phase + math.radians(orient)
 
-    if wid_opt is not None and float(wid_opt) > 0 and abs(float(wid_opt) - length) > 1e-9:
+    if wid_opt is not None and abs(wid_opt - length) > 1e-9:
         # The square-family Python builders currently take a single LEN
         # (square footprint). The C ASITIC supports rectangular LEN×WID
         # for SQ / SYMSQ / SQMM / TRANS but we haven't ported that path
@@ -217,7 +261,7 @@ def build_shape(spec: dict) -> dict:
             "Rectangular WID != LEN is not yet supported. "
             "Leave WID blank or set WID = LEN.",
         )
-    if ilen_opt is not None and float(ilen_opt) > 0 and kind in (
+    if ilen_opt is not None and kind in (
         "square_spiral", "multi_metal_square",
     ):
         # SQ / SQMM in C support an inner-bound ILEN; the Python builder
@@ -225,9 +269,9 @@ def build_shape(spec: dict) -> dict:
         raise NotImplementedError(
             "ILEN inner-bound is not yet supported for SQ / SQMM.",
         )
-    if iwid_opt is not None and float(iwid_opt) > 0:
+    if iwid_opt is not None:
         raise NotImplementedError("IWID is not yet supported.")
-    if w2_opt is not None and float(w2_opt) > 0 and float(w2_opt) != width:
+    if w2_opt is not None and w2_opt != width:
         raise NotImplementedError(
             "Independent W2 (balun secondary width) is not yet supported. "
             "Leave W2 blank or set W2 = W1.",
@@ -250,9 +294,9 @@ def build_shape(spec: dict) -> dict:
             x_origin=x_origin, y_origin=y_origin, phase=total_phase,
         )
     elif kind == "ring":
-        gap_deg = float(spec.get("gap", 0.0))
+        gap_deg = _f("gap", 0.0)
         n_sides = sides if sides >= 3 else 16
-        ring_radius = float(spec.get("radius", length))
+        ring_radius = _f("radius", length)
         sh = reasitic.ring(
             name, radius=ring_radius, width=width, gap=gap_deg,
             sides=n_sides, tech=tech, metal=metal,
@@ -329,9 +373,9 @@ def build_shape(spec: dict) -> dict:
             x_origin=x_origin, y_origin=y_origin, which=which,
         )
     elif kind == "via":
-        nx = int(spec.get("n_via_x", 1))
-        ny = int(spec.get("n_via_y", nx))
-        via_index = int(spec.get("via_index", 0))
+        nx = max(1, _i("n_via_x", 1))
+        ny = max(1, _i("n_via_y", nx))
+        via_index = max(0, _i("via_index", 0))
         sh = reasitic.via(
             name, tech=tech, via_index=via_index, nx=nx, ny=ny,
             x_origin=x_origin, y_origin=y_origin,

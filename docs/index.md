@@ -19,6 +19,7 @@ cookbook
 faq
 cli
 gui
+repl
 ```
 
 ```{toctree}
@@ -27,6 +28,7 @@ gui
 
 api/index
 mapping
+asitic_geometry_c
 benchmarks
 milestone
 changelog

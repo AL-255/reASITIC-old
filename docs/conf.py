@@ -171,3 +171,45 @@ nitpick_ignore: list[tuple[str, str]] = []
 # regeneration — set MPLBACKEND so any matplotlib import inside an autodoc'd
 # module never tries to open a display.
 os.environ.setdefault("MPLBACKEND", "Agg")
+
+
+# -- Bundle the in-browser Pyodide REPL ------------------------------------
+#
+# ``docs/repl/`` holds a self-contained REPL: an HTML page, JS UI, the
+# reasitic wheel, and the BiCMOS / CMOS .tek files. We copy the whole
+# directory to ``_build/html/repl/`` after Sphinx finishes so visitors of
+# the published site can open ``…/repl/`` directly and the page works
+# with relative URLs (Pyodide is fetched from a CDN; everything else is
+# colocated). This makes the REPL accessible from GitHub Pages without
+# any extra deployment step.
+
+import shutil
+
+
+def _copy_repl_into_build(app, exception):  # pragma: no cover - build hook
+    """Mirror ``docs/repl/`` into ``_build/html/repl/`` post-build.
+
+    Skipped if the build raised, so failed runs don't ship a stale REPL.
+    """
+    if exception is not None:
+        return
+    src = Path(app.srcdir) / "repl"
+    if not src.is_dir():
+        return
+    dst = Path(app.outdir) / "repl"
+    if dst.exists():
+        shutil.rmtree(dst)
+    shutil.copytree(
+        src, dst,
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".DS_Store"),
+    )
+
+
+def setup(app):  # pragma: no cover - sphinx extension hook
+    app.connect("build-finished", _copy_repl_into_build)
+    return {"parallel_read_safe": True, "parallel_write_safe": True}
+
+
+# Don't try to render the REPL's own ``index.html`` and wheel as Sphinx
+# sources — they're plain HTML/JS that we copy verbatim above.
+exclude_patterns += ["repl/**"]

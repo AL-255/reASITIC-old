@@ -34,6 +34,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[docs]"
+          pip install build
+
+      - name: Build wheel for in-browser REPL
+        # The Pyodide REPL under docs/repl/ loads the reasitic wheel
+        # from docs/repl/wheels/. Build a fresh wheel so the deployed
+        # site always reflects the current source.
+        run: |
+          python -m build --wheel --outdir docs/repl/wheels/
 
       - name: Build HTML
         working-directory: docs

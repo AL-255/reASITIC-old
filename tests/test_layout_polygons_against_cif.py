@@ -264,6 +264,48 @@ def _assert_same_polygons(actual, expected, *, tol: float = 0.01) -> None:
             ]
             for layer in ("M3", "M2", "VIA3")
         ),
+        # BALUN — primary + secondary, full parity for the one
+        # canonical case
+        (
+            "balun_200x8x3x3_m3_m2_primary",
+            lambda tech: reasitic.balun(
+                "BL", length=200, width=8, spacing=3, turns=3,
+                primary_metal="m3", secondary_metal="m2", exit_metal="m2",
+                tech=tech, x_origin=0, y_origin=0, which="primary",
+            ),
+            "M3",
+            0.02,
+        ),
+        (
+            "balun_200x8x3x3_m3_m2_primary",
+            lambda tech: reasitic.balun(
+                "BL", length=200, width=8, spacing=3, turns=3,
+                primary_metal="m3", secondary_metal="m2", exit_metal="m2",
+                tech=tech, x_origin=0, y_origin=0, which="primary",
+            ),
+            "M2",
+            0.02,
+        ),
+        (
+            "balun_200x8x3x3_m3_m2_primary",
+            lambda tech: reasitic.balun(
+                "BL", length=200, width=8, spacing=3, turns=3,
+                primary_metal="m3", secondary_metal="m2", exit_metal="m2",
+                tech=tech, x_origin=0, y_origin=0, which="primary",
+            ),
+            "VIA3",
+            0.02,
+        ),
+        (
+            "balun_200x8x3x3_m3_m2_secondary",
+            lambda tech: reasitic.balun(
+                "BL", length=200, width=8, spacing=3, turns=3,
+                primary_metal="m3", secondary_metal="m2", exit_metal="m2",
+                tech=tech, x_origin=0, y_origin=0, which="secondary",
+            ),
+            "M3",
+            0.02,
+        ),
     ],
 )
 def test_layout_polygons_match_cif_goldens(stem, shape_factory, layer, tol, tech):

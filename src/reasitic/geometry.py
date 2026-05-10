@@ -994,6 +994,10 @@ def layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
         return list(shape.polygons)
     if shape.kind == "symsq":
         return _symsq_layout_polygons(shape, tech)
+    if shape.kind == "balun_primary":
+        return _balun_primary_layout_polygons(shape, tech)
+    if shape.kind == "balun_secondary":
+        return _balun_secondary_layout_polygons(shape, tech)
     if shape.kind == "polygon_spiral":
         return _polygon_spiral_layout_polygons(shape, tech)
     if shape.kind == "ring":
@@ -2387,52 +2391,243 @@ def balun(
     spacing: float,
     turns: float,
     tech: Tech,
-    metal: int | str = 0,
+    metal: int | str | None = None,
     metal2: int | str | None = None,
+    primary_metal: int | str | None = None,
+    secondary_metal: int | str | None = None,
+    exit_metal: int | str | None = None,
     x_origin: float = 0.0,
     y_origin: float = 0.0,
+    which: str = "primary",
 ) -> Shape:
-    """Build a planar balun (``Balun``, command id 5).
+    """Build one coil of a 3D / planar balun (``Balun``, decomp ``0x0805bc74``).
 
-    Two stacked counter-wound square coils, typically on adjacent
-    metal layers, used for differential-to-single-ended conversion.
-    Mirrors ``cmd_balun_build_geometry`` in the original.
+    The C builder is a 72-byte wrapper that calls
+    ``cmd_symsq_build_geometry`` twice and applies ``cmd_flipv_apply``
+    to the secondary. Each coil is a *partial* SYMSQ — only
+    alternating rings are emitted, so the two coils together
+    interleave nicely in 3D::
+
+        Primary   coil:  rings 0, 2, 4, … (even k)
+        Secondary coil:  rings 1, 3, 5, … (odd  k)
+
+    The internal ILEN is derived from the build args (no explicit
+    ILEN parameter for BALUN) — decoded from gold
+    ``balun_200x8x3x3_m3_m2``: ``ILEN = 2 · (W + S) = 2 · pitch``.
+
+    Use ``which="primary"`` (default) or ``which="secondary"`` to
+    select the coil to materialise.
     """
-    metal2_resolved = metal if metal2 is None else metal2
-    coil_a = square_spiral(
-        f"{name}_a",
-        length=length,
-        width=width,
-        spacing=spacing,
-        turns=turns,
-        tech=tech,
-        metal=metal,
-        x_origin=x_origin,
-        y_origin=y_origin,
-    )
-    coil_b = square_spiral(
-        f"{name}_b",
-        length=length,
-        width=width,
-        spacing=spacing,
-        turns=turns,
-        tech=tech,
-        metal=metal2_resolved,
-        x_origin=x_origin,
-        y_origin=y_origin,
-        phase=math.pi,
-    )
+    primary_idx = _resolve_metal(
+        tech, primary_metal if primary_metal is not None else metal,
+    ).index if (metal is not None or primary_metal is not None) else 0
+    # In the 2D CIF, both BALUN coils land on the SAME metal layer
+    # (METAL=m3 in the canonical case). The METAL2 / secondary_metal
+    # parameter affects 3D inductance modelling but not the layout.
+    # The exit_metal parameter (if provided) is used for the centre-
+    # tap via cluster on the primary coil — defaults to METAL2 for
+    # backward compat.
+    if exit_metal is not None:
+        exit_idx = _resolve_metal(tech, exit_metal).index
+    else:
+        exit_metal_arg = secondary_metal if secondary_metal is not None else metal2
+        exit_idx = _resolve_metal(tech, exit_metal_arg).index if exit_metal_arg is not None else None
+
     return Shape(
         name=name,
-        polygons=coil_a.polygons + coil_b.polygons,
-        width=width,
-        length=length,
-        spacing=spacing,
-        turns=turns,
+        polygons=[],
+        width=width, length=length, spacing=spacing, turns=turns,
         sides=4,
-        metal=coil_a.metal,
-        exit_metal=coil_b.metal,
-        x_origin=x_origin,
-        y_origin=y_origin,
-        kind="balun",
+        metal=primary_idx,
+        exit_metal=exit_idx,
+        x_origin=x_origin, y_origin=y_origin,
+        ilen=2.0 * (width + spacing),
+        kind="balun_primary" if which == "primary" else "balun_secondary",
     )
+
+
+def _balun_primary_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
+    """Primary coil of a BALUN — rings 0, 2, 4, ... + via clusters + M2 trace.
+
+    The primary BALUN coil is a partial SYMSQ that emits only the
+    EVEN-indexed rings (k = 0, 2, ...) plus the centre-tap routing.
+    Matches the ``balun_..._primary.cif`` gold output.
+    """
+    L = shape.length
+    W = shape.width
+    S = shape.spacing
+    if L <= 0 or W <= 0:
+        return []
+    pitch = W + S
+    ILEN = shape.ilen if shape.ilen > 0 else 2.0 * pitch
+    X = shape.x_origin
+    Y = shape.y_origin
+    metal_rec = tech.metals[shape.metal]
+    n_int = int(round(shape.turns))
+    even_ks = [k for k in range(n_int) if k % 2 == 0]
+    polys: list[Polygon] = []
+
+    # Centre-U at top (always — it's ring k=0 top, full L width)
+    polys.extend(_symsq_centre_arm_polygons(L, W, ILEN, X, Y, metal_rec))
+    # Top rings k=2, 4, ... (even and ≥1)
+    for k in even_ks:
+        if k == 0:
+            continue
+        polys.extend(_symsq_u_ring_polygons(
+            outer_x_min=X + k * pitch, outer_x_max=X + L - k * pitch,
+            outer_top_y=Y + L + ILEN * 0.5 - k * pitch,
+            arm_bottom_y=Y + L * 0.5 + ILEN,
+            W=W, open_side="bottom", metal_rec=metal_rec,
+        ))
+    # Bottom rings k=0, 2, 4, ...
+    for k in even_ks:
+        polys.extend(_symsq_u_ring_polygons(
+            outer_x_min=X + k * pitch, outer_x_max=X + L - k * pitch,
+            outer_top_y=Y + L * 0.5,
+            arm_bottom_y=Y + ILEN * 0.5 + k * pitch,
+            W=W, open_side="top", metal_rec=metal_rec,
+        ))
+
+    # Stubs + slants for the INNERMOST even ring (= max even k)
+    if even_ks and ILEN > 0:
+        k_inner = max(even_ks)
+        if k_inner > 0:
+            # Left stub at offset k_inner from XORG
+            stub_x0 = X + k_inner * pitch
+            stub_x1 = stub_x0 + W
+            stub_mid = Y + L * 0.5 + ILEN * 0.5
+            for y0, y1 in [
+                (Y + L * 0.5, stub_mid), (stub_mid, Y + L * 0.5 + ILEN),
+            ]:
+                polys.append(_polygon_record_to_poly(
+                    [(stub_x0, y0), (stub_x0, y1), (stub_x1, y1), (stub_x1, y0)],
+                    metal_rec, W,
+                ))
+            # Right slant: top edge at the INNERMOST ring's outer-x
+            # (offset k_inner*pitch from right), bottom edge at the
+            # OUTERMOST ring's outer-x (offset 0 from right).
+            u_arm_bot = Y + L * 0.5 + ILEN
+            slant = [
+                (X + L - k_inner * pitch, u_arm_bot),
+                (X + L, Y + L * 0.5),
+                (X + L - W, Y + L * 0.5),
+                (X + L - k_inner * pitch - W, u_arm_bot),
+            ]
+            polys.append(_polygon_record_to_poly(slant, metal_rec, W))
+
+    # Via clusters + M2 trace — only on the right side. Pad 1 is at
+    # the OUTERMOST ring's right vertical (offset 0 from right);
+    # pad 2 is at the INNERMOST ring's right vertical (offset
+    # k_inner*pitch). Decoded from gold balun_200x8x3x3:
+    #   pad 1 cx = 196 = X+L-W/2     (offset 0 from right)
+    #   pad 2 cx = 174 = X+L-2pitch-W/2  (offset k_inner=2)
+    exit_idx = shape.exit_metal
+    if exit_idx is not None and exit_idx != shape.metal and even_ks:
+        k_inner = max(even_ks)
+        via_rec, via_idx = None, -1
+        for i, v in enumerate(tech.vias):
+            if {v.top, v.bottom} == {shape.metal, exit_idx}:
+                via_rec, via_idx = v, i
+                break
+        if via_rec is not None:
+            overplot = max(via_rec.overplot1, via_rec.overplot2)
+            vp = via_rec.width + via_rec.space
+            n_vias = max(1, int(math.floor((W - 2.0 * overplot + via_rec.space) / vp)))
+            cluster_span = n_vias * via_rec.width + (n_vias - 1) * via_rec.space
+            pad_h = cluster_span + 2.0 * overplot
+            u_arm_bot = Y + L * 0.5 + ILEN
+            exit_metal_rec = tech.metals[exit_idx]
+            via_metal = len(tech.metals) + via_idx
+            half_w = W * 0.5
+            half_h = pad_h * 0.5
+            pad_centers = [
+                (X + L - W * 0.5,
+                 u_arm_bot + pad_h * 0.5),
+                (X + L - k_inner * pitch - W * 0.5,
+                 Y + L * 0.5 - pad_h * 0.5),
+            ]
+            for cx, cy in pad_centers:
+                pad_corners = [
+                    (cx - half_w, cy - half_h), (cx + half_w, cy - half_h),
+                    (cx + half_w, cy + half_h), (cx - half_w, cy + half_h),
+                ]
+                polys.append(_polygon_record_to_poly(pad_corners, exit_metal_rec, W))
+                polys.append(_polygon_record_to_poly(pad_corners, metal_rec, W))
+                cell0_x = cx - cluster_span * 0.5
+                cell0_y = cy - cluster_span * 0.5
+                for i in range(n_vias):
+                    for j in range(n_vias):
+                        x0 = cell0_x + i * vp
+                        y0 = cell0_y + j * vp
+                        polys.append(_closed_poly(
+                            [(x0, y0), (x0 + via_rec.width, y0),
+                             (x0 + via_rec.width, y0 + via_rec.width),
+                             (x0, y0 + via_rec.width)],
+                            z=0.0, metal=via_metal,
+                            width=via_rec.width, thickness=0.0,
+                        ))
+            # M2 chamfered transition trace from the outermost-ring
+            # pad to the innermost-ring pad.
+            trace = [
+                (X + L, u_arm_bot),
+                (X + L - k_inner * pitch, Y + L * 0.5),
+                (X + L - k_inner * pitch - W, Y + L * 0.5),
+                (X + L - W, u_arm_bot),
+            ]
+            polys.append(_polygon_record_to_poly(trace, exit_metal_rec, W))
+
+    return polys
+
+
+def _balun_secondary_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
+    """Secondary coil of a BALUN — odd-indexed rings only.
+
+    No centre-U, no via clusters, no M2 trace — just the rings and
+    their centre-transition stubs.
+    """
+    L = shape.length
+    W = shape.width
+    S = shape.spacing
+    if L <= 0 or W <= 0:
+        return []
+    pitch = W + S
+    ILEN = shape.ilen if shape.ilen > 0 else 2.0 * pitch
+    X = shape.x_origin
+    Y = shape.y_origin
+    metal_rec = tech.metals[shape.metal]
+    n_int = int(round(shape.turns))
+    odd_ks = [k for k in range(n_int) if k % 2 == 1]
+    polys: list[Polygon] = []
+
+    # Top rings k=1, 3, ...
+    for k in odd_ks:
+        polys.extend(_symsq_u_ring_polygons(
+            outer_x_min=X + k * pitch, outer_x_max=X + L - k * pitch,
+            outer_top_y=Y + L + ILEN * 0.5 - k * pitch,
+            arm_bottom_y=Y + L * 0.5 + ILEN,
+            W=W, open_side="bottom", metal_rec=metal_rec,
+        ))
+    # Bottom rings k=1, 3, ...
+    for k in odd_ks:
+        polys.extend(_symsq_u_ring_polygons(
+            outer_x_min=X + k * pitch, outer_x_max=X + L - k * pitch,
+            outer_top_y=Y + L * 0.5,
+            arm_bottom_y=Y + ILEN * 0.5 + k * pitch,
+            W=W, open_side="top", metal_rec=metal_rec,
+        ))
+
+    # Stubs for the OUTERMOST odd ring (= min odd k, typically 1)
+    if odd_ks and ILEN > 0:
+        k_outer_odd = min(odd_ks)
+        stub_x0 = X + k_outer_odd * pitch
+        stub_x1 = stub_x0 + W
+        stub_mid = Y + L * 0.5 + ILEN * 0.5
+        for y0, y1 in [
+            (Y + L * 0.5, stub_mid), (stub_mid, Y + L * 0.5 + ILEN),
+        ]:
+            polys.append(_polygon_record_to_poly(
+                [(stub_x0, y0), (stub_x0, y1), (stub_x1, y1), (stub_x1, y0)],
+                metal_rec, W,
+            ))
+
+    return polys

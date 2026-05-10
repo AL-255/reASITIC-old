@@ -17,7 +17,7 @@ implementation in `src/reasitic/geometry.py`.
 | `Symmetric square` | `cmd_symsq_build_geometry @ 08059854` | done | 3/3 (266 polys all match) |
 | `Symmetric polygon` | `cmd_sympoly_build_geometry @ 0805a45c` | broken | 0/2 |
 | `Transformer` | `cmd_trans_build_geometry @ 080576d4` | done (primary full; secondary M3+M2 full, VIA3 ~3µm off) | 2/2 |
-| `Balun` (3D Transformer) | `cmd_3dtrans_build_geometry @ 08057d40` | broken | 0/2 |
+| `Balun` (3D Transformer) | `cmd_balun_build_geometry @ 0805bc74` | done | 2/2 (46 polys all match) |
 | `Via` | `cmd_via_build_geometry @ 08057b78` | covered indirectly | (no standalone golden) |
 
 ## Common Record Model

@@ -1684,6 +1684,65 @@ def _trans_extend_primary_lead(
     return out
 
 
+def _symsq_centre_arm_polygons(
+    L: float, W: float, ilen: float,
+    x_origin: float, y_origin: float,
+    metal_rec: Metal,
+) -> list[Polygon]:
+    """The 3-poly U-shape that sits at the top of a SYMSQ.
+
+    The U is the centre-tap connector between the two arms of the
+    symmetric square inductor. Decoded by linear regression across
+    the three golden cases (symsq_150x8x2x2, symsq_200x10x3x3,
+    symsq_300x12x4x3):
+
+    * U_outer_top_y   = YORG + L + ILEN/2
+    * U_inner_top_y   = U_outer_top_y − W
+    * U_arm_bottom_y  = YORG + L/2 + ILEN
+    * U_outer_x:      XORG → XORG + L
+    * U_inner_x:      XORG + W → XORG + L − W
+    * U_height        = (L − ILEN) / 2
+
+    Each polygon is a chamfered trapezoid: the U arms have a chamfer
+    at the top-inner corner (where they meet the U top); the U top
+    has chamfers at both inner corners.
+    """
+    u_outer_top = y_origin + L + ilen * 0.5
+    u_inner_top = u_outer_top - W
+    u_arm_bot = y_origin + L * 0.5 + ilen
+    x_left_outer = x_origin
+    x_left_inner = x_origin + W
+    x_right_outer = x_origin + L
+    x_right_inner = x_origin + L - W
+
+    # Left arm — chamfer at top-right inner corner (where it meets the U top).
+    left_arm = [
+        (x_left_outer, u_arm_bot),
+        (x_left_outer, u_outer_top),
+        (x_left_inner, u_inner_top),
+        (x_left_inner, u_arm_bot),
+    ]
+    # Top — chamfers at both inner corners.
+    top_bar = [
+        (x_left_outer, u_outer_top),
+        (x_right_outer, u_outer_top),
+        (x_right_inner, u_inner_top),
+        (x_left_inner, u_inner_top),
+    ]
+    # Right arm — chamfer at top-left inner corner (mirror of left).
+    right_arm = [
+        (x_right_outer, u_outer_top),
+        (x_right_outer, u_arm_bot),
+        (x_right_inner, u_arm_bot),
+        (x_right_inner, u_inner_top),
+    ]
+    return [
+        _polygon_record_to_poly(left_arm, metal_rec, W),
+        _polygon_record_to_poly(top_bar, metal_rec, W),
+        _polygon_record_to_poly(right_arm, metal_rec, W),
+    ]
+
+
 def _trans_extend_secondary_lead(
     polys: list[Polygon], pitch: float,
 ) -> list[Polygon]:

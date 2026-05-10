@@ -282,62 +282,72 @@ centre with the same ILEN-based centre-tap bridge.
 half-radius polygon spirals at offset positions. Signature
 doesn't accept `ilen`. Same gaps as `symmetric_square`.
 
-## Resume here (2026-05-09)
+## Resume here (2026-05-09 round 2)
 
-**Status snapshot.** 6/10 builders verified vertex-for-vertex
-against CIF goldens: wire, capacitor, square (incl. exit
-routing), polygon spiral, ring, MMSQ. Still broken: TRANS,
-BALUN/3DTRANS, SYMSQ, SYMPOLY.
+**Status snapshot.** 7/10 builders done or substantially-done.
 
-**Useful primitives now available** (unlocked while doing MMSQ):
+| Builder | M2 | M3 | VIA3 |
+|---|---|---|---|
+| Wire ✓ | n/a | exact | n/a |
+| Capacitor ✓ | exact | exact | n/a |
+| Square ✓ | exact | exact | exact |
+| Polygon spiral ✓ | n/a | exact | n/a |
+| Ring ✓ | n/a | exact | n/a |
+| MMSQ ✓ | exact | exact | n/a |
+| TRANS (mostly) | exact | 12/13 | exact |
+| SYMSQ | not started | | |
+| SYMPOLY | not started | | |
+| BALUN/3DTRANS | not started | | |
 
-- `_polygon_fliph_apply(polys)` — Y-mirror about bbox center.
-- `_polygon_flipv_apply(polys)` — X-mirror about bbox center.
-- `_polygons_relayer(polys, tech, metal_idx)` — re-emit polygons
-  on a different metal layer (z, thickness, metal index).
-- `_polygon_bbox(polys)` — `(xmin, xmax, ymin, ymax)` over all
-  vertices.
+**TRANS outstanding gap.** The entry-lead extension on the
+outermost top side needs decoding. The gold extends the lead
+back to `x=0` (chip edge or some reference); my Python stops
+at `x=11` (= W+S). Looking at cmd_trans_build_geometry lines
+3879-3897, after the cmd_square + flips, the C does
+adjustments using `dVar2 = (W + S)/2 = 5.5` — but the actual
+lead extension is 11. The 5.5 shift in the C might be one of
+two combined adjustments (primary.last shifted by -5.5 +
+something else, secondary.first shifted by +5.5 + something
+else). Needs side-by-side trace.
+
+Also the secondary's via cluster is off by 3 µm in both x and
+y. Unclear cause — could be the secondary's basic spiral
+terminating at a slightly different innermost-end position.
+
+**Useful primitives now available**:
+
+- `_polygon_fliph_apply(polys, y_axis=...)` — Y-mirror with
+  optional explicit axis (not bbox-derived).
+- `_polygon_flipv_apply(polys, x_axis=...)` — X-mirror with
+  optional explicit axis.
+- `_polygons_relayer(polys, tech, metal_idx)` — re-emit on a
+  different metal layer.
+- `_polygon_bbox(polys)` — `(xmin, xmax, ymin, ymax)`.
 - `_square_layout_polygons(..., trim_final=False)` — square
-  spiral without the exit-via clearance trim (used by MMSQ; will
-  be needed by TRANS/BALUN too).
+  spiral without the exit-via clearance trim.
+- `_square_access_polygons` via-array sizing now uses `floor`
+  to match the C convention.
 
-**Suggested next unit (TRANS).** Read
-`cmd_trans_build_geometry @ 0x080576d4` (568 bytes — short!) end
-to end. The structure is:
+**Suggested next unit.** SYMSQ is structurally most similar
+to a "two square arms + centre-tap bridge". The C function is
+2679 bytes, with `cmd_symsq_emit_helper @ 0x080595d0` doing
+the per-turn polygon emission. The golden CIFs show:
 
-```c
-cmd_square_build_geometry(primary, 3);     // build primary at its origin
-cmd_square_build_geometry(secondary, 3);   // build secondary at its origin
-cmd_flipv_apply(secondary);                // flip x
-cmd_fliph_apply(secondary);                // flip y
-// Adjust the secondary's *first* and *last* segments to
-// interleave with the primary (lines 3879-3897 of asitic_repl.c).
-// Approximation: skip the per-segment endpoint adjustment and
-// just rely on the double-flip for ~95% match.
-shape.linked_list[0xb4] = secondary;       // sibling pointer
-secondary.linked_list[0xb4] = primary;
-```
+- A 3-poly M3 "centre arm" (the bridge)
+- Two via clusters (one per arm endpoint that lands on M2)
+- A 12-poly M3 main spiral structure
+- An M2 connecting trace
 
-Both coils are on the SAME metal (METAL=m3 in the canonical
-test case), with EXIT=m2 routing applied to each. The CIF
-golden saves them separately by name (`CIFSAVE TP file.cif`
-saves only the primary's polygons). The Python equivalent
-needs to return TWO Shape objects (primary + secondary) or a
-single Shape with a pointer to its sibling, mirroring the C's
-linked-list structure.
+`symsq_150x8x2x2_m3_m2.cif` is the smallest case (53 lines —
+half the size of `symsq_200x10x3x3` and `symsq_300x12x4x3`)
+and a good starting point.
 
-A `which="primary"|"secondary"` kwarg on `transformer()` is
-the most ergonomic match for the existing test harness:
-
-```python
-trans_p = reasitic.transformer("TP", length=200, width=8, ...,
-                                metal="m3", exit_metal="m2",
-                                which="primary")
-trans_s = reasitic.transformer("TS", ..., which="secondary")
-```
-
-After TRANS lands, BALUN follows the same pattern but with the
-secondary on a *different* metal layer (3D / coupled stack).
+For the entry-lead extension fix on TRANS, search the C for
+`shape_extend_first_segment_unit` and any related extension
+helpers; the standalone-square call at `cmd_square_build_geometry`
+calls it conditionally on `color_idx == 0 || color_idx == 2`,
+but TRANS uses color_idx=3. Maybe TRANS does its own extension
+via a different code path I haven't found yet.
 
 ## Remaining Work
 

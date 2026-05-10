@@ -16,7 +16,7 @@ implementation in `src/reasitic/geometry.py`.
 | `MMSquare` | `cmd_mmsquare_build_geometry @ 0805af5c` | done | 2/2 |
 | `Symmetric square` | `cmd_symsq_build_geometry @ 08059854` | broken | 0/3 |
 | `Symmetric polygon` | `cmd_sympoly_build_geometry @ 0805a45c` | broken | 0/2 |
-| `Transformer` | `cmd_trans_build_geometry @ 080576d4` | partial (M2/VIA3 match, M3 12/13) | 2/2 cases routed |
+| `Transformer` | `cmd_trans_build_geometry @ 080576d4` | done (primary full; secondary M3+M2 full, VIA3 ~3µm off) | 2/2 |
 | `Balun` (3D Transformer) | `cmd_3dtrans_build_geometry @ 08057d40` | broken | 0/2 |
 | `Via` | `cmd_via_build_geometry @ 08057b78` | covered indirectly | (no standalone golden) |
 
@@ -299,20 +299,29 @@ doesn't accept `ilen`. Same gaps as `symmetric_square`.
 | SYMPOLY | not started | | |
 | BALUN/3DTRANS | not started | | |
 
-**TRANS outstanding gap.** The entry-lead extension on the
-outermost top side needs decoding. The gold extends the lead
-back to `x=0` (chip edge or some reference); my Python stops
-at `x=11` (= W+S). Looking at cmd_trans_build_geometry lines
-3879-3897, after the cmd_square + flips, the C does
-adjustments using `dVar2 = (W + S)/2 = 5.5` — but the actual
-lead extension is 11. The 5.5 shift in the C might be one of
-two combined adjustments (primary.last shifted by -5.5 +
-something else, secondary.first shifted by +5.5 + something
-else). Needs side-by-side trace.
+**TRANS entry-lead gap RESOLVED.** Decoded in commit *(this
+session)*: `dVar2` in `cmd_trans_build_geometry @ :3879-3893`
+evaluates to **`pitch = W + S`** (not `W+S/2`), because
+`cmd_trans_create_new` at `:11171` pre-modifies
+`primary.S = 2*S + W` so `(W + S')/2 = pitch`. The C then:
 
-Also the secondary's via cluster is off by 3 µm in both x and
-y. Unclear cause — could be the secondary's basic spiral
-terminating at a slightly different innermost-end position.
+* shifts `primary.first_polygon`'s start corners by `-pitch`
+  (extending the outermost top-side leftward to `x=0`)
+* shifts `secondary.first_polygon`'s start corners by `+pitch`
+  (post-flip, this extends the secondary's outermost top-side
+  rightward to `x = XORG + L + pitch`)
+
+Implemented as `_trans_extend_primary_lead` and
+`_trans_extend_secondary_lead` in `geometry.py`. TRANS primary
+now full M3+M2+VIA3 match; secondary M3+M2 full match.
+
+**TRANS secondary VIA3 still off by ~3 µm.** Cluster center
+is at `(152, 86)` in py vs `(155, 89)` in gold — diff of
+exactly `S = 3` in both x and y. Likely the secondary's last
+polygon (post-flip) presents its terminal corner at a
+different position than the via-cluster placer assumes. Needs
+investigation into how the C trans handles the
+secondary-specific via cluster center.
 
 **Useful primitives now available**:
 

@@ -987,8 +987,8 @@ def layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
         return _square_layout_polygons(shape, tech)
     if shape.kind == "mmsquare":
         return _mmsquare_layout_polygons(shape, tech)
-    if shape.kind == "transformer_secondary":
-        # Pre-flipped polygons stored on the shape directly
+    if shape.kind == "transformer_secondary" or shape.kind == "transformer_primary":
+        # Polygons already laid out & adjusted; stored on the shape.
         return list(shape.polygons)
     if shape.kind == "polygon_spiral":
         return _polygon_spiral_layout_polygons(shape, tech)
@@ -1599,8 +1599,32 @@ def transformer(
         x_origin=coil_x, y_origin=coil_y, kind="square",
     )
 
+    # The C cmd_trans_build_geometry applies a per-coil entry-lead
+    # extension. Decoded from asitic_repl.c:3879-3893:
+    #
+    #     dVar2 = primary.W + (secondary.S' - primary.W) / 2
+    #           = (W + S') / 2 = pitch_post_setup / 2 = (W + S)
+    #     primary.first_polygon[start corners].x   -= dVar2
+    #     secondary.first_polygon[start corners].x += dVar2
+    #
+    # where ``S'`` is the trans-modified spacing (= W + 2*S; see
+    # cmd_trans_create_new at asitic_repl.c:11171). After
+    # simplification ``dVar2 = W + S = pitch`` (single-coil pitch).
+    # Effect: each coil's outermost top side gets extended outward
+    # by pitch on its outer-end (primary on the left, secondary on
+    # the right — by symmetry of the double-flip).
+    pitch = W + S
+
     if which == "primary":
-        return base_shape
+        primary_polys = layout_polygons(base_shape, tech)
+        primary_polys = _trans_extend_primary_lead(primary_polys, pitch)
+        return Shape(
+            name=name, polygons=primary_polys,
+            width=W, length=L, spacing=coil_spacing, turns=N, sides=4,
+            metal=coil_idx, exit_metal=exit_idx,
+            x_origin=coil_x, y_origin=coil_y,
+            kind="transformer_primary",
+        )
 
     if which != "secondary":
         raise ValueError(f"which must be 'primary' or 'secondary', not {which!r}")
@@ -1617,6 +1641,10 @@ def transformer(
         _polygon_fliph_apply(base_polys, y_axis=spiral_y_axis),
         x_axis=spiral_x_axis,
     )
+    # The secondary's lead extension is on the post-flip RIGHT end
+    # (which was the LEFT end pre-flip; the +dVar2 shift in the C
+    # symmetrically extends the secondary outward on its outer end).
+    secondary_polys = _trans_extend_secondary_lead(secondary_polys, pitch)
 
     return Shape(
         name=name, polygons=secondary_polys,
@@ -1625,6 +1653,61 @@ def transformer(
         x_origin=coil_x, y_origin=coil_y,
         kind="transformer_secondary",
     )
+
+
+def _trans_extend_primary_lead(
+    polys: list[Polygon], pitch: float,
+) -> list[Polygon]:
+    """Extend the primary's outermost top side leftward by ``pitch``.
+
+    Mirrors cmd_trans_build_geometry's primary.first_polygon shift
+    (asitic_repl.c:3886-3893). The first polygon emitted by
+    ``_square_layout_polygons`` is the outermost top side; its
+    "start" corners (left-end outer-y, left-end inner-y, and the
+    centerline-start) need to shift left by pitch = W + S.
+    """
+    if not polys:
+        return polys
+    out: list[Polygon] = []
+    first = polys[0]
+    # Find the leftmost x of the first polygon — the "start" corners
+    # are the two vertices at min(x).
+    xs = [v.x for v in first.vertices]
+    xmin = min(xs)
+    new_verts = [
+        Point(v.x - pitch if abs(v.x - xmin) < 1e-9 else v.x, v.y, v.z)
+        for v in first.vertices
+    ]
+    out.append(Polygon(vertices=new_verts, metal=first.metal,
+                       width=first.width, thickness=first.thickness))
+    out.extend(polys[1:])
+    return out
+
+
+def _trans_extend_secondary_lead(
+    polys: list[Polygon], pitch: float,
+) -> list[Polygon]:
+    """Extend the secondary's first (post-flip) polygon outward.
+
+    After fliph+flipv the secondary's first polygon is what was the
+    last pre-flip — its "start corners" land at the post-flip right
+    end. Mirroring the +dVar2 shift in cmd_trans_build_geometry, we
+    extend the rightmost x by pitch.
+    """
+    if not polys:
+        return polys
+    out: list[Polygon] = []
+    first = polys[0]
+    xs = [v.x for v in first.vertices]
+    xmax = max(xs)
+    new_verts = [
+        Point(v.x + pitch if abs(v.x - xmax) < 1e-9 else v.x, v.y, v.z)
+        for v in first.vertices
+    ]
+    out.append(Polygon(vertices=new_verts, metal=first.metal,
+                       width=first.width, thickness=first.thickness))
+    out.extend(polys[1:])
+    return out
 
 
 def symmetric_square(

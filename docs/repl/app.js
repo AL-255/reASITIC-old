@@ -9,21 +9,33 @@ const ui = {
   techSelect: $("tech-select"),
   shapeSelect: $("shape-select"),
   metalSelect: $("metal-select"),
+  metalBalunPrimarySelect: $("metal-balun-primary-select"),
+  metalCapTopSelect: $("metal-cap-top-select"),
+  metalCapBottomSelect: $("metal-cap-bottom-select"),
+  metalBalunTransitionSelect: $("metal-balun-transition-select"),
   exitMetalSelect: $("exit-metal-select"),
-  metal2Select: $("metal2-select"),
-  metalSecondarySelect: $("metal-secondary-select"),
+  mmsqExitSelect: $("mmsq-exit-metal-select"),
   viaSelect: $("via-index-select"),
   name: $("p-name"),
+  pname: $("p-pname"),
+  sname: $("p-sname"),
   length: $("p-length"),
+  wid: $("p-wid"),
+  ilenSq: $("p-ilen-sq"),
+  iwidSq: $("p-iwid-sq"),
   radius: $("p-radius"),
+  widPoly: $("p-wid-poly"),
   ringRadius: $("p-ring-radius"),
   capLength: $("p-cap-length"),
   capWidth: $("p-cap-width"),
   wireLength: $("p-wire-length"),
   wireWidth: $("p-wire-width"),
   width: $("p-width"),
+  balunW1: $("p-balun-w1"),
+  balunW2: $("p-balun-w2"),
   spacing: $("p-spacing"),
   ilen: $("p-ilen"),
+  iwid: $("p-iwid"),
   turns: $("p-turns"),
   sides: $("p-sides"),
   gap: $("p-gap"),
@@ -33,6 +45,7 @@ const ui = {
   yorg: $("p-yorg"),
   orient: $("p-orient"),
   phase: $("p-phase"),
+  viaPhase: $("p-via-phase"),
   freq: $("p-freq"),
   swF1: $("sw-f1"),
   swF2: $("sw-f2"),
@@ -48,6 +61,28 @@ const ui = {
   replOut: $("repl-out"),
   tabs: document.querySelectorAll(".tab"),
 };
+
+// Parse a value that may be blank ("") / "0" → return undefined ("not specified").
+// Otherwise parse as float and return that. Used to send only the parameters
+// the user explicitly set so bridge.py can apply ASITIC defaults.
+function optFloat(el) {
+  if (!el) return undefined;
+  const v = el.value;
+  if (v === null || v === undefined) return undefined;
+  const s = String(v).trim();
+  if (s === "") return undefined;
+  const n = parseFloat(s);
+  if (!Number.isFinite(n) || n <= 0) return undefined;
+  return n;
+}
+
+function optText(el) {
+  if (!el) return undefined;
+  const v = el.value;
+  if (v === null || v === undefined) return undefined;
+  const s = String(v).trim();
+  return s === "" ? undefined : s;
+}
 
 let pyodide = null;
 let bridgeReady = false;
@@ -96,7 +131,11 @@ function downloadText(filename, text, mime = "text/plain") {
 
 function getSpec() {
   const kind = ui.shapeSelect.value;
-  // Different shape kinds carry their "size" args in different fields.
+  // Build a spec that mirrors the per-command syntax in ./run/doc:
+  // mandatory args are always present, optional args are sent only when
+  // the user provided a value (so bridge.py applies the ASITIC default).
+
+  // Per-shape "primary size" args.
   let length;
   let width;
   let radius;
@@ -111,31 +150,66 @@ function getSpec() {
     length = parseFloat(ui.capLength.value);
     width = parseFloat(ui.capWidth.value);
   } else if (kind === "polygon_spiral" || kind === "symmetric_polygon") {
-    length = parseFloat(ui.radius.value) * 2;
-    width = parseFloat(ui.width.value);
     radius = parseFloat(ui.radius.value);
+    length = radius * 2;
+    width = parseFloat(ui.width.value);
   } else if (kind === "via") {
     length = 0;
     width = 0;
+  } else if (kind === "balun_primary" || kind === "balun_secondary") {
+    length = parseFloat(ui.length.value);
+    width = parseFloat(ui.balunW1.value);
   } else {
     length = parseFloat(ui.length.value);
     width = parseFloat(ui.width.value);
   }
-  return {
+
+  // Metal: source from the field appropriate for this shape kind.
+  let metal = null;
+  let metal_top = null;       // CAP METAL1
+  let metal_bottom = null;    // CAP METAL2
+  let metal_transition = null; // BALUN METAL2
+  if (kind === "capacitor") {
+    metal_top = ui.metalCapTopSelect ? ui.metalCapTopSelect.value : null;
+    metal_bottom = ui.metalCapBottomSelect ? ui.metalCapBottomSelect.value : null;
+    metal = metal_top;
+  } else if (kind === "balun_primary" || kind === "balun_secondary") {
+    metal = ui.metalBalunPrimarySelect ? ui.metalBalunPrimarySelect.value : null;
+    metal_transition = ui.metalBalunTransitionSelect
+      ? ui.metalBalunTransitionSelect.value : null;
+  } else {
+    metal = ui.metalSelect ? ui.metalSelect.value : null;
+  }
+
+  // EXIT metal: SQ/SYMSQ/SYMPOLY/TRANS have an optional EXIT; SQMM has a
+  // required EXIT (bottom of the stack).
+  let exit_metal = null;
+  if (kind === "multi_metal_square") {
+    exit_metal = ui.mmsqExitSelect ? ui.mmsqExitSelect.value : null;
+  } else {
+    exit_metal = ui.exitMetalSelect ? (ui.exitMetalSelect.value || null) : null;
+  }
+
+  // NAME — most shapes use a single name, TRANS distinguishes PNAME/SNAME.
+  let name;
+  if (kind === "transformer_primary") name = ui.pname.value || "TP";
+  else if (kind === "transformer_secondary") name = ui.sname.value || "TS";
+  else name = ui.name.value || "L1";
+
+  const spec = {
     kind,
-    name: ui.name.value || "L1",
-    metal: ui.metalSelect ? ui.metalSelect.value : null,
-    exit_metal: ui.exitMetalSelect ? ui.exitMetalSelect.value || null : null,
-    metal_bottom: ui.metal2Select ? ui.metal2Select.value || null : null,
-    secondary_metal: ui.metalSecondarySelect
-      ? ui.metalSecondarySelect.value || null : null,
+    name,
+    metal,
+    exit_metal,
+    metal_top,
+    metal_bottom,
+    metal_transition,
     via_index: ui.viaSelect && ui.viaSelect.value !== ""
       ? parseInt(ui.viaSelect.value, 10) : 0,
     radius: radius !== undefined ? radius : undefined,
     length,
     width,
     spacing: parseFloat(ui.spacing.value),
-    ilen: ui.ilen ? parseFloat(ui.ilen.value) : 0,
     turns: parseFloat(ui.turns.value),
     sides: parseInt(ui.sides.value, 10),
     gap: parseFloat(ui.gap.value),
@@ -145,7 +219,31 @@ function getSpec() {
     y_origin: parseFloat(ui.yorg.value),
     orient: parseFloat(ui.orient.value),
     phase: parseFloat(ui.phase.value),
+    via_phase: ui.viaPhase ? parseFloat(ui.viaPhase.value) : 0,
   };
+
+  // Optional rectangular / inner-bound parameters, sent only when set.
+  // Square family: WID, ILEN, IWID.
+  const wid = optFloat(ui.wid);
+  if (wid !== undefined) spec.wid = wid;
+  const ilenSq = optFloat(ui.ilenSq);
+  if (ilenSq !== undefined) spec.ilen = ilenSq;
+  const iwidSq = optFloat(ui.iwidSq);
+  if (iwidSq !== undefined) spec.iwid = iwidSq;
+  // Polygon family: WID (outer height — not in the doc for SP, only SYMPOLY).
+  const widPoly = optFloat(ui.widPoly);
+  if (widPoly !== undefined) spec.wid = widPoly;
+  // Centre-tapped: ILEN required; IWID optional.
+  if (kind === "symmetric_square" || kind === "symmetric_polygon") {
+    spec.ilen = parseFloat(ui.ilen.value);
+    const iwid = optFloat(ui.iwid);
+    if (iwid !== undefined) spec.iwid = iwid;
+  }
+  // BALUN: optional W2.
+  const w2 = optFloat(ui.balunW2);
+  if (w2 !== undefined) spec.w2 = w2;
+
+  return spec;
 }
 
 function applyShapeVisibility() {
@@ -158,24 +256,45 @@ function applyShapeVisibility() {
 
 function populateMetals(metals) {
   ui.metalSelect.innerHTML = "";
-  ui.exitMetalSelect.innerHTML = '<option value="">(none — no via / lead)</option>';
-  if (ui.metal2Select) ui.metal2Select.innerHTML = '<option value="">(same as METAL)</option>';
-  if (ui.metalSecondarySelect) ui.metalSecondarySelect.innerHTML = '<option value="">(same as METAL)</option>';
-  metals.forEach((m) => {
-    const value = m.name || String(m.index);
-    const label = `${m.name || ("m" + m.index)}  (idx ${m.index}, t=${m.t}μm)`;
-    [ui.metalSelect, ui.exitMetalSelect, ui.metal2Select, ui.metalSecondarySelect].filter(Boolean).forEach((sel) => {
+  ui.exitMetalSelect.innerHTML = '<option value="">(none — default M(metal-1))</option>';
+  if (ui.mmsqExitSelect) ui.mmsqExitSelect.innerHTML = "";
+  if (ui.metalBalunPrimarySelect) ui.metalBalunPrimarySelect.innerHTML = "";
+  if (ui.metalBalunTransitionSelect) ui.metalBalunTransitionSelect.innerHTML = "";
+  if (ui.metalCapTopSelect) ui.metalCapTopSelect.innerHTML = "";
+  if (ui.metalCapBottomSelect) ui.metalCapBottomSelect.innerHTML = "";
+
+  const valueLabelPairs = metals.map((m) => ({
+    value: m.name || String(m.index),
+    label: `${m.name || ("m" + m.index)}  (idx ${m.index}, t=${m.t}μm)`,
+    index: m.index,
+  }));
+  const allSelects = [
+    ui.metalSelect, ui.exitMetalSelect, ui.mmsqExitSelect,
+    ui.metalBalunPrimarySelect, ui.metalBalunTransitionSelect,
+    ui.metalCapTopSelect, ui.metalCapBottomSelect,
+  ].filter(Boolean);
+  valueLabelPairs.forEach(({ value, label }) => {
+    allSelects.forEach((sel) => {
       const opt = document.createElement("option");
       opt.value = value;
       opt.textContent = label;
       sel.appendChild(opt);
     });
   });
-  // Default METAL = top metal; EXIT/METAL2 default to empty.
-  ui.metalSelect.value = ui.metalSelect.options[ui.metalSelect.options.length - 1].value;
+
+  // Defaults — top metal for the primary trace selects, one layer down
+  // (or the lowest) for transition / bottom selects.
+  const top = valueLabelPairs[valueLabelPairs.length - 1];
+  const second = valueLabelPairs.length >= 2
+    ? valueLabelPairs[valueLabelPairs.length - 2]
+    : top;
+  ui.metalSelect.value = top.value;
   ui.exitMetalSelect.value = "";
-  if (ui.metal2Select) ui.metal2Select.value = "";
-  if (ui.metalSecondarySelect) ui.metalSecondarySelect.value = "";
+  if (ui.mmsqExitSelect) ui.mmsqExitSelect.value = second.value;
+  if (ui.metalBalunPrimarySelect) ui.metalBalunPrimarySelect.value = top.value;
+  if (ui.metalBalunTransitionSelect) ui.metalBalunTransitionSelect.value = second.value;
+  if (ui.metalCapTopSelect) ui.metalCapTopSelect.value = top.value;
+  if (ui.metalCapBottomSelect) ui.metalCapBottomSelect.value = second.value;
 }
 
 function populateVias(vias) {
@@ -388,13 +507,18 @@ function wireEvents() {
   });
 
   [
-    ui.metalSelect, ui.exitMetalSelect, ui.metal2Select,
-    ui.metalSecondarySelect, ui.viaSelect, ui.name,
-    ui.length, ui.radius, ui.ringRadius, ui.wireLength, ui.wireWidth,
+    ui.metalSelect, ui.exitMetalSelect, ui.mmsqExitSelect,
+    ui.metalBalunPrimarySelect, ui.metalBalunTransitionSelect,
+    ui.metalCapTopSelect, ui.metalCapBottomSelect,
+    ui.viaSelect, ui.name, ui.pname, ui.sname,
+    ui.length, ui.wid, ui.ilenSq, ui.iwidSq,
+    ui.radius, ui.widPoly,
+    ui.ringRadius, ui.wireLength, ui.wireWidth,
     ui.capLength, ui.capWidth,
-    ui.width, ui.spacing, ui.ilen, ui.turns, ui.sides, ui.gap,
+    ui.width, ui.balunW1, ui.balunW2,
+    ui.spacing, ui.ilen, ui.iwid, ui.turns, ui.sides, ui.gap,
     ui.nvx, ui.nvy,
-    ui.xorg, ui.yorg, ui.orient, ui.phase,
+    ui.xorg, ui.yorg, ui.orient, ui.phase, ui.viaPhase,
   ].filter(Boolean).forEach((el) => {
     el.addEventListener("change", buildShape);
   });

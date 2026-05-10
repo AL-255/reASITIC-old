@@ -1,20 +1,27 @@
 // Inductor geometry rendering on an SVG canvas.
 //
-// The Python side dumps shape geometry as a small JSON-friendly object:
+// Ground truth: in the original ASITIC, each segment of a spiral side is a
+// 4-corner *quadrilateral* (offset ±w/2 perpendicular to the centerline) that
+// the X11 backend draws via XFillPolygon. We mirror that here: the JS payload
+// gives us a centerline polyline + width per polygon, and for each segment we
+// emit one filled SVG polygon shaped like the fat trace. Adjacent rectangles
+// overlap at corners, which produces the natural mitered look you see in the
+// ASITIC GUI.
+//
+// Payload from bridge.py:
 //   {
 //     name, bbox: [xmin, ymin, xmax, ymax],
 //     polygons: [
-//       { metal: <int>, width, thickness,
-//         points: [[x, y, z], ...],
-//         color: "#rrggbb",   // metal color (mapped from tech)
-//         metal_name: "m3",
+//       { metal, metal_name, color, width, thickness,
+//         points: [[x, y, z], ...]   // centerline polyline
 //       }, ...
 //     ],
-//     metals: [{ index, name, color }, ...],   // legend
-//     ports: [{ x, y }, ...]                   // optional terminal markers
+//     ports: [{ x, y }, ...]
 //   }
 (function (global) {
   const SVG_NS = "http://www.w3.org/2000/svg";
+
+  // Mapping of ASITIC tech-file color names → CSS colors.
   const PALETTE = {
     red: "#ef4444", green: "#22c55e", blue: "#60a5fa",
     yellow: "#facc15", white: "#e5e7eb", black: "#1f2937",
@@ -30,6 +37,25 @@
     return PALETTE[lower] || FALLBACK_COLORS[fallbackIdx % FALLBACK_COLORS.length];
   }
 
+  // Lighten/darken a hex color for stroke and fill differentiation.
+  function shade(hex, amount) {
+    const m = /^#([0-9a-f]{6})$/i.exec(hex);
+    if (!m) return hex;
+    const n = parseInt(m[1], 16);
+    let r = (n >> 16) & 0xff;
+    let g = (n >> 8) & 0xff;
+    let b = n & 0xff;
+    if (amount > 0) {
+      r = Math.round(r + (255 - r) * amount);
+      g = Math.round(g + (255 - g) * amount);
+      b = Math.round(b + (255 - b) * amount);
+    } else {
+      const k = 1 + amount;
+      r = Math.round(r * k); g = Math.round(g * k); b = Math.round(b * k);
+    }
+    return "#" + [r, g, b].map((v) => Math.max(0, Math.min(255, v)).toString(16).padStart(2, "0")).join("");
+  }
+
   function clear(svg) {
     while (svg.firstChild) svg.removeChild(svg.firstChild);
   }
@@ -39,8 +65,10 @@
     let dx = x1 - x0, dy = y1 - y0;
     if (dx <= 0) dx = 1;
     if (dy <= 0) dy = 1;
-    const pad = Math.max(dx, dy) * 0.12 + 2;
-    // SVG y grows downwards — flip with negative height to keep math-like axes.
+    const span = Math.max(dx, dy);
+    const pad = span * 0.12 + 2;
+    // SVG y grows downwards — we render world Y mathematically (positive up)
+    // by negating Y when emitting points; the viewBox below mirrors that.
     const minX = x0 - pad;
     const minY = -(y1 + pad);
     const w = dx + 2 * pad;
@@ -53,7 +81,7 @@
     const g = document.createElementNS(SVG_NS, "g");
     g.setAttribute("class", "axes");
 
-    // Bounding box rectangle
+    // Bounding-box rectangle
     const rect = document.createElementNS(SVG_NS, "rect");
     rect.setAttribute("x", x0);
     rect.setAttribute("y", -y1);
@@ -62,7 +90,6 @@
     rect.setAttribute("class", "shape-bbox");
     g.appendChild(rect);
 
-    // Centerlines if origin is inside the bbox
     if (x0 <= 0 && x1 >= 0) {
       const v = document.createElementNS(SVG_NS, "line");
       v.setAttribute("x1", 0); v.setAttribute("y1", -y1);
@@ -78,11 +105,10 @@
       g.appendChild(h);
     }
 
-    // Scale label
     const w = x1 - x0;
     const lbl = document.createElementNS(SVG_NS, "text");
     lbl.setAttribute("x", x0);
-    lbl.setAttribute("y", -y0 + Math.max(w, 1) * 0.05);
+    lbl.setAttribute("y", -y0 + Math.max(w, 1) * 0.06);
     lbl.setAttribute("class", "axis-label");
     lbl.textContent = `${w.toFixed(1)} μm × ${(y1 - y0).toFixed(1)} μm`;
     g.appendChild(lbl);
@@ -92,34 +118,80 @@
 
   function drawPolygons(svg, payload) {
     const { polygons } = payload;
-    const refStroke = Math.max(
-      0.5,
-      (payload.bbox[2] - payload.bbox[0]) * 0.0025
-    );
 
-    polygons.forEach((poly, idx) => {
-      if (!poly.points || poly.points.length < 2) return;
-      const color = colorFor(poly.color, idx);
-      const w = Math.max(poly.width || refStroke, refStroke);
-      const path = document.createElementNS(SVG_NS, "polyline");
-      const ptStr = poly.points
-        .map(([x, y]) => `${x.toFixed(3)},${(-y).toFixed(3)}`)
-        .join(" ");
-      path.setAttribute("points", ptStr);
-      path.setAttribute("class", "shape-edge");
-      path.setAttribute("stroke", color);
-      path.setAttribute("stroke-width", w);
-      path.setAttribute("stroke-opacity", "0.85");
-      svg.appendChild(path);
+    // Group polygons by metal so we can layer them in tech-stack order
+    // (lower metal beneath higher metal). With one metal layer this is a
+    // no-op; with transformer / multi-metal shapes it matters.
+    const layered = [...polygons]
+      .map((p, idx) => ({ p, idx }))
+      .sort((a, b) => (a.p.metal | 0) - (b.p.metal | 0));
+
+    layered.forEach(({ p, idx }) => {
+      const fill = colorFor(p.color, idx);
+      const segPolys = Array.isArray(p.segment_polys) ? p.segment_polys : [];
+      if (segPolys.length === 0) return;
+
+      const group = document.createElementNS(SVG_NS, "g");
+      group.setAttribute("data-metal", p.metal);
+      group.setAttribute("data-metal-name", p.metal_name || "");
+
+      // ASITIC's CIF emits one filled 4-corner ``P`` polygon per spiral
+      // side (offsets ±W/2 perpendicular to the centerline). We mirror
+      // that here — bridge.py hands us the corner lists, and we draw
+      // each as an SVG <polygon>. Adjacent rectangles overlap at the
+      // corner squares (one overlap per bend), which tiles the corner
+      // cleanly and matches the visual produced by ASITIC's
+      // ``XFillPolygon`` sequence. We deliberately *omit* a stroke so
+      // the overlap regions don't show seams between adjacent fills.
+      segPolys.forEach((corners) => {
+        if (!corners || corners.length < 3) return;
+        const poly = document.createElementNS(SVG_NS, "polygon");
+        const pts = corners
+          .map(([x, y]) => `${x.toFixed(3)},${(-y).toFixed(3)}`)
+          .join(" ");
+        poly.setAttribute("points", pts);
+        poly.setAttribute("fill", fill);
+        poly.setAttribute("stroke", "none");
+        group.appendChild(poly);
+      });
+
+      // A faint outline around the union of all segments lets the eye
+      // pick out the shape; we draw it after the fills using the
+      // centerline polyline as a stroked path with miter joins, which
+      // matches the XDrawSegments overlay the C GUI puts on top of the
+      // filled metal.
+      if (p.points && p.points.length >= 2) {
+        const path = document.createElementNS(SVG_NS, "path");
+        const cmds = [];
+        for (let i = 0; i < p.points.length; i++) {
+          const [x, y] = p.points[i];
+          cmds.push(`${i === 0 ? "M" : "L"} ${x.toFixed(3)} ${(-y).toFixed(3)}`);
+        }
+        const a = p.points[0], b = p.points[p.points.length - 1];
+        if (Math.hypot(a[0] - b[0], a[1] - b[1]) < 1e-6) cmds.push("Z");
+        path.setAttribute("d", cmds.join(" "));
+        path.setAttribute("fill", "none");
+        path.setAttribute("stroke", shade(fill, -0.55));
+        path.setAttribute("stroke-opacity", "0.55");
+        path.setAttribute("stroke-width", Math.max((p.width || 1) * 0.05, 0.25));
+        path.setAttribute("stroke-linecap", "butt");
+        path.setAttribute("stroke-linejoin", "miter");
+        group.appendChild(path);
+      }
+
+      svg.appendChild(group);
     });
 
-    // Terminal markers
-    if (Array.isArray(payload.ports)) {
+    // Terminal markers: small filled circles at the entry / exit ports of
+    // the spiral so users can see where the actual port leads attach.
+    if (Array.isArray(payload.ports) && payload.ports.length) {
+      const span = payload.bbox[2] - payload.bbox[0];
+      const r = Math.max(span * 0.012, 1.0);
       payload.ports.forEach((p) => {
         const c = document.createElementNS(SVG_NS, "circle");
         c.setAttribute("cx", p.x);
         c.setAttribute("cy", -p.y);
-        c.setAttribute("r", refStroke * 1.6);
+        c.setAttribute("r", r);
         c.setAttribute("class", "shape-port");
         svg.appendChild(c);
       });
@@ -153,7 +225,7 @@
       );
       dimsEl.textContent =
         `${payload.name}  |  bbox ${(x1 - x0).toFixed(1)}×${(y1 - y0).toFixed(1)} μm  |  ` +
-        `${payload.polygons.length} polygon(s), ${segs} segment(s)`;
+        `${payload.polygons.length} polygon(s), ${segs} fat-trace segment(s)`;
     }
   }
 

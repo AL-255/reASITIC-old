@@ -24,7 +24,7 @@ from __future__ import annotations
 import os
 from collections.abc import Iterable
 
-from reasitic.geometry import Point, Polygon, Shape
+from reasitic.geometry import Point, Polygon, Shape, layout_polygons
 from reasitic.tech import Tech
 
 try:
@@ -62,6 +62,7 @@ def _shape_polygon_to_gdstk(
 
 def write_gds(
     shapes: Iterable[Shape],
+    tech: Tech | None = None,
     *,
     unit: float = 1e-6,        # 1 μm
     precision: float = 1e-9,   # 1 nm
@@ -84,7 +85,7 @@ def write_gds(
     """
     _require_gdstk()
     import tempfile
-    lib = _build_gds_library(shapes, unit=unit, precision=precision,
+    lib = _build_gds_library(shapes, tech=tech, unit=unit, precision=precision,
                              library_name=library_name)
     with tempfile.NamedTemporaryFile(suffix=".gds", delete=False) as f:
         tmp_path = f.name
@@ -99,6 +100,7 @@ def write_gds(
 def write_gds_file(
     path: str | os.PathLike[str],
     shapes: Iterable[Shape],
+    tech: Tech | None = None,
     *,
     unit: float = 1e-6,
     precision: float = 1e-9,
@@ -109,7 +111,7 @@ def write_gds_file(
     See :func:`write_gds` for details on parameters.
     """
     _require_gdstk()
-    lib = _build_gds_library(shapes, unit=unit, precision=precision,
+    lib = _build_gds_library(shapes, tech=tech, unit=unit, precision=precision,
                              library_name=library_name)
     lib.write_gds(os.fspath(path))
 
@@ -117,6 +119,7 @@ def write_gds_file(
 def _build_gds_library(
     shapes: Iterable[Shape],
     *,
+    tech: Tech | None = None,
     unit: float,
     precision: float,
     library_name: str,
@@ -125,16 +128,20 @@ def _build_gds_library(
     lib = gdstk.Library(name=library_name, unit=unit, precision=precision)
     for shape in shapes:
         cell = gdstk.Cell(shape.name or "UNNAMED")
-        for poly in shape.polygons:
+        use_layout = tech is not None
+        polys = layout_polygons(shape, tech) if use_layout else shape.polygons
+        x0 = 0.0 if use_layout else shape.x_origin
+        y0 = 0.0 if use_layout else shape.y_origin
+        for poly in polys:
             if len(poly.vertices) < 2:
                 continue
             if _is_closed(poly):
                 cell.add(_shape_polygon_to_gdstk(
-                    poly, shape.x_origin, shape.y_origin
+                    poly, x0, y0
                 ))
             else:
                 pts = [
-                    (v.x + shape.x_origin, v.y + shape.y_origin)
+                    (v.x + x0, v.y + y0)
                     for v in poly.vertices
                 ]
                 w = poly.width if poly.width > 0 else 1.0

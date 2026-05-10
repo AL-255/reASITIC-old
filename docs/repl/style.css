@@ -300,8 +300,7 @@ footer {
   font-family: var(--mono);
 }
 
-.shape-edge { stroke-linecap: round; stroke-linejoin: round; fill: none; }
 .shape-port { fill: var(--warn); stroke: #000; stroke-width: 0.5; }
-.shape-bbox { stroke: var(--muted); stroke-dasharray: 3 3; fill: none; opacity: 0.5; }
+.shape-bbox { stroke: var(--muted); stroke-dasharray: 3 3; fill: none; opacity: 0.4; }
 .axis      { stroke: var(--border); stroke-width: 0.5; }
 .axis-label { fill: var(--muted); font-size: 8px; font-family: var(--mono); }

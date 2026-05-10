@@ -836,8 +836,9 @@ class Repl:
             raise RuntimeError("no tech file loaded")
         sh = ring(
             args["NAME"],
-            radius=float(args["RADIUS"]),
+            radius=float(args.get("RADIUS", args.get("RAD", "0"))),
             width=float(args["W"]),
+            gap=float(args.get("GAP", "0")),
             sides=int(float(args.get("SIDES", "32"))),
             tech=self.tech,
             metal=args.get("METAL", 0),

@@ -1855,39 +1855,43 @@ def _symsq_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
     exit_metal_rec = tech.metals[exit_idx]
 
     polys: list[Polygon] = []
-
-    # 1) Centre-U at the top
-    polys.extend(_symsq_centre_arm_polygons(L, W, ILEN, X, Y, metal_rec))
-
-    # 2) Outer ring (bottom-half U opening at top)
-    polys.extend(_symsq_u_ring_polygons(
-        outer_x_min=X, outer_x_max=X + L,
-        outer_top_y=Y + L * 0.5, arm_bottom_y=Y + ILEN * 0.5,
-        W=W, open_side="top", metal_rec=metal_rec,
-    ))
-
-    # 3) Inner mini-loop (smaller U opening at top, nested inside outer)
-    polys.extend(_symsq_u_ring_polygons(
-        outer_x_min=X + pitch, outer_x_max=X + L - pitch,
-        outer_top_y=Y + L * 0.5, arm_bottom_y=Y + ILEN * 0.5 + pitch,
-        W=W, open_side="top", metal_rec=metal_rec,
-    ))
-
-    # 4) Upper inner ring (U opening at bottom, inside the centre-U)
-    polys.extend(_symsq_u_ring_polygons(
-        outer_x_min=X + pitch, outer_x_max=X + L - pitch,
-        outer_top_y=Y + L + ILEN * 0.5 - pitch,
-        arm_bottom_y=Y + L * 0.5 + ILEN,
-        W=W, open_side="bottom", metal_rec=metal_rec,
-    ))
-
-    # 5) ILEN-stub on left (2 polys, each ILEN/2 tall — only emitted
-    #    by the C state machine for N=2; for N≥3 the gap is filled
-    #    by additional nested rings)
     n_int = int(round(shape.turns))
-    if n_int == 2 and ILEN > 0:
-        stub_x0 = X + pitch
-        stub_x1 = X + pitch + W
+
+    # 1) Top rings (k=0..N-1). k=0 is the centre-U (full-L wide
+    #    + special chamfer-only-at-inner-corners pattern).
+    polys.extend(_symsq_centre_arm_polygons(L, W, ILEN, X, Y, metal_rec))
+    for k in range(1, n_int):
+        polys.extend(_symsq_u_ring_polygons(
+            outer_x_min=X + k * pitch, outer_x_max=X + L - k * pitch,
+            outer_top_y=Y + L + ILEN * 0.5 - k * pitch,
+            arm_bottom_y=Y + L * 0.5 + ILEN,
+            W=W, open_side="bottom", metal_rec=metal_rec,
+        ))
+
+    # 2) Bottom rings (k=0..N-1) all open-at-top
+    for k in range(n_int):
+        polys.extend(_symsq_u_ring_polygons(
+            outer_x_min=X + k * pitch, outer_x_max=X + L - k * pitch,
+            outer_top_y=Y + L * 0.5,
+            arm_bottom_y=Y + ILEN * 0.5 + k * pitch,
+            W=W, open_side="top", metal_rec=metal_rec,
+        ))
+
+    # 5) ILEN-stub bridges the centre transition between the bottom
+    #    and top rings on one side. Decoded:
+    #       N=2: stub on LEFT  at offset 1*pitch from XORG.
+    #       N=3: stub on RIGHT at offset 2*pitch from XORG+L.
+    #    Generalising: stub at offset (N-1)*pitch from one edge,
+    #    side alternates with N (LEFT for even, RIGHT for odd).
+    if n_int >= 2 and ILEN > 0:
+        if n_int % 2 == 0:
+            # LEFT side
+            stub_x0 = X + (n_int - 1) * pitch
+            stub_x1 = stub_x0 + W
+        else:
+            # RIGHT side
+            stub_x1 = X + L - (n_int - 1) * pitch
+            stub_x0 = stub_x1 - W
         stub_mid = Y + L * 0.5 + ILEN * 0.5
         for y0, y1 in [(Y + L * 0.5, stub_mid), (stub_mid, Y + L * 0.5 + ILEN)]:
             polys.append(_polygon_record_to_poly(
@@ -1895,21 +1899,41 @@ def _symsq_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
                 metal_rec, W,
             ))
 
-    # 6) Slanted right-side transition (1 poly)
-    if n_int == 2 and ILEN > 0:
-        # Decoded from gold case 1: vertices in CIF order are
-        # (X+L-pitch, U_arm_bot)
-        # (X+L,        Y+L/2)
-        # (X+L-W,      Y+L/2)
-        # (X+L-pitch-W, U_arm_bot)
+    # 6) Slanted centre-transition polygons.
+    #    N=2: one slant on the RIGHT side.
+    #    N=3: TWO slants — one on each side (symmetric pair),
+    #    bridging between adjacent ring layers across the centre gap.
+    if ILEN > 0:
         u_arm_bot = Y + L * 0.5 + ILEN
-        slant = [
-            (X + L - pitch, u_arm_bot),
-            (X + L, Y + L * 0.5),
-            (X + L - W, Y + L * 0.5),
-            (X + L - pitch - W, u_arm_bot),
-        ]
-        polys.append(_polygon_record_to_poly(slant, metal_rec, W))
+        if n_int == 2:
+            right_slant = [
+                (X + L - pitch, u_arm_bot),
+                (X + L, Y + L * 0.5),
+                (X + L - W, Y + L * 0.5),
+                (X + L - pitch - W, u_arm_bot),
+            ]
+            polys.append(_polygon_record_to_poly(right_slant, metal_rec, W))
+        elif n_int >= 3:
+            # Right slant for N≥3
+            right_slant = [
+                (X + L - pitch, u_arm_bot),
+                (X + L, Y + L * 0.5),
+                (X + L - W, Y + L * 0.5),
+                (X + L - pitch - W, u_arm_bot),
+            ]
+            polys.append(_polygon_record_to_poly(right_slant, metal_rec, W))
+            # Left slant for N≥3: at offset 1 from LEFT edge.
+            # Decoded from case 2/3:
+            #   bottom (y=Y+L/2):     x = X+pitch to X+pitch+W
+            #   top    (y=u_arm_bot): x = X+2*pitch to X+2*pitch+W
+            # i.e. bottom edge at ring k=1, top edge at ring k=2.
+            left_slant = [
+                (X + 2 * pitch, u_arm_bot),
+                (X + pitch, Y + L * 0.5),
+                (X + pitch + W, Y + L * 0.5),
+                (X + 2 * pitch + W, u_arm_bot),
+            ]
+            polys.append(_polygon_record_to_poly(left_slant, metal_rec, W))
 
     # 7) Via clusters with M3 + M2 overlap pads. The C uses
     #    lookup_via_for_metal_pair (asitic_repl.c:??) — formulas
@@ -1937,10 +1961,20 @@ def _symsq_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
             cluster_span = n_vias * via_rec.width + (n_vias - 1) * via_rec.space
             pad_h = cluster_span + 2.0 * overplot
             u_arm_bot = Y + L * 0.5 + ILEN
+            # RIGHT-side pads: always 2 (decoded from N=2 and N=3 cases)
             pad_centers = [
                 (X + L - W * 0.5, u_arm_bot + pad_h * 0.5),
                 (X + L - pitch - W * 0.5, Y + L * 0.5 - pad_h * 0.5),
             ]
+            # For N>=3 the C state machine emits LEFT-side pads too.
+            # Decoded from cases 2/3:
+            #   Left pad k cx = X + W/2 + (k+1)*pitch for k = 0..N-2
+            #   Left pad k cy alternates U_arm_bot+pad_h/2 and Y+L/2-pad_h/2
+            if n_int >= 3:
+                pad_centers.append((X + W * 0.5 + 1 * pitch,
+                                    u_arm_bot + pad_h * 0.5))
+                pad_centers.append((X + W * 0.5 + 2 * pitch,
+                                    Y + L * 0.5 - pad_h * 0.5))
             via_metal = len(tech.metals) + via_idx
             half_w = W * 0.5
             half_h = pad_h * 0.5
@@ -1967,19 +2001,33 @@ def _symsq_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
                             width=via_rec.width, thickness=0.0,
                         ))
 
-            # 8) M2 chamfered transition trace from pad 1 down-and-left
-            #    to pad 2's region. CIF vertex order in the gold:
-            #      (XORG+L,         U_arm_bot)   # right-end at pad 1
-            #      (XORG+L-pitch,   Y+L/2)       # slanted to outer corner
-            #      (XORG+L-pitch-W, Y+L/2)       # left-end inner of pad-2 region
-            #      (XORG+L-W,       U_arm_bot)   # back up to pad 1's left edge
-            trace = [
+            # 8) M2 chamfered transition traces. Right-side trace
+            #    always emitted; left-side trace for N≥3 only.
+            #    CIF vertex order for the right trace:
+            #      (XORG+L,         U_arm_bot)
+            #      (XORG+L-pitch,   Y+L/2)
+            #      (XORG+L-pitch-W, Y+L/2)
+            #      (XORG+L-W,       U_arm_bot)
+            right_trace = [
                 (X + L, u_arm_bot),
                 (X + L - pitch, Y + L * 0.5),
                 (X + L - pitch - W, Y + L * 0.5),
                 (X + L - W, u_arm_bot),
             ]
-            polys.append(_polygon_record_to_poly(trace, exit_metal_rec, W))
+            polys.append(_polygon_record_to_poly(right_trace, exit_metal_rec, W))
+            if n_int >= 3:
+                # Left trace connects from the LEFT pads. CIF order:
+                #   (X+pitch,         U_arm_bot)
+                #   (X+2*pitch,       Y+L/2)
+                #   (X+2*pitch+W,     Y+L/2)
+                #   (X+pitch+W,       U_arm_bot)
+                left_trace = [
+                    (X + pitch, u_arm_bot),
+                    (X + 2 * pitch, Y + L * 0.5),
+                    (X + 2 * pitch + W, Y + L * 0.5),
+                    (X + pitch + W, u_arm_bot),
+                ]
+                polys.append(_polygon_record_to_poly(left_trace, exit_metal_rec, W))
 
     return polys
 

@@ -233,36 +233,36 @@ def _assert_same_polygons(actual, expected, *, tol: float = 0.01) -> None:
             "M3",
             0.02,
         ),
-        # SYMSQ N=2 — full vertex-for-vertex parity
-        (
-            "symsq_150x8x2x2_m3_m2",
-            lambda tech: reasitic.symmetric_square(
-                "Y3", length=150, width=8, spacing=2, turns=2,
-                ilen=15, tech=tech, metal="m3", exit_metal="m2",
-                x_origin=100, y_origin=100,
-            ),
-            "M3",
-            0.02,
-        ),
-        (
-            "symsq_150x8x2x2_m3_m2",
-            lambda tech: reasitic.symmetric_square(
-                "Y3", length=150, width=8, spacing=2, turns=2,
-                ilen=15, tech=tech, metal="m3", exit_metal="m2",
-                x_origin=100, y_origin=100,
-            ),
-            "M2",
-            0.02,
-        ),
-        (
-            "symsq_150x8x2x2_m3_m2",
-            lambda tech: reasitic.symmetric_square(
-                "Y3", length=150, width=8, spacing=2, turns=2,
-                ilen=15, tech=tech, metal="m3", exit_metal="m2",
-                x_origin=100, y_origin=100,
-            ),
-            "VIA3",
-            0.02,
+        # SYMSQ — full vertex-for-vertex parity for all 3 golden cases
+        *(
+            (stem, mkfn, layer, 0.02)
+            for stem, mkfn in [
+                (
+                    "symsq_150x8x2x2_m3_m2",
+                    lambda tech: reasitic.symmetric_square(
+                        "Y3", length=150, width=8, spacing=2, turns=2,
+                        ilen=15, tech=tech, metal="m3", exit_metal="m2",
+                        x_origin=100, y_origin=100,
+                    ),
+                ),
+                (
+                    "symsq_200x10x3x3_m3_m2",
+                    lambda tech: reasitic.symmetric_square(
+                        "Y1", length=200, width=10, spacing=3, turns=3,
+                        ilen=20, tech=tech, metal="m3", exit_metal="m2",
+                        x_origin=100, y_origin=100,
+                    ),
+                ),
+                (
+                    "symsq_300x12x4x3_m3_m2_offset",
+                    lambda tech: reasitic.symmetric_square(
+                        "Y2", length=300, width=12, spacing=4, turns=3,
+                        ilen=30, tech=tech, metal="m3", exit_metal="m2",
+                        x_origin=100, y_origin=100,
+                    ),
+                ),
+            ]
+            for layer in ("M3", "M2", "VIA3")
         ),
     ],
 )

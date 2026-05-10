@@ -242,6 +242,16 @@ def _assert_same_polygons(actual, expected, *, tol: float = 0.01) -> None:
             "M3",
             0.02,
         ),
+        (
+            "trans_200x8x3x3_m3_m2_secondary",
+            lambda tech: reasitic.transformer(
+                "TX", length=200, width=8, spacing=3, turns=3,
+                metal="m3", exit_metal="m2", tech=tech,
+                x_origin=0, y_origin=0, which="secondary",
+            ),
+            "VIA3",
+            0.02,
+        ),
         # SYMSQ — full vertex-for-vertex parity for all 3 golden cases
         *(
             (stem, mkfn, layer, 0.02)

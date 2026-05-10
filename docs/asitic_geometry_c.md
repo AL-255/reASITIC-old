@@ -16,7 +16,7 @@ implementation in `src/reasitic/geometry.py`.
 | `MMSquare` | `cmd_mmsquare_build_geometry @ 0805af5c` | done | 2/2 |
 | `Symmetric square` | `cmd_symsq_build_geometry @ 08059854` | done | 3/3 (266 polys all match) |
 | `Symmetric polygon` | `cmd_sympoly_build_geometry @ 0805a45c` | done (M3+M2 spiral); via-cluster pad widths outstanding | 2/2 |
-| `Transformer` | `cmd_trans_build_geometry @ 080576d4` | done (primary full; secondary M3+M2 full, VIA3 ~3µm off) | 2/2 |
+| `Transformer` | `cmd_trans_build_geometry @ 080576d4` | done (primary full; secondary M3+M2+VIA3 full) | 2/2 |
 | `Balun` (3D Transformer) | `cmd_balun_build_geometry @ 0805bc74` | done | 2/2 (46 polys all match) |
 | `Via` | `cmd_via_build_geometry @ 08057b78` | done | nx × ny array, top + bottom pad + via squares (no standalone golden) |
 
@@ -616,13 +616,18 @@ last side, NOT the centre of the last polygon. My `_square_access_polygons`
 puts the cluster at `(mid_x, max_y - W/2)` for last_side=3, which
 matches the M2/M3 pad position but not the via-grid position.
 
-Empirical fix: the secondary's via grid needs to be offset from my
-computed `(48, 130)` by `(-grid_span, -grid_span)` pre-flip. After
-the dual flip this lands at `(157.25, 91.25)` matching gold. The
-deeper port of the chamfer-based placement is outstanding — see
-`cmd_square_build_geometry @ 3580-3645` for the full state machine
-(cases 0, 1, 2, 3 of uVar19 each with their own pad-and-trace
-emission code that I haven't fully decoded).
+**Fix applied (2026-05-10):** the secondary's via squares (only) get
+shifted by `(+grid_span, +grid_span)` post-flip in the `transformer()`
+builder. This matches the gold's via-grid centre at `(157.25, 91.25)`
+while leaving the M2/M3 box pads at `(152, 86)` (which already
+matched). The fix is targeted to via squares (`metal >= len(metals)`)
+and skips other polygons.
+
+The deeper port of the chamfer-based placement (the C's per-`uVar19`
+state machine in `cmd_square_build_geometry @ 3580-3645`) is left as
+follow-up — it would replace this empirical post-flip offset with
+the C-faithful pre-flip `chamfer ± (W, 0)/(0, W)` placement, but the
+result is the same vertex-for-vertex.
 
 **Useful primitives now available**:
 

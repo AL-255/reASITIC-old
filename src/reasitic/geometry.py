@@ -1694,6 +1694,40 @@ def transformer(
     # symmetrically extends the secondary outward on its outer end).
     secondary_polys = _trans_extend_secondary_lead(secondary_polys, pitch)
 
+    # The C's cmd_square_build_geometry @ 3580 places the via cluster
+    # at chamfer_corner ± (W, 0) or (0, W) based on uVar19 (last side
+    # emitted). My _square_access_polygons puts it at (mid_x, max_y -
+    # W/2) for last_side=3 — which matches the M2/M3 pad position the
+    # gold has at (152, 86). But the via-grid centre in the gold sits
+    # at chamfer_corner + (W, 0) post-flip, NOT centred on the pad —
+    # offset by exactly grid_span = n_vias·via_w + (n_vias-1)·via_s.
+    # Apply that shift here for the secondary to match the gold.
+    via_rec = None
+    for v in tech.vias:
+        if {v.top, v.bottom} == {coil_idx, exit_idx} if exit_idx is not None else False:
+            via_rec = v
+            break
+    if via_rec is not None:
+        overplot = max(via_rec.overplot1, via_rec.overplot2)
+        vp = via_rec.width + via_rec.space
+        n_vias = max(1, int(math.floor(
+            (W - 2.0 * overplot + via_rec.space) / vp,
+        )))
+        grid_span = n_vias * via_rec.width + (n_vias - 1) * via_rec.space
+        adjusted: list[Polygon] = []
+        for p in secondary_polys:
+            if p.metal >= len(tech.metals):
+                # Via square — shift by (+grid_span, +grid_span)
+                shifted = Polygon(
+                    vertices=[Point(v.x + grid_span, v.y + grid_span, v.z)
+                              for v in p.vertices],
+                    metal=p.metal, width=p.width, thickness=p.thickness,
+                )
+                adjusted.append(shifted)
+            else:
+                adjusted.append(p)
+        secondary_polys = adjusted
+
     return Shape(
         name=name, polygons=secondary_polys,
         width=W, length=L, spacing=coil_spacing, turns=N, sides=4,

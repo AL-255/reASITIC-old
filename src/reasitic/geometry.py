@@ -125,6 +125,7 @@ class Shape:
     polygons: list[Polygon] = field(default_factory=list)
     # Build parameters retained for re-export / Geom-info display
     width: float = 0.0
+    length: float = 0.0
     spacing: float = 0.0
     turns: float = 0.0
     sides: int = 4
@@ -134,6 +135,12 @@ class Shape:
     y_origin: float = 0.0
     orientation: int = 0  # 1 == cw, -1 == ccw, 0 == as-built
     phase: float = 0.0
+    kind: str = ""
+    # Polygon-spiral specific: outer-vertex radius used by the builder.
+    # Lets downstream code recover the spiral centre (which sits at
+    # ``(x_origin + radius - pitch_radial/4, y_origin + radius - pitch_radial/2)``
+    # for the binary's coord convention). Default 0.0 = "not a polygon spiral".
+    radius: float = 0.0
 
     def segments(self) -> list[Segment]:
         """Flat list of every polygon edge in the shape."""
@@ -210,6 +217,7 @@ class Shape:
             name=self.name,
             polygons=new_polys,
             width=self.width,
+            length=self.length,
             spacing=self.spacing,
             turns=self.turns,
             sides=self.sides,
@@ -219,6 +227,7 @@ class Shape:
             y_origin=self.y_origin + dy_origin,
             orientation=self.orientation,
             phase=self.phase,
+            kind=self.kind,
         )
 
 
@@ -348,6 +357,7 @@ def extend_terminal_segment(shape: Shape, *, dx_um: float = 0.0) -> Shape:
         name=shape.name,
         polygons=new_polys,
         width=shape.width,
+        length=shape.length,
         spacing=shape.spacing,
         turns=shape.turns,
         sides=shape.sides,
@@ -357,6 +367,7 @@ def extend_terminal_segment(shape: Shape, *, dx_um: float = 0.0) -> Shape:
         y_origin=shape.y_origin,
         orientation=shape.orientation,
         phase=shape.phase,
+        kind=shape.kind,
     )
 
 
@@ -429,6 +440,7 @@ def emit_vias_at_layer_transitions(shape: Shape, tech: Tech) -> Shape:
         name=shape.name,
         polygons=new_polys,
         width=shape.width,
+        length=shape.length,
         spacing=shape.spacing,
         turns=shape.turns,
         sides=shape.sides,
@@ -438,6 +450,7 @@ def emit_vias_at_layer_transitions(shape: Shape, tech: Tech) -> Shape:
         y_origin=shape.y_origin,
         orientation=shape.orientation,
         phase=shape.phase,
+        kind=shape.kind,
     )
 
 
@@ -495,6 +508,7 @@ def extend_last_segment_to_chip_edge(shape: Shape, tech: Tech) -> Shape:
         name=shape.name,
         polygons=new_polys,
         width=shape.width,
+        length=shape.length,
         spacing=shape.spacing,
         turns=shape.turns,
         sides=shape.sides,
@@ -504,7 +518,481 @@ def extend_last_segment_to_chip_edge(shape: Shape, tech: Tech) -> Shape:
         y_origin=shape.y_origin,
         orientation=shape.orientation,
         phase=shape.phase,
+        kind=shape.kind,
     )
+
+
+def _closed_poly(
+    corners: list[tuple[float, float]],
+    *,
+    z: float,
+    metal: int,
+    width: float,
+    thickness: float,
+) -> Polygon:
+    verts = [Point(x, y, z) for x, y in corners]
+    if verts and (verts[0].x != verts[-1].x or verts[0].y != verts[-1].y):
+        verts.append(verts[0])
+    return Polygon(vertices=verts, metal=metal, width=width, thickness=thickness)
+
+
+def _polygon_record_to_poly(
+    corners: list[tuple[float, float]],
+    metal_rec: Metal,
+    width: float,
+) -> Polygon:
+    z = metal_rec.d + metal_rec.t * 0.5
+    return _closed_poly(
+        corners,
+        z=z,
+        metal=metal_rec.index,
+        width=width,
+        thickness=metal_rec.t,
+    )
+
+
+def _square_layout_polygons(
+    shape: Shape,
+    tech: Tech,
+    *,
+    include_access: bool = True,
+    trim_final: bool = True,
+) -> list[Polygon]:
+    """Return ASITIC display polygons for an SQ/MMSQ winding.
+
+    Direct port of the polygon-emission part of
+    ``cmd_square_build_geometry``.  ASITIC's CIF/GDS path stores
+    trapezoidal metal ribbons, not centerlines, so exporters use this
+    helper while analysis keeps using :meth:`Shape.segments`.
+    """
+    metal_rec = tech.metals[shape.metal]
+    W = shape.width
+    S = shape.spacing
+    # ``length`` is not a Shape field; recover it from the layout bbox
+    # metadata when available, otherwise from the centerline footprint.
+    length = shape.length
+    if length <= 0.0:
+        if shape.polygons:
+            bx0, by0, bx1, by1 = shape.bounding_box()
+            length = max(bx1 - bx0, by1 - by0)
+        else:
+            return []
+    if length <= 0.0:
+        return []
+    pitch = W + S
+    n_int = int(math.floor(shape.turns))
+    frac_side = int(round((shape.turns - n_int) * 4.0))
+    polys: list[Polygon] = []
+    last_corners: list[tuple[float, float]] | None = None
+    last_side = 0
+
+    for turn in range(n_int + 1):
+        if turn == n_int and frac_side == 0:
+            if last_corners is not None:
+                # Binary trims the final side by W/2 when there is no
+                # explicit exit-layer segment.
+                pass
+            break
+        if turn > shape.turns:
+            break
+        inset = pitch * turn
+        x0 = shape.x_origin + inset
+        y0 = shape.y_origin + inset
+        x1 = shape.x_origin + length - inset
+        y1 = shape.y_origin + length - inset
+        ix0 = x0 + W
+        iy0 = y0 + W
+        ix1 = x1 - W
+        iy1 = y1 - W
+        join = W
+        top_left_outer_x = shape.x_origin + max(0, turn - 1) * pitch
+        top_left_inner_x = top_left_outer_x if turn == 0 else top_left_outer_x + W
+
+        side_polys = [
+            [(top_left_outer_x, y1), (x1, y1), (ix1, iy1), (top_left_inner_x, iy1)],
+            [(x1, y1), (x1, y0), (ix1, iy0), (ix1, iy1)],
+            [(x1, y0), (x0, y0), (ix0, iy0), (ix1, iy0)],
+            [
+                (x0, y0),
+                (x0, y1 - pitch),
+                (ix0, y1 - pitch - W),
+                (ix0, iy0),
+            ],
+        ]
+        max_sides = 4
+        if turn == n_int:
+            max_sides = frac_side
+        for side in range(max_sides):
+            corners = side_polys[side]
+            is_final_side = (
+                (frac_side == 0 and turn == n_int - 1 and side == 3)
+                or (frac_side > 0 and turn == n_int and side == max_sides - 1)
+            )
+            if is_final_side and not trim_final:
+                # No exit / no next turn: the side runs straight to its
+                # terminal outer corner without the chamfer that would
+                # accommodate the next turn's perpendicular side.
+                if side == 0:
+                    # Top side: inner-end chamfer becomes the inner edge
+                    # at the same x as the outer end.
+                    corners = [corners[0], corners[1],
+                               (corners[1][0], corners[2][1]), corners[3]]
+                elif side == 1:
+                    # Right side: bottom-inner chamfer disappears.
+                    corners = [corners[0], corners[1],
+                               (corners[2][0], corners[1][1]), corners[3]]
+                elif side == 2:
+                    # Bottom side: left-inner chamfer disappears.
+                    corners = [corners[0], corners[1],
+                               (corners[1][0], corners[2][1]), corners[3]]
+                else:
+                    # Left side: top-inner chamfer disappears.
+                    corners = [corners[0], corners[1],
+                               (corners[2][0], corners[1][1]), corners[3]]
+            elif is_final_side and trim_final:
+                if side == 0:
+                    corners = [corners[0], (corners[1][0] - W, corners[1][1]),
+                               corners[2], corners[3]]
+                elif side == 1:
+                    corners = [corners[0], (corners[1][0], corners[1][1] + W),
+                               corners[2], corners[3]]
+                elif side == 2:
+                    corners = [corners[0], (corners[1][0] + W, corners[1][1]),
+                               corners[2], corners[3]]
+                else:
+                    corners = [corners[0], (corners[1][0], corners[2][1]), corners[2], corners[3]]
+            polys.append(_polygon_record_to_poly(corners, metal_rec, W))
+            last_corners = corners
+            last_side = side
+
+    if include_access and polys:
+        access = _square_access_polygons(shape, tech, polys[-1], last_side)
+        polys.extend(access)
+    return polys
+
+
+def _square_access_polygons(
+    shape: Shape,
+    tech: Tech,
+    last_poly: Polygon,
+    last_side: int,
+) -> list[Polygon]:
+    exit_idx = shape.exit_metal
+    if exit_idx is None:
+        exit_idx = shape.metal - 1
+    if exit_idx is None or exit_idx < 0 or exit_idx >= len(tech.metals):
+        return []
+    if exit_idx == shape.metal:
+        return []
+    via_rec = None
+    via_idx = -1
+    for i, v in enumerate(tech.vias):
+        if {v.top, v.bottom} == {shape.metal, exit_idx}:
+            via_rec = v
+            via_idx = i
+            break
+    if via_rec is None:
+        return []
+
+    W = shape.width
+    half = W * 0.5
+    verts = last_poly.vertices
+    if len(verts) < 4:
+        return []
+    # ASITIC places the via cluster at the centre of the terminal trace
+    # width and one half-width back from the terminal end.
+    xs = [v.x for v in verts[:-1]]
+    ys = [v.y for v in verts[:-1]]
+    if last_side == 0:       # top side, exits right
+        cx, cy = max(xs) - half, (min(ys) + max(ys)) * 0.5
+        ux, uy = 1.0, 0.0
+    elif last_side == 1:     # right side, exits down
+        cx, cy = (min(xs) + max(xs)) * 0.5, min(ys) + half
+        ux, uy = 0.0, -1.0
+    elif last_side == 2:     # bottom side, exits left
+        cx, cy = min(xs) + half, (min(ys) + max(ys)) * 0.5
+        ux, uy = -1.0, 0.0
+    else:                    # left side, exits up
+        cx, cy = (min(xs) + max(xs)) * 0.5, max(ys) - half
+        ux, uy = 0.0, 1.0
+
+    out: list[Polygon] = []
+    top = tech.metals[shape.metal]
+    exit_m = tech.metals[exit_idx]
+    pad = [
+        (cx - half, cy - half), (cx + half, cy - half),
+        (cx + half, cy + half), (cx - half, cy + half),
+    ]
+    out.append(_polygon_record_to_poly(pad, exit_m, W))
+    out.append(_polygon_record_to_poly(pad, top, W))
+
+    overplot = max(via_rec.overplot1, via_rec.overplot2)
+    pitch = via_rec.width + via_rec.space
+    n = max(1, int(round((W - 2.0 * overplot + via_rec.space) / pitch)))
+    span = (n - 1) * via_rec.space + n * via_rec.width
+    z = 0.0
+    via_metal = len(tech.metals) + via_idx
+    for i in range(n):
+        for j in range(n):
+            x0 = cx - span * 0.5 + i * pitch
+            y0 = cy - span * 0.5 + j * pitch
+            out.append(_closed_poly(
+                [(x0, y0), (x0 + via_rec.width, y0),
+                 (x0 + via_rec.width, y0 + via_rec.width),
+                 (x0, y0 + via_rec.width)],
+                z=z,
+                metal=via_metal,
+                width=via_rec.width,
+                thickness=0.0,
+            ))
+
+    bx0 = shape.x_origin
+    by0 = shape.y_origin
+    outer_len = shape.length if shape.length > 0.0 else max(
+        shape.bounding_box()[2] - shape.bounding_box()[0],
+        shape.bounding_box()[3] - shape.bounding_box()[1],
+    )
+    bx1 = shape.x_origin + outer_len
+    by1 = shape.y_origin + outer_len
+    tail_x = cx - ux * half
+    tail_y = cy - uy * half
+    if abs(ux) > abs(uy):
+        outer = bx1 if ux > 0 else bx0
+        ext = (outer - tail_x) * (1.0 if ux > 0 else -1.0)
+    else:
+        outer = by1 if uy > 0 else by0
+        ext = (outer - tail_y) * (1.0 if uy > 0 else -1.0)
+    lead_len = max(ext + W, 2.0 * W)
+    head_x = tail_x + ux * lead_len
+    head_y = tail_y + uy * lead_len
+    nx = -uy * half
+    ny = ux * half
+    lead = [
+        (tail_x + nx, tail_y + ny),
+        (head_x + nx, head_y + ny),
+        (head_x - nx, head_y - ny),
+        (tail_x - nx, tail_y - ny),
+    ]
+    out.append(_polygon_record_to_poly(lead, exit_m, W))
+    return out
+
+
+def _polygon_bbox(polys: list[Polygon]) -> tuple[float, float, float, float]:
+    """Return (xmin, xmax, ymin, ymax) over all vertices of ``polys``."""
+    xs = [v.x for p in polys for v in p.vertices]
+    ys = [v.y for p in polys for v in p.vertices]
+    return (min(xs), max(xs), min(ys), max(ys))
+
+
+def _polygon_fliph_apply(polys: list[Polygon]) -> list[Polygon]:
+    """Mirror Y about the bbox horizontal centerline.
+
+    Mirrors ``cmd_fliph_apply`` (decomp ``0x08078d20``): computes
+    ``y_axis = ymin + ymax`` and replaces each ``y`` with
+    ``y_axis - y``.
+    """
+    if not polys:
+        return polys
+    _, _, ymin, ymax = _polygon_bbox(polys)
+    y_axis = ymin + ymax
+    out: list[Polygon] = []
+    for p in polys:
+        verts = [Point(v.x, y_axis - v.y, v.z) for v in p.vertices]
+        out.append(Polygon(vertices=verts, metal=p.metal,
+                           width=p.width, thickness=p.thickness))
+    return out
+
+
+def _polygon_flipv_apply(polys: list[Polygon]) -> list[Polygon]:
+    """Mirror X about the bbox vertical centerline.
+
+    Mirrors ``cmd_flipv_apply`` (decomp ``0x08078cdc``): computes
+    ``x_axis = xmin + xmax`` and replaces each ``x`` with
+    ``x_axis - x``.
+    """
+    if not polys:
+        return polys
+    xmin, xmax, _, _ = _polygon_bbox(polys)
+    x_axis = xmin + xmax
+    out: list[Polygon] = []
+    for p in polys:
+        verts = [Point(x_axis - v.x, v.y, v.z) for v in p.vertices]
+        out.append(Polygon(vertices=verts, metal=p.metal,
+                           width=p.width, thickness=p.thickness))
+    return out
+
+
+def _polygons_relayer(polys: list[Polygon], tech: Tech, new_metal: int) -> list[Polygon]:
+    """Return ``polys`` with ``metal``, ``thickness`` and vertex ``z``
+    fields swapped to ``new_metal``."""
+    if new_metal < 0 or new_metal >= len(tech.metals):
+        return polys
+    m = tech.metals[new_metal]
+    z = m.d + m.t * 0.5
+    out: list[Polygon] = []
+    for p in polys:
+        verts = [Point(v.x, v.y, z) for v in p.vertices]
+        out.append(Polygon(vertices=verts, metal=new_metal,
+                           width=p.width, thickness=m.t))
+    return out
+
+
+def _mmsquare_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
+    """Return CIF/GDS-equivalent polygons for an MMSQ multi-metal stack.
+
+    Mirrors ``cmd_mmsquare_build_geometry`` (decomp ``0x0805af5c``):
+
+    1. Build a square spiral on the top metal (``shape.metal``)
+       with no exit routing — pure square spiral.
+    2. For each metal layer between top and ``shape.exit_metal``
+       (inclusive), clone the spiral, swap the metal layer, apply
+       ``cmd_fliph_apply`` (Y-mirror about bbox centerline) for
+       integer or half-integer turns, then reverse the linked
+       list order.
+
+    The C alternates the flip direction between ``fliph`` and
+    ``flipv`` for half-integer turns. For integer turns it always
+    uses ``fliph``; that's what we implement here. Half-integer
+    behaviour is a follow-up.
+    """
+    if shape.exit_metal is None:
+        return _square_layout_polygons(shape, tech, include_access=False)
+    top_metal = shape.metal
+    bot_metal = shape.exit_metal
+    if top_metal <= bot_metal:
+        return _square_layout_polygons(shape, tech, include_access=False)
+
+    # Build the top-layer square spiral (no exit access routing — MMSQ
+    # forces exit_metal to -1 inside the C cmd_square_build_geometry call)
+    top_shape = Shape(
+        name=shape.name, polygons=shape.polygons,
+        width=shape.width, length=shape.length, spacing=shape.spacing,
+        turns=shape.turns, sides=4, metal=top_metal, exit_metal=None,
+        x_origin=shape.x_origin, y_origin=shape.y_origin,
+        phase=shape.phase, kind="square",
+    )
+    top_polys = _square_layout_polygons(
+        top_shape, tech, include_access=False, trim_final=False,
+    )
+    out: list[Polygon] = list(top_polys)
+
+    # Build each subsequent metal layer from the top via fliph + reverse
+    prev_polys = top_polys
+    for layer_idx in range(top_metal - 1, bot_metal - 1, -1):
+        flipped = _polygon_fliph_apply(prev_polys)
+        flipped = list(reversed(flipped))
+        flipped = _polygons_relayer(flipped, tech, layer_idx)
+        out.extend(flipped)
+        prev_polys = flipped
+
+    return out
+
+
+def _polygon_spiral_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
+    metal_rec = tech.metals[shape.metal]
+    sides = shape.sides
+    if sides < 3 or shape.radius <= 0.0:
+        return []
+    R = shape.radius
+    W = shape.width
+    S = shape.spacing
+    cos_half = math.cos(math.pi / sides)
+    radial_w = W / cos_half
+    radial_step = (W + S) / cos_half / sides
+    n_round = int(round(shape.turns))
+    loops = int(round(shape.turns + 1.0))
+    r = R
+    raw: list[list[tuple[float, float]]] = []
+    for turn in range(1, loops + 1):
+        n_side = sides
+        if turn == loops:
+            n_side = int(round((shape.turns - n_round) * sides + 1.0 / (2.0 * sides)))
+        for i in range(1, n_side + 1):
+            a0 = shape.phase + 2.0 * math.pi * (i - 1) / sides
+            a1 = shape.phase + 2.0 * math.pi * i / sides
+            outer0 = (r * math.cos(a0), r * math.sin(a0))
+            inner0 = ((r - radial_w) * math.cos(a0), (r - radial_w) * math.sin(a0))
+            r -= radial_step
+            outer1 = (r * math.cos(a1), r * math.sin(a1))
+            inner1 = ((r - radial_w) * math.cos(a1), (r - radial_w) * math.sin(a1))
+            raw.append([outer0, outer1, inner1, inner0])
+    if not raw:
+        return []
+    xs = [x for poly in raw for x, _ in poly]
+    ys = [y for poly in raw for _, y in poly]
+    dx = shape.x_origin + (max(xs) - min(xs)) * 0.5
+    dy = shape.y_origin + (max(ys) - min(ys)) * 0.5
+    return [
+        _polygon_record_to_poly([(x + dx, y + dy) for x, y in poly], metal_rec, W)
+        for poly in raw
+    ]
+
+
+def _ring_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
+    metal_rec = tech.metals[shape.metal]
+    sides = shape.sides
+    if sides < 3 or shape.radius <= 0.0:
+        return []
+    gap_rad = math.radians(abs(shape.spacing))
+    radial_w = shape.width / math.cos(math.pi / sides)
+    per_side = (2.0 * math.pi - gap_rad) / (sides - 1)
+    start = shape.phase + gap_rad * 0.5
+    angles = [start + k * per_side for k in range(sides - 1)]
+    angles.append(shape.phase - gap_rad * 0.5)
+
+    outer = [(shape.radius * math.cos(a), shape.radius * math.sin(a)) for a in angles]
+    inner_r = shape.radius - radial_w
+    inner = [(inner_r * math.cos(a), inner_r * math.sin(a)) for a in angles]
+    xs = [x for x, _ in outer + inner]
+    ys = [y for _, y in outer + inner]
+    dx = shape.x_origin + (max(xs) - min(xs)) * 0.5
+    dy = shape.y_origin + (max(ys) - min(ys)) * 0.5
+    out: list[Polygon] = []
+    for i in range(sides - 1):
+        out.append(_polygon_record_to_poly(
+            [
+                (outer[i][0] + dx, outer[i][1] + dy),
+                (outer[i + 1][0] + dx, outer[i + 1][1] + dy),
+                (inner[i + 1][0] + dx, inner[i + 1][1] + dy),
+                (inner[i][0] + dx, inner[i][1] + dy),
+            ],
+            metal_rec,
+            shape.width,
+        ))
+    return out
+
+
+def layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
+    """Return filled layout polygons matching ASITIC's CIF/GDS geometry."""
+    if shape.kind == "square":
+        return _square_layout_polygons(shape, tech)
+    if shape.kind == "mmsquare":
+        return _mmsquare_layout_polygons(shape, tech)
+    if shape.kind == "polygon_spiral":
+        return _polygon_spiral_layout_polygons(shape, tech)
+    if shape.kind == "ring":
+        return _ring_layout_polygons(shape, tech)
+    if shape.kind == "wire" and shape.polygons and len(shape.polygons[0].vertices) >= 2:
+        p = shape.polygons[0]
+        a, b = p.vertices[0], p.vertices[-1]
+        dx = b.x - a.x
+        dy = b.y - a.y
+        length = math.hypot(dx, dy)
+        if length <= 1e-12:
+            return []
+        nx = -dy / length * p.width * 0.5
+        ny = dx / length * p.width * 0.5
+        metal_rec = tech.metals[p.metal]
+        return [_polygon_record_to_poly(
+            [(a.x + nx, a.y + ny), (b.x + nx, b.y + ny),
+             (b.x - nx, b.y - ny), (a.x - nx, a.y - ny)],
+            metal_rec,
+            p.width,
+        )]
+    return [
+        Polygon(vertices=list(p.vertices), metal=p.metal, width=p.width, thickness=p.thickness)
+        for p in shape.polygons
+    ]
 
 
 # Geometry builders ------------------------------------------------------
@@ -537,78 +1025,167 @@ def square_spiral(
     inward by ``width + spacing`` per turn. The spiral occupies the
     metal layer ``metal`` (index or tech-file name).
 
-    Parameters are in **microns**. ``turns`` may be fractional —
-    it controls how many quarter-segments are emitted on the
-    innermost partial turn.
+    Parameters are in **microns**. ``turns`` may be fractional;
+    integer turns each emit four sides, and the fractional remainder
+    contributes ``round(4*frac)`` additional sides on a partial turn.
+
+    The trace is generated as a single connected polyline matching
+    ASITIC's ``cmd_square_build_geometry`` (decompiled at ``0x08056670``):
+
+    * centerlines are inset by ``W/2`` from the outer ``length × length``
+      bounding box, so the outer metal edge sits exactly at ``±L/2``;
+    * the entry lead extends the outermost top-side centerline all the
+      way to the left edge (``x = -L/2``) so the spiral can be probed
+      at the chip boundary;
+    * each successive turn shrinks inward by ``pitch = W + S`` and the
+      bottom-left corner of one turn connects to the top-left corner
+      of the next via the outer-left side, producing a true Archimedean
+      spiral instead of nested closed loops;
+    * the very last segment is trimmed by ``1.5 × W`` to leave clearance
+      for the exit-via attachment, matching the binary's reference output.
+
+    The Python signature follows ASITIC's documented convention:
+    ``(x_origin, y_origin)`` is the **lower-left corner** of the
+    spiral's outer bounding box, so the spiral metal occupies
+    ``[x_origin, x_origin + length] × [y_origin, y_origin + length]``
+    in world coords (with ``phase = 0``).
+
+    Verified vertex-for-vertex against the 1999 ASITIC binary's
+    ``LISTSEGS`` output (BiCMOS tech, captured under qemu-i386-static).
     """
     metal_rec = _resolve_metal(tech, metal)
     metal_idx = metal_rec.index
     z = metal_rec.d + metal_rec.t * 0.5
     thickness = metal_rec.t
 
-    polygons: list[Polygon] = []
+    # Local corner-anchored frame: spiral occupies [0, length] x [0, length].
+    # Phase rotates about the lower-left corner; then translate by
+    # (x_origin, y_origin) so the lower-left lands at the user's origin —
+    # matching ASITIC's "Origin of spiral is the lower-left corner".
+    L = length
+    W = width
+    halfw = W * 0.5
+    pitch = W + spacing
 
-    # Outer half-side starts at length/2; each successive turn shrinks
-    # by (width + spacing).
-    outer_half = length * 0.5
-    pitch = width + spacing
-
-    # Number of full turns and a fractional remainder (0..1)
     n_full = math.floor(turns)
     frac = turns - n_full
+    n_partial = int(round(4 * frac))
 
-    # Phase rotates the spiral in-plane by `phase` radians; for square
-    # the entry edge is normally on the right (-x) side of the outer ring.
     cphase = math.cos(phase)
     sphase = math.sin(phase)
 
-    def rot(px: float, py: float) -> tuple[float, float]:
-        return (px * cphase - py * sphase, px * sphase + py * cphase)
+    def to_world(lx: float, ly: float) -> Point:
+        rx = lx * cphase - ly * sphase
+        ry = lx * sphase + ly * cphase
+        return Point(rx + x_origin, ry + y_origin, z)
 
-    def add_loop(half: float, partial_turn: float) -> bool:
-        """Append a closed loop (or partial loop) at half-side ``half``.
+    # Centerline corners of turn `k` in the local corner-anchored frame.
+    # See ASITIC's cmd_square_build_geometry for the corresponding XFillPolygon
+    # corner triples (offsets +0x44 / +0x5c / +0x88 / +0xa0 of the polygon
+    # record); here we only need the centerline vertex positions.
+    def tl(k: int) -> tuple[float, float]:
+        return (halfw + max(0, k - 1) * pitch, L - halfw - k * pitch)
 
-        Returns True if added; False if the inner radius collapsed.
-        """
-        if half <= width * 0.5:
-            return False
-        # Vertices of a square loop, traced clockwise starting at the
-        # right side. Each side is one polygon segment.
-        # Right, top, left, bottom — corner offsets:
-        corners = [
-            (+half, -half),  # bottom-right
-            (+half, +half),  # top-right
-            (-half, +half),  # top-left
-            (-half, -half),  # bottom-left
-            (+half, -half),  # close
-        ]
-        if partial_turn >= 1.0 - 1e-12:
-            verts = corners
-        else:
-            # Use only the leading `4 * partial_turn` segments
-            n_seg = max(1, round(4 * partial_turn))
-            verts = corners[: n_seg + 1]
-        pts = []
-        for cx, cy in verts:
-            rx, ry = rot(cx + x_origin, cy + y_origin)
-            pts.append(Point(rx, ry, z))
-        polygons.append(
-            Polygon(vertices=pts, metal=metal_idx, width=width, thickness=thickness)
+    def tr(k: int) -> tuple[float, float]:
+        return (L - halfw - k * pitch, L - halfw - k * pitch)
+
+    def br(k: int) -> tuple[float, float]:
+        return (L - halfw - k * pitch, halfw + k * pitch)
+
+    def bl(k: int) -> tuple[float, float]:
+        return (halfw + k * pitch, halfw + k * pitch)
+
+    def collapsed(k: int) -> bool:
+        # Innermost half-side of turn k must be larger than W/2 for the
+        # turn to fit; otherwise the spiral has collapsed and we stop.
+        return (L * 0.5 - halfw - k * pitch) <= halfw * 0.5
+
+    verts: list[Point] = []
+
+    # Cap the requested turn count at the geometric limit so we don't emit
+    # tracks that have collapsed past the spiral centre.
+    n_full_emit = min(n_full, max(0, math.floor((L * 0.5 - halfw) / pitch + 1)))
+
+    if n_full_emit == 0 and n_partial == 0:
+        return Shape(
+            name=name,
+            polygons=[],
+            width=width,
+            length=length,
+            spacing=spacing,
+            turns=turns,
+            sides=4,
+            metal=metal_idx,
+            x_origin=x_origin,
+            y_origin=y_origin,
+            phase=phase,
+            kind="square",
         )
-        return True
 
-    half = outer_half
-    for _ in range(n_full):
-        if not add_loop(half, 1.0):
+    # Entry lead: the outermost top-side centerline starts at x = 0 (the
+    # left edge of the bounding box) instead of the inner TL corner. This
+    # is the ASITIC convention so a probe / pad can attach at the chip
+    # boundary without an extra wire.
+    verts.append(to_world(0.0, L - halfw))
+
+    last_seg_dir: tuple[float, float] | None = None
+
+    for k in range(n_full_emit):
+        if collapsed(k):
             break
-        half -= pitch
-    if frac > 0:
-        add_loop(half, frac)
+        # Top side completes at TR_k.
+        verts.append(to_world(*tr(k)))
+        # Right side -> BR_k.
+        verts.append(to_world(*br(k)))
+        # Bottom side -> BL_k.
+        verts.append(to_world(*bl(k)))
+        # Left side -> TL of the next turn (for chained spiraling). On the
+        # last full turn with no fractional remainder, this is the spiral's
+        # exit toward where TL_{k+1} would sit.
+        nxt_tl = tl(k + 1)
+        verts.append(to_world(*nxt_tl))
+        last_seg_dir = (nxt_tl[0] - bl(k)[0], nxt_tl[1] - bl(k)[1])
+
+    # Partial turn (top → right → bottom → left, in that order).
+    if n_partial > 0 and not collapsed(n_full_emit):
+        k = n_full_emit
+        partial_corners = [tr(k), br(k), bl(k), tl(k + 1)]
+        prev = (verts[-1].x - x_origin, verts[-1].y - y_origin)  # rough check unused
+        anchor = tl(k)
+        seq = [tr(k), br(k), bl(k), tl(k + 1)]
+        for i in range(n_partial):
+            verts.append(to_world(*seq[i]))
+            if i == 0:
+                last_seg_dir = (seq[i][0] - anchor[0], seq[i][1] - anchor[1])
+            else:
+                last_seg_dir = (seq[i][0] - seq[i - 1][0], seq[i][1] - seq[i - 1][1])
+        del partial_corners, prev
+
+    # Exit-lead trim: ASITIC shortens the final M3 centerline by W/2 so
+    # the polygon's outer-end lands exactly at the top of the via cell
+    # that drops to the exit metal layer. The polygon corners (after
+    # chamfering by the bridge) then match the binary's CIF byte-for-byte.
+    if len(verts) >= 2 and last_seg_dir is not None:
+        dx, dy = last_seg_dir
+        seg_len = math.hypot(dx, dy)
+        trim = 0.5 * W
+        if seg_len > trim:
+            f = (seg_len - trim) / seg_len
+            p_prev = verts[-2]
+            p_end = verts[-1]
+            new_x = p_prev.x + (p_end.x - p_prev.x) * f
+            new_y = p_prev.y + (p_end.y - p_prev.y) * f
+            verts[-1] = Point(new_x, new_y, p_end.z)
+
+    polygons = [
+        Polygon(vertices=verts, metal=metal_idx, width=width, thickness=thickness)
+    ]
 
     return Shape(
         name=name,
         polygons=polygons,
         width=width,
+        length=length,
         spacing=spacing,
         turns=turns,
         sides=4,
@@ -616,6 +1193,7 @@ def square_spiral(
         x_origin=x_origin,
         y_origin=y_origin,
         phase=phase,
+        kind="square",
     )
 
 
@@ -635,9 +1213,17 @@ def polygon_spiral(
 ) -> Shape:
     """Build an ``n``-sided polygon spiral inscribed in ``radius``.
 
-    Each turn is a regular ``sides``-gon; consecutive turns are
-    offset radially by ``width + spacing`` measured along the
-    perpendicular bisector of each side.
+    Mirrors ASITIC's ``cmd_spiral_build_geometry`` (decompiled at
+    ``0x08057248``): the spiral is generated as one connected polyline
+    that turns by ``2π/sides`` each step while the radius decreases by
+    ``pitch_radial / sides`` per side, where
+    ``pitch_radial = (W + S) / cos(π/sides)`` is the turn-to-turn radial
+    pitch measured along the polygon's perpendicular bisector.
+
+    The bbox is then centered on ``(x_origin, y_origin)`` (per ASITIC's
+    ``shape_translate_inplace_xy`` post-build pass) so the user's origin
+    parameter ends up at the spiral centre — matching the documented
+    behaviour for ``Spiral (NAME:RADIUS:SIDES:…:XORG:YORG)``.
     """
     if sides < 3:
         raise ValueError("polygon spiral needs at least 3 sides")
@@ -646,46 +1232,82 @@ def polygon_spiral(
     z = metal_rec.d + metal_rec.t * 0.5
     thickness = metal_rec.t
 
-    polygons: list[Polygon] = []
+    half_angle = math.pi / sides
+    cos_half = math.cos(half_angle)
+    # The "radial half-width" — how much the trace extends inward along
+    # the radial direction at each vertex of the polygon (the trace face
+    # is perpendicular to the bisector of each side, so along the radial
+    # direction the half-width is W / (2·cos(π/sides))).
+    radial_half_w = width / (2.0 * cos_half)
+    pitch_radial = (width + spacing) / cos_half
 
     n_full = math.floor(turns)
     frac = turns - n_full
-    pitch_radial = (width + spacing) / math.cos(math.pi / sides)
+    n_partial_sides = int(round(sides * frac))
+    total_sides = n_full * sides + n_partial_sides
 
-    def add_loop(r: float, partial_turn: float) -> bool:
-        if r <= width * 0.5:
-            return False
-        # Vertex positions: regular polygon centered at origin, first
-        # vertex at angle ``phase``.
-        n_full_sides = sides
-        verts: list[Point] = []
-        n_seg = (
-            n_full_sides
-            if partial_turn >= 1.0 - 1e-12
-            else max(1, round(n_full_sides * partial_turn))
-        )
-        for k in range(n_seg + 1):
-            theta = phase + 2.0 * math.pi * k / sides
-            vx = x_origin + r * math.cos(theta)
-            vy = y_origin + r * math.sin(theta)
-            verts.append(Point(vx, vy, z))
-        polygons.append(
-            Polygon(vertices=verts, metal=metal_idx, width=width, thickness=thickness)
-        )
-        return True
+    cphase = math.cos(phase)
+    sphase = math.sin(phase)
 
-    r = radius
-    for _ in range(n_full):
-        if not add_loop(r, 1.0):
+    # Build the centerline polyline in a frame anchored at the spiral
+    # center, then bbox-center-shift to (x_origin, y_origin) at the end.
+    cx_local: list[float] = []
+    cy_local: list[float] = []
+
+    # Centerline radius starts one half-width inside the outer-vertex
+    # radius and decrements by pitch_radial per turn (= pitch_radial /
+    # sides per side). The first vertex sits exactly on the polygon's
+    # outer face at phase angle.
+    r_centerline = radius - radial_half_w
+    pitch_per_side = pitch_radial / sides
+
+    if r_centerline <= width * 0.5 or total_sides < 1:
+        return Shape(
+            name=name, polygons=[], width=width, length=radius * 2.0, spacing=spacing,
+            turns=turns, sides=sides, metal=metal_idx,
+            x_origin=x_origin, y_origin=y_origin, phase=phase,
+            kind="polygon_spiral",
+        )
+
+    cx_local.append(r_centerline * math.cos(phase))
+    cy_local.append(r_centerline * math.sin(phase))
+    for k in range(total_sides):
+        r_centerline = r_centerline - pitch_per_side
+        if r_centerline <= width * 0.5:
             break
-        r -= pitch_radial
-    if frac > 0:
-        add_loop(r, frac)
+        theta = phase + 2.0 * math.pi * (k + 1) / sides
+        cx_local.append(r_centerline * math.cos(theta))
+        cy_local.append(r_centerline * math.sin(theta))
+
+    # ASITIC's ``shape_translate_inplace_xy`` for polygon spirals shifts
+    # the centered polyline so the spiral's first centerline vertex lands
+    # at world ``(XORG + 2R - radial_half_w - pitch_radial/4,
+    #            YORG + R - pitch_radial/2)``. Equivalently, the spiral's
+    # geometric centre lands at ``(XORG + R - pitch_radial/4,
+    #                              YORG + R - pitch_radial/2)``.
+    #
+    # This formula was reverse-engineered from the binary's LISTSEGS
+    # output (sp_r80, sp_r100, sp_r120) and matches all three cases
+    # vertex-for-vertex.
+    dx = x_origin + radius - pitch_radial * 0.25
+    dy = y_origin + radius - pitch_radial * 0.5
+
+    verts: list[Point] = [
+        Point(x + dx, y + dy, z)
+        for x, y in zip(cx_local, cy_local, strict=True)
+    ]
+
+    polygons = [
+        Polygon(vertices=verts, metal=metal_idx, width=width, thickness=thickness)
+    ]
+    # phase rotation is already baked into the cos/sin calls above.
+    _ = (cphase, sphase)
 
     return Shape(
         name=name,
         polygons=polygons,
         width=width,
+        length=radius * 2.0,
         spacing=spacing,
         turns=turns,
         sides=sides,
@@ -693,6 +1315,8 @@ def polygon_spiral(
         x_origin=x_origin,
         y_origin=y_origin,
         phase=phase,
+        radius=radius,
+        kind="polygon_spiral",
     )
 
 
@@ -707,16 +1331,32 @@ def wire(
     y_origin: float = 0.0,
     phase: float = 0.0,
 ) -> Shape:
-    """Build a single straight wire of length ``length`` on ``metal``."""
+    """Build a single straight wire of length ``length`` on ``metal``.
+
+    Matches ASITIC's ``W NAME=…:LEN=…:WID=…:METAL=…:XORG=…:YORG=…``
+    convention: ``(x_origin, y_origin)`` is the **lower-left corner**
+    of the wire's bounding box, so the metal occupies
+    ``[x_origin, x_origin + length] × [y_origin, y_origin + width]``
+    when ``phase=0``. The centerline runs along ``y = y_origin + W/2``.
+    """
     metal_rec = _resolve_metal(tech, metal)
     metal_idx = metal_rec.index
     z = metal_rec.d + metal_rec.t * 0.5
     cphase = math.cos(phase)
     sphase = math.sin(phase)
 
-    half = length * 0.5
-    a = Point(x_origin - half * cphase, y_origin - half * sphase, z)
-    b = Point(x_origin + half * cphase, y_origin + half * sphase, z)
+    # Local frame: wire occupies [0, length] × [0, width]; centerline
+    # at y = width/2. Apply phase rotation about the lower-left corner,
+    # then translate by (x_origin, y_origin).
+    halfw = width * 0.5
+
+    def to_world(lx: float, ly: float) -> Point:
+        rx = lx * cphase - ly * sphase
+        ry = lx * sphase + ly * cphase
+        return Point(rx + x_origin, ry + y_origin, z)
+
+    a = to_world(0.0, halfw)
+    b = to_world(length, halfw)
     polygons = [
         Polygon(vertices=[a, b], metal=metal_idx, width=width, thickness=metal_rec.t)
     ]
@@ -724,6 +1364,7 @@ def wire(
         name=name,
         polygons=polygons,
         width=width,
+        length=length,
         spacing=0.0,
         turns=1.0,
         sides=1,
@@ -731,6 +1372,7 @@ def wire(
         x_origin=x_origin,
         y_origin=y_origin,
         phase=phase,
+        kind="wire",
     )
 
 
@@ -773,12 +1415,14 @@ def via(
         name=name,
         polygons=[poly],
         width=v.width,
+        length=0.0,
         spacing=v.space,
         turns=1.0,
         sides=1,
         metal=metal_idx,
         x_origin=x_origin,
         y_origin=y_origin,
+        kind="via",
     )
 
 
@@ -787,6 +1431,7 @@ def ring(
     *,
     radius: float,
     width: float,
+    gap: float = 0.0,
     sides: int = 32,
     tech: Tech,
     metal: int | str = 0,
@@ -800,7 +1445,7 @@ def ring(
     as a thin wrapper for clarity, since the binary's REPL exposes
     ``Ring`` as a separate command.
     """
-    return polygon_spiral(
+    sh = polygon_spiral(
         name,
         radius=radius,
         width=width,
@@ -813,6 +1458,10 @@ def ring(
         y_origin=y_origin,
         phase=phase,
     )
+    sh.kind = "ring"
+    sh.spacing = gap
+    sh.radius = radius
+    return sh
 
 
 def transformer(
@@ -865,6 +1514,7 @@ def transformer(
         name=name,
         polygons=primary.polygons + secondary.polygons,
         width=width,
+        length=length,
         spacing=spacing,
         turns=turns,
         sides=4,
@@ -872,6 +1522,7 @@ def transformer(
         exit_metal=secondary.metal,
         x_origin=x_origin,
         y_origin=y_origin,
+        kind="transformer",
     )
 
 
@@ -926,12 +1577,14 @@ def symmetric_square(
         name=name,
         polygons=arm_a.polygons + arm_b.polygons,
         width=width,
+        length=length,
         spacing=spacing,
         turns=turns,
         sides=4,
         metal=arm_a.metal,
         x_origin=x_origin,
         y_origin=y_origin,
+        kind="symmetric_square",
     )
 
 
@@ -960,17 +1613,14 @@ def capacitor(
     z_top = top.d + top.t * 0.5
     z_bot = bot.d + bot.t * 0.5
 
-    half_x = length * 0.5
-    half_y = width * 0.5
-
     def rect(metal_idx: int, z: float, thickness: float) -> Polygon:
         return Polygon(
             vertices=[
-                Point(x_origin - half_x, y_origin - half_y, z),
-                Point(x_origin + half_x, y_origin - half_y, z),
-                Point(x_origin + half_x, y_origin + half_y, z),
-                Point(x_origin - half_x, y_origin + half_y, z),
-                Point(x_origin - half_x, y_origin - half_y, z),
+                Point(x_origin, y_origin, z),
+                Point(x_origin + length, y_origin, z),
+                Point(x_origin + length, y_origin + width, z),
+                Point(x_origin, y_origin + width, z),
+                Point(x_origin, y_origin, z),
             ],
             metal=metal_idx,
             width=width,
@@ -985,6 +1635,7 @@ def capacitor(
         name=name,
         polygons=polygons,
         width=width,
+        length=length,
         spacing=0.0,
         turns=1.0,
         sides=4,
@@ -992,6 +1643,7 @@ def capacitor(
         exit_metal=bot.index,
         x_origin=x_origin,
         y_origin=y_origin,
+        kind="capacitor",
     )
 
 
@@ -1043,12 +1695,15 @@ def symmetric_polygon(
         name=name,
         polygons=arm_a.polygons + arm_b.polygons,
         width=width,
+        length=radius * 2.0,
         spacing=spacing,
         turns=turns,
         sides=sides,
         metal=arm_a.metal,
         x_origin=x_origin,
         y_origin=y_origin,
+        radius=radius,
+        kind="symmetric_polygon",
     )
 
 
@@ -1060,47 +1715,69 @@ def multi_metal_square(
     spacing: float,
     turns: float,
     tech: Tech,
-    metals: list[int | str],
+    metals: list[int | str] | None = None,
+    metal: int | str | None = None,
+    exit_metal: int | str | None = None,
     x_origin: float = 0.0,
     y_origin: float = 0.0,
 ) -> Shape:
-    """Multi-metal series square inductor (``MMSquare``, case 18).
+    """Multi-metal series square inductor (``MMSquare``).
 
-    Stacks ``len(metals)`` square spirals (each on a different metal
-    layer), connected in series by implicit vias. Boosts L for a
-    given footprint by reusing area on multiple layers.
+    Mirrors ``cmd_mmsquare_build_geometry`` (decomp ``0x0805af5c``):
+    builds a square spiral on the top metal, then a Y-mirrored,
+    list-reversed copy on each lower metal layer down to and
+    including ``exit_metal``. Adjacent layers connect via implicit
+    vias at the inner-end of one and the outer-start of the next,
+    boosting L for a given footprint by re-using area.
 
-    Mirrors ``cmd_mmsq_build_geometry``.
+    Two equivalent calling conventions are supported:
+
+    * ``metal="m3", exit_metal="m2"`` — matches the C ASITIC
+      ``MMSQ NAME=...:METAL=m3:EXIT=m2`` form. The Python uses
+      every metal layer from ``metal`` down to ``exit_metal``
+      inclusive.
+    * ``metals=[m3, m2]`` — backward-compatible explicit list.
+
+    The basic square-spiral on the top metal is built with
+    ``cmd_square_build_geometry``'s exit-routing branch suppressed
+    (the C sets ``shape.exit_metal = -1`` before calling
+    ``cmd_square_build_geometry``). The full per-layer flip cascade
+    is then applied by :func:`_mmsquare_layout_polygons`.
     """
-    if not metals:
-        raise ValueError("at least one metal layer required")
-    polygons: list[Polygon] = []
-    metal_indices: list[int] = []
-    for i, m in enumerate(metals):
-        sp = square_spiral(
-            f"{name}_{i}",
-            length=length,
-            width=width,
-            spacing=spacing,
-            turns=turns,
-            tech=tech,
-            metal=m,
-            x_origin=x_origin,
-            y_origin=y_origin,
-        )
-        polygons.extend(sp.polygons)
-        metal_indices.append(sp.metal)
+    if metals is not None:
+        resolved = [_resolve_metal(tech, m).index for m in metals]
+        if len(resolved) < 1:
+            raise ValueError("at least one metal layer required")
+        top_idx = max(resolved)
+        bot_idx = min(resolved)
+    elif metal is not None and exit_metal is not None:
+        top_idx = _resolve_metal(tech, metal).index
+        bot_idx = _resolve_metal(tech, exit_metal).index
+    elif metal is not None:
+        top_idx = _resolve_metal(tech, metal).index
+        bot_idx = top_idx
+    else:
+        raise ValueError("must pass either metals=[...] or metal=...")
+
+    base = square_spiral(
+        f"{name}_top",
+        length=length, width=width, spacing=spacing, turns=turns,
+        tech=tech, metal=top_idx,
+        x_origin=x_origin, y_origin=y_origin,
+    )
     return Shape(
         name=name,
-        polygons=polygons,
+        polygons=base.polygons,
         width=width,
+        length=length,
         spacing=spacing,
         turns=turns,
         sides=4,
-        metal=metal_indices[0],
-        exit_metal=metal_indices[-1] if len(metal_indices) > 1 else None,
+        metal=top_idx,
+        exit_metal=bot_idx if bot_idx != top_idx else None,
         x_origin=x_origin,
         y_origin=y_origin,
+        kind="mmsquare",
     )
 
 
@@ -1166,6 +1843,7 @@ def transformer_3d(
         name=name,
         polygons=primary.polygons + secondary.polygons + via_segment.polygons,
         width=width,
+        length=length,
         spacing=spacing,
         turns=turns,
         sides=4,
@@ -1173,6 +1851,7 @@ def transformer_3d(
         exit_metal=secondary.metal,
         x_origin=x_origin,
         y_origin=y_origin,
+        kind="transformer_3d",
     )
 
 
@@ -1223,6 +1902,7 @@ def balun(
         name=name,
         polygons=coil_a.polygons + coil_b.polygons,
         width=width,
+        length=length,
         spacing=spacing,
         turns=turns,
         sides=4,
@@ -1230,4 +1910,5 @@ def balun(
         exit_metal=coil_b.metal,
         x_origin=x_origin,
         y_origin=y_origin,
+        kind="balun",
     )

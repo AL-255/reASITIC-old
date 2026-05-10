@@ -255,22 +255,116 @@ match the C output. Signatures don't accept `primary_metal` /
 
 Symmetric centre-tapped square inductor. The 2679-byte function
 takes an `ILEN` parameter (centre-tap spacing) in addition to the
-standard `LEN`/`W`/`S`/`N`/`METAL`/`EXIT` set. It builds two arms
-that meet at the centre with a bridge segment crossing on the
-exit metal.
+standard `LEN`/`W`/`S`/`N`/`METAL`/`EXIT` set.
 
-Algorithm (high level):
+### Decoded structure (per-piece)
 
-1. Build the right arm: walk `N` turns of square spiral but stop
-   each side at the centre line, with a centre-tap stub of length
-   `ILEN/2`.
-2. Build the left arm as the mirror of the right (cmd_fliph_apply).
-3. Cross-connect at the centre via a bridge on `EXIT` metal.
+The full SYMSQ output for the smallest golden case
+(`symsq_150x8x2x2_m3_m2`: L=150, W=8, S=2, N=2, ILEN=15,
+XORG=100, YORG=100) breaks down into:
 
-**Python status (broken):** `symmetric_square` builds two
-half-length square spirals at offset positions, missing the
-centre-tap bridge and the ILEN parameter. Signature doesn't
-accept `ilen` or `primary_metal`/`exit_metal`.
+* **Centre-U** (3 M3 polygons forming an inverted "Π") — done.
+  See `_symsq_centre_arm_polygons` in `geometry.py`. Verified
+  vertex-for-vertex against all three golden cases.
+* **Two via clusters with M3+M2 overlap pads.** Pad sizes
+  ``(W × ILEN/2)`` at:
+    - Pad 1 (right-arm-base): at `(XORG + L − W/2 − ?, U_arm_bot + ?)`
+    - Pad 2 (lower-spiral-attachment): different position
+  Exact placement formulas need decoding from the C
+  `lookup_via_for_metal_pair` calls inside the SYMSQ state
+  machine.
+* **M2 chamfered transition trace** — a single quadrilateral
+  connecting pad 1 down-and-left to pad 2 region, with the
+  characteristic 45° chamfer.
+* **Main spiral (12 polygons across 6 sub-pieces):**
+
+  | Sub-piece | Polys | Decoded location (case 1) |
+  |---|---|---|
+  | Inner mini-loop bottom-U | 3 | y=117.5–175, x=110–240 |
+  | ILEN-stub on left | 2 | x=110–118, y=175–190 (split into 2 of W height each) |
+  | Upper inner ring | 3 | y=190–247.5, x=110–240 |
+  | Slanted right-side transition | 1 | x=232–250, y=175–190 |
+  | Outermost ring | 3 | y=107.5–175, x=100–250 |
+
+### Decoded formulas
+
+For the centre-U (verified on all 3 cases):
+
+  ```
+  U_outer_top_y   = YORG + L + ILEN/2
+  U_arm_bottom_y  = YORG + L/2 + ILEN
+  U_outer_x       = [XORG, XORG + L]
+  U_inner_x       = [XORG + W, XORG + L − W]
+  U_height        = (L − ILEN) / 2
+  ```
+
+For the bbox of the whole SYMSQ:
+
+  ```
+  total_bbox_x = [XORG, XORG + L]
+  total_bbox_y = [YORG + ILEN/2, YORG + L + ILEN/2]
+  ```
+
+So the whole SYMSQ fits in an L × L bounding box, shifted up by
+`ILEN/2` from `YORG`.
+
+For the inner mini-loop (1 of the 3 sub-pieces of the main
+spiral, case 1):
+
+  ```
+  inner_loop_top_y    = YORG + L/2          (= 175)
+  inner_loop_bottom_y = YORG + ILEN/2 + pitch  (= 117.5)
+  inner_loop_x        = [XORG + pitch, XORG + L − pitch]
+  ```
+
+(pitch = W + S; verified against case 1 only — needs cross-check
+against cases 2 and 3.)
+
+### Algorithm (high level, decoded from C)
+
+The C builds the geometry via a state machine in
+``cmd_symsq_build_geometry`` (lines 4970-5089) with cases 0-7
+dispatching to two helpers:
+
+* `shape_aux_init @ 0x0805bb64` (211 bytes) — emits a single
+  side trapezoid by collapsing-and-extending an initial
+  degenerate polygon. Args: `(side_idx, polygon_record, length, width)`.
+* `symsq_emit_polygon_layers @ 0x080595d0` (lines 4677-4853) —
+  emits 4 polygons in one call (the 4-side cross-tap segment
+  cluster).
+
+The state machine progresses as:
+
+* Cases 0-3 (corner sides): single `shape_aux_init` call per side.
+* Case 5 (bottom-half cross-tap): two `lookup_via_for_metal_pair`
+  calls + one `symsq_emit_polygon_layers` call (4 polys).
+* Case 6 (top-half cross-tap): same as 5 but mirrored.
+
+The state machine cycles uVar11 through 0→3→5→0→1→3 etc.,
+emitting one to four polygons per iteration. After N turns the
+loop exits and tail-emits 2 more polygons (the centre-tap stub
+on M2/EXIT).
+
+### `cmd_balun_build_geometry` (`0x0805bc74`, 72 bytes!)
+
+Wraps SYMSQ:
+
+```c
+cmd_symsq_build_geometry(shape);           // primary
+cmd_symsq_build_geometry(args_buf);        // secondary
+cmd_flipv_apply(g_current_shape);          // flip secondary x
+cmd_showldiv_format(g_current_shape);
+shape.linked_list[0xb4] = secondary;       // sibling pointers
+secondary.linked_list[0xb4] = shape;
+```
+
+So once SYMSQ is fully ported, BALUN is essentially free.
+
+**Python status (centre-U done; main spiral TODO).**
+`_symsq_centre_arm_polygons` matches the gold for all three
+cases. The main spiral structure (12 polygons across 6
+sub-pieces) needs `shape_aux_init` and `symsq_emit_polygon_layers`
+ported, plus the state machine that orchestrates them.
 
 ## `cmd_sympoly_build_geometry` (`0x0805a45c`)
 

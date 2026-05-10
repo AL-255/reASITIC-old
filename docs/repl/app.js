@@ -9,11 +9,30 @@ const ui = {
   techSelect: $("tech-select"),
   shapeSelect: $("shape-select"),
   metalSelect: $("metal-select"),
+  exitMetalSelect: $("exit-metal-select"),
+  metal2Select: $("metal2-select"),
+  metalSecondarySelect: $("metal-secondary-select"),
+  viaSelect: $("via-index-select"),
+  name: $("p-name"),
   length: $("p-length"),
+  radius: $("p-radius"),
+  ringRadius: $("p-ring-radius"),
+  capLength: $("p-cap-length"),
+  capWidth: $("p-cap-width"),
+  wireLength: $("p-wire-length"),
+  wireWidth: $("p-wire-width"),
   width: $("p-width"),
   spacing: $("p-spacing"),
+  ilen: $("p-ilen"),
   turns: $("p-turns"),
   sides: $("p-sides"),
+  gap: $("p-gap"),
+  nvx: $("p-nvx"),
+  nvy: $("p-nvy"),
+  xorg: $("p-xorg"),
+  yorg: $("p-yorg"),
+  orient: $("p-orient"),
+  phase: $("p-phase"),
   freq: $("p-freq"),
   swF1: $("sw-f1"),
   swF2: $("sw-f2"),
@@ -76,15 +95,56 @@ function downloadText(filename, text, mime = "text/plain") {
 }
 
 function getSpec() {
+  const kind = ui.shapeSelect.value;
+  // Different shape kinds carry their "size" args in different fields.
+  let length;
+  let width;
+  let radius;
+  if (kind === "ring") {
+    length = parseFloat(ui.ringRadius.value);
+    width = parseFloat(ui.wireWidth.value);
+    radius = parseFloat(ui.ringRadius.value);
+  } else if (kind === "wire") {
+    length = parseFloat(ui.wireLength.value);
+    width = parseFloat(ui.wireWidth.value);
+  } else if (kind === "capacitor") {
+    length = parseFloat(ui.capLength.value);
+    width = parseFloat(ui.capWidth.value);
+  } else if (kind === "polygon_spiral" || kind === "symmetric_polygon") {
+    length = parseFloat(ui.radius.value) * 2;
+    width = parseFloat(ui.width.value);
+    radius = parseFloat(ui.radius.value);
+  } else if (kind === "via") {
+    length = 0;
+    width = 0;
+  } else {
+    length = parseFloat(ui.length.value);
+    width = parseFloat(ui.width.value);
+  }
   return {
-    kind: ui.shapeSelect.value,
-    name: "L1",
-    metal: ui.metalSelect.value,
-    length: parseFloat(ui.length.value),
-    width: parseFloat(ui.width.value),
+    kind,
+    name: ui.name.value || "L1",
+    metal: ui.metalSelect ? ui.metalSelect.value : null,
+    exit_metal: ui.exitMetalSelect ? ui.exitMetalSelect.value || null : null,
+    metal_bottom: ui.metal2Select ? ui.metal2Select.value || null : null,
+    secondary_metal: ui.metalSecondarySelect
+      ? ui.metalSecondarySelect.value || null : null,
+    via_index: ui.viaSelect && ui.viaSelect.value !== ""
+      ? parseInt(ui.viaSelect.value, 10) : 0,
+    radius: radius !== undefined ? radius : undefined,
+    length,
+    width,
     spacing: parseFloat(ui.spacing.value),
+    ilen: ui.ilen ? parseFloat(ui.ilen.value) : 0,
     turns: parseFloat(ui.turns.value),
     sides: parseInt(ui.sides.value, 10),
+    gap: parseFloat(ui.gap.value),
+    n_via_x: ui.nvx ? parseInt(ui.nvx.value, 10) : 1,
+    n_via_y: ui.nvy ? parseInt(ui.nvy.value, 10) : 1,
+    x_origin: parseFloat(ui.xorg.value),
+    y_origin: parseFloat(ui.yorg.value),
+    orient: parseFloat(ui.orient.value),
+    phase: parseFloat(ui.phase.value),
   };
 }
 
@@ -94,29 +154,40 @@ function applyShapeVisibility() {
     const allowed = el.dataset.only.split(/\s+/);
     el.style.display = allowed.includes(kind) ? "" : "none";
   });
-  // For polygon spiral / wire, "Length" is conceptually different — relabel.
-  const lengthLabel = ui.length.parentElement;
-  if (kind === "polygon_spiral") {
-    lengthLabel.firstChild.nodeValue = "Outer radius (μm)";
-  } else if (kind === "wire") {
-    lengthLabel.firstChild.nodeValue = "Length (μm)";
-  } else if (kind === "symmetric_square") {
-    lengthLabel.firstChild.nodeValue = "Outer length (μm)";
-  } else {
-    lengthLabel.firstChild.nodeValue = "Length / radius (μm)";
-  }
 }
 
 function populateMetals(metals) {
   ui.metalSelect.innerHTML = "";
+  ui.exitMetalSelect.innerHTML = '<option value="">(none — no via / lead)</option>';
+  if (ui.metal2Select) ui.metal2Select.innerHTML = '<option value="">(same as METAL)</option>';
+  if (ui.metalSecondarySelect) ui.metalSecondarySelect.innerHTML = '<option value="">(same as METAL)</option>';
   metals.forEach((m) => {
-    const opt = document.createElement("option");
-    opt.value = m.name || String(m.index);
-    opt.textContent = `${m.name || ("m" + m.index)}  (idx ${m.index}, t=${m.t}μm)`;
-    ui.metalSelect.appendChild(opt);
+    const value = m.name || String(m.index);
+    const label = `${m.name || ("m" + m.index)}  (idx ${m.index}, t=${m.t}μm)`;
+    [ui.metalSelect, ui.exitMetalSelect, ui.metal2Select, ui.metalSecondarySelect].filter(Boolean).forEach((sel) => {
+      const opt = document.createElement("option");
+      opt.value = value;
+      opt.textContent = label;
+      sel.appendChild(opt);
+    });
   });
-  // Default to top metal (best Q in a typical stack).
+  // Default METAL = top metal; EXIT/METAL2 default to empty.
   ui.metalSelect.value = ui.metalSelect.options[ui.metalSelect.options.length - 1].value;
+  ui.exitMetalSelect.value = "";
+  if (ui.metal2Select) ui.metal2Select.value = "";
+  if (ui.metalSecondarySelect) ui.metalSecondarySelect.value = "";
+}
+
+function populateVias(vias) {
+  if (!ui.viaSelect) return;
+  ui.viaSelect.innerHTML = "";
+  vias.forEach((v, i) => {
+    const opt = document.createElement("option");
+    opt.value = String(i);
+    opt.textContent = `${v.name || ("via" + i)} (idx ${i})`;
+    ui.viaSelect.appendChild(opt);
+  });
+  if (vias.length > 0) ui.viaSelect.value = "0";
 }
 
 async function loadTechFile(filename) {
@@ -125,6 +196,7 @@ async function loadTechFile(filename) {
   const text = await resp.text();
   const info = pyodide.globals.get("load_tech")(text).toJs({ dict_converter: Object.fromEntries });
   populateMetals(info.metals);
+  populateVias(info.vias || []);
   setStatus(`Loaded ${filename} — ${info.metals.length} metals, ${info.n_layers} layers, ${info.n_vias} vias.`, "ready");
 }
 
@@ -315,7 +387,15 @@ function wireEvents() {
     buildShape();
   });
 
-  [ui.metalSelect, ui.length, ui.width, ui.spacing, ui.turns, ui.sides].forEach((el) => {
+  [
+    ui.metalSelect, ui.exitMetalSelect, ui.metal2Select,
+    ui.metalSecondarySelect, ui.viaSelect, ui.name,
+    ui.length, ui.radius, ui.ringRadius, ui.wireLength, ui.wireWidth,
+    ui.capLength, ui.capWidth,
+    ui.width, ui.spacing, ui.ilen, ui.turns, ui.sides, ui.gap,
+    ui.nvx, ui.nvy,
+    ui.xorg, ui.yorg, ui.orient, ui.phase,
+  ].filter(Boolean).forEach((el) => {
     el.addEventListener("change", buildShape);
   });
 

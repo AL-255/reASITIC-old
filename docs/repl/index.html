@@ -31,32 +31,111 @@
 
     <label>Shape
       <select id="shape-select">
-        <option value="square_spiral">Square spiral</option>
-        <option value="polygon_spiral">Polygon spiral</option>
-        <option value="symmetric_square">Symmetric square</option>
-        <option value="wire">Single wire</option>
+        <optgroup label="Single-trace primitives">
+          <option value="wire">Wire (W)</option>
+          <option value="capacitor">Capacitor (CAP)</option>
+          <option value="ring">Ring (RING)</option>
+          <option value="via">Via cluster (VIA)</option>
+        </optgroup>
+        <optgroup label="Single-port spirals">
+          <option value="square_spiral" selected>Square spiral (SQ)</option>
+          <option value="polygon_spiral">Polygon spiral (SP)</option>
+          <option value="multi_metal_square">Multi-metal square (SQMM)</option>
+        </optgroup>
+        <optgroup label="Centre-tapped">
+          <option value="symmetric_square">Symmetric square (SYMSQ)</option>
+          <option value="symmetric_polygon">Symmetric polygon (SYMPOLY)</option>
+        </optgroup>
+        <optgroup label="Two-coil">
+          <option value="transformer_primary">Transformer primary (TRANS)</option>
+          <option value="transformer_secondary">Transformer secondary (TRANS)</option>
+          <option value="balun_primary">Balun primary (BALUN)</option>
+          <option value="balun_secondary">Balun secondary (BALUN)</option>
+        </optgroup>
       </select>
     </label>
 
-    <label>Metal layer
-      <select id="metal-select"></select>
-    </label>
-
     <div class="grid2">
-      <label>Length / radius (μm)
+      <label>NAME
+        <input id="p-name" type="text" value="L1" />
+      </label>
+      <label data-only="square_spiral polygon_spiral wire ring capacitor multi_metal_square symmetric_square symmetric_polygon transformer_primary transformer_secondary balun_primary balun_secondary">METAL
+        <select id="metal-select"></select>
+      </label>
+      <label data-only="square_spiral multi_metal_square symmetric_square symmetric_polygon transformer_primary transformer_secondary">EXIT metal (optional)
+        <select id="exit-metal-select">
+          <option value="">(none — no via / lead)</option>
+        </select>
+      </label>
+      <label data-only="capacitor">METAL2
+        <select id="metal2-select">
+          <option value="">(same as METAL)</option>
+        </select>
+      </label>
+      <label data-only="balun_primary balun_secondary">METAL2 (secondary)
+        <select id="metal-secondary-select">
+          <option value="">(same as METAL)</option>
+        </select>
+      </label>
+      <label data-only="via">VIA layer
+        <select id="via-index-select"></select>
+      </label>
+      <label data-only="square_spiral multi_metal_square symmetric_square transformer_primary transformer_secondary balun_primary balun_secondary">LEN (μm)
         <input id="p-length" type="number" value="170" step="any" min="1" />
       </label>
-      <label>Width (μm)
+      <label data-only="polygon_spiral symmetric_polygon">RADIUS (μm)
+        <input id="p-radius" type="number" value="100" step="any" min="1" />
+      </label>
+      <label data-only="ring">RADIUS (μm)
+        <input id="p-ring-radius" type="number" value="100" step="any" min="1" />
+      </label>
+      <label data-only="capacitor">LEN (μm)
+        <input id="p-cap-length" type="number" value="80" step="any" min="1" />
+      </label>
+      <label data-only="capacitor">WID (μm)
+        <input id="p-cap-width" type="number" value="80" step="any" min="0.1" />
+      </label>
+      <label data-only="wire">LEN (μm)
+        <input id="p-wire-length" type="number" value="100" step="any" min="1" />
+      </label>
+      <label data-only="wire ring">WID (μm)
+        <input id="p-wire-width" type="number" value="10" step="any" min="0.1" />
+      </label>
+      <label data-only="square_spiral polygon_spiral multi_metal_square symmetric_square symmetric_polygon transformer_primary transformer_secondary balun_primary balun_secondary">W (μm)
         <input id="p-width" type="number" value="10" step="any" min="0.1" />
       </label>
-      <label data-only="square_spiral polygon_spiral symmetric_square">Spacing (μm)
+      <label data-only="square_spiral polygon_spiral multi_metal_square symmetric_square symmetric_polygon transformer_primary transformer_secondary balun_primary balun_secondary">S (μm)
         <input id="p-spacing" type="number" value="3" step="any" min="0.1" />
       </label>
-      <label data-only="square_spiral polygon_spiral symmetric_square">Turns
-        <input id="p-turns" type="number" value="2" step="0.5" min="0.5" />
+      <label data-only="symmetric_square symmetric_polygon">ILEN (μm)
+        <input id="p-ilen" type="number" value="20" step="any" min="0" />
       </label>
-      <label data-only="polygon_spiral">Sides
+      <label data-only="ring">GAP (deg)
+        <input id="p-gap" type="number" value="4" step="any" min="0" />
+      </label>
+      <label data-only="square_spiral polygon_spiral multi_metal_square symmetric_square symmetric_polygon transformer_primary transformer_secondary balun_primary balun_secondary">N (turns)
+        <input id="p-turns" type="number" value="2" step="0.25" min="0.25" />
+      </label>
+      <label data-only="polygon_spiral ring symmetric_polygon">SIDES
         <input id="p-sides" type="number" value="8" step="1" min="3" />
+      </label>
+      <label data-only="via">NX
+        <input id="p-nvx" type="number" value="3" step="1" min="1" />
+      </label>
+      <label data-only="via">NY
+        <input id="p-nvy" type="number" value="3" step="1" min="1" />
+      </label>
+      <label>XORG (μm)
+        <input id="p-xorg" type="number" value="0" step="any" />
+      </label>
+      <label>YORG (μm)
+        <input id="p-yorg" type="number" value="0" step="any" />
+      </label>
+      <label data-only="square_spiral polygon_spiral wire ring capacitor symmetric_square symmetric_polygon multi_metal_square">ORIENT (deg)
+        <input id="p-orient" type="number" value="0" step="any" />
+      </label>
+      <label data-only="square_spiral polygon_spiral wire ring">PHASE (rad)
+        <input id="p-phase" type="number" value="0" step="any" />
       </label>
       <label>Frequency (GHz)
         <input id="p-freq" type="number" value="2.4" step="any" min="0.001" />

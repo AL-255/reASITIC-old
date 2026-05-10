@@ -14,7 +14,7 @@ implementation in `src/reasitic/geometry.py`.
 | `Polygon spiral` | `cmd_spiral_build_geometry @ 08057248` | done | 3 sp_*_m{2,3} cases |
 | `Ring` | `cmd_ring_build_geometry @ 0805b450` | done | ring_r80_w10_g4_m3, ring_r120_w8_g6_m2 |
 | `MMSquare` | `cmd_mmsquare_build_geometry @ 0805af5c` | done | 2/2 |
-| `Symmetric square` | `cmd_symsq_build_geometry @ 08059854` | N=2 done; N≥3 partial | 1/3 |
+| `Symmetric square` | `cmd_symsq_build_geometry @ 08059854` | done | 3/3 (266 polys all match) |
 | `Symmetric polygon` | `cmd_sympoly_build_geometry @ 0805a45c` | broken | 0/2 |
 | `Transformer` | `cmd_trans_build_geometry @ 080576d4` | done (primary full; secondary M3+M2 full, VIA3 ~3µm off) | 2/2 |
 | `Balun` (3D Transformer) | `cmd_3dtrans_build_geometry @ 08057d40` | broken | 0/2 |
@@ -358,7 +358,21 @@ shape.linked_list[0xb4] = secondary;       // sibling pointers
 secondary.linked_list[0xb4] = shape;
 ```
 
-So once SYMSQ is fully ported, BALUN is essentially free.
+**BALUN ILEN derivation.** BALUN's CLI doesn't take an explicit
+ILEN parameter — it's derived from the build args. Decoded from
+gold `balun_200x8x3x3` (L=200, W=8, S=3, N=3): the apparent ILEN
+inside the BALUN-internal SYMSQs is **22 = 2·pitch = 2·(W+S)**.
+This makes the centre gap large enough for the second SYMSQ to
+fit between (or over/under).
+
+**BALUN primary vs full SYMSQ.** The primary BALUN coil has 15
+M3 polys (vs 26 for a full SYMSQ at N=3). It looks like each
+BALUN coil is a *partial* SYMSQ — only the OUTERMOST and the
+INNERMOST rings are emitted, plus the centre-U. The middle-
+nested rings (k=1..N-2) appear only on the partner coil.
+
+Confirming the partial-SYMSQ structure and decoding which rings
+go with which coil is the next BALUN porting step.
 
 **Python status: N=2 done, N≥3 partial.** All 38 polygons
 of `symsq_150x8x2x2_m3_m2` (the smallest case, N=2) match the

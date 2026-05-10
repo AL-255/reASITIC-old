@@ -728,7 +728,12 @@ def _square_access_polygons(
 
     overplot = max(via_rec.overplot1, via_rec.overplot2)
     pitch = via_rec.width + via_rec.space
-    n = max(1, int(round((W - 2.0 * overplot + via_rec.space) / pitch)))
+    # Use floor to match the C binary's via-count convention
+    # (asitic_repl.c: cmd_square_build_geometry's via cluster sizing
+    # gives n = floor((W - 2·op + via_s) / (via_w + via_s))).
+    # Verified against gold sq_170 (W=10 → n=4) and trans_200x8x3x3
+    # (W=8 → n=3).
+    n = max(1, int(math.floor((W - 2.0 * overplot + via_rec.space) / pitch)))
     span = (n - 1) * via_rec.space + n * via_rec.width
     z = 0.0
     via_metal = len(tech.metals) + via_idx
@@ -784,17 +789,25 @@ def _polygon_bbox(polys: list[Polygon]) -> tuple[float, float, float, float]:
     return (min(xs), max(xs), min(ys), max(ys))
 
 
-def _polygon_fliph_apply(polys: list[Polygon]) -> list[Polygon]:
-    """Mirror Y about the bbox horizontal centerline.
+def _polygon_fliph_apply(
+    polys: list[Polygon],
+    *,
+    y_axis: float | None = None,
+) -> list[Polygon]:
+    """Mirror Y about a horizontal centerline.
 
     Mirrors ``cmd_fliph_apply`` (decomp ``0x08078d20``): computes
-    ``y_axis = ymin + ymax`` and replaces each ``y`` with
-    ``y_axis - y``.
+    ``y_sum = ymin + ymax`` of the bbox and replaces each ``y``
+    with ``y_sum - y``. Pass ``y_axis = ymin + ymax`` explicitly
+    to mirror about a known axis (useful when the input polygons'
+    bbox includes access routing whose post-flip direction is the
+    opposite of the desired one).
     """
     if not polys:
         return polys
-    _, _, ymin, ymax = _polygon_bbox(polys)
-    y_axis = ymin + ymax
+    if y_axis is None:
+        _, _, ymin, ymax = _polygon_bbox(polys)
+        y_axis = ymin + ymax
     out: list[Polygon] = []
     for p in polys:
         verts = [Point(v.x, y_axis - v.y, v.z) for v in p.vertices]
@@ -803,17 +816,23 @@ def _polygon_fliph_apply(polys: list[Polygon]) -> list[Polygon]:
     return out
 
 
-def _polygon_flipv_apply(polys: list[Polygon]) -> list[Polygon]:
-    """Mirror X about the bbox vertical centerline.
+def _polygon_flipv_apply(
+    polys: list[Polygon],
+    *,
+    x_axis: float | None = None,
+) -> list[Polygon]:
+    """Mirror X about a vertical centerline.
 
     Mirrors ``cmd_flipv_apply`` (decomp ``0x08078cdc``): computes
-    ``x_axis = xmin + xmax`` and replaces each ``x`` with
-    ``x_axis - x``.
+    ``x_sum = xmin + xmax`` of the bbox and replaces each ``x``
+    with ``x_sum - x``. Pass ``x_axis = xmin + xmax`` explicitly
+    when the bbox-derived value would include unwanted offsets.
     """
     if not polys:
         return polys
-    xmin, xmax, _, _ = _polygon_bbox(polys)
-    x_axis = xmin + xmax
+    if x_axis is None:
+        xmin, xmax, _, _ = _polygon_bbox(polys)
+        x_axis = xmin + xmax
     out: list[Polygon] = []
     for p in polys:
         verts = [Point(x_axis - v.x, v.y, v.z) for v in p.vertices]
@@ -968,6 +987,9 @@ def layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
         return _square_layout_polygons(shape, tech)
     if shape.kind == "mmsquare":
         return _mmsquare_layout_polygons(shape, tech)
+    if shape.kind == "transformer_secondary":
+        # Pre-flipped polygons stored on the shape directly
+        return list(shape.polygons)
     if shape.kind == "polygon_spiral":
         return _polygon_spiral_layout_polygons(shape, tech)
     if shape.kind == "ring":
@@ -1467,62 +1489,141 @@ def ring(
 def transformer(
     name: str,
     *,
-    length: float,
-    width: float,
-    spacing: float,
-    turns: float,
+    length: float | None = None,
+    width: float | None = None,
+    spacing: float | None = None,
+    turns: float | None = None,
+    primary_length: float | None = None,
+    primary_width: float | None = None,
+    primary_spacing: float | None = None,
+    primary_turns: float | None = None,
+    secondary_length: float | None = None,
+    secondary_width: float | None = None,
+    secondary_spacing: float | None = None,
+    secondary_turns: float | None = None,
     tech: Tech,
-    metal_primary: int | str = 0,
+    metal: int | str | None = None,
+    exit_metal: int | str | None = None,
+    metal_primary: int | str | None = None,
     metal_secondary: int | str | None = None,
     x_origin: float = 0.0,
     y_origin: float = 0.0,
+    which: str = "primary",
 ) -> Shape:
     """Build a planar two-coil transformer (``Trans``).
 
-    Mirrors the simple-case behaviour of ``cmd_trans_build_geometry``
-    (``asitic_repl.c:3861``): two interleaved square spirals, the
-    second flipped horizontally and vertically. Returns a single
-    Shape whose polygon list contains both coils.
+    Mirrors ``cmd_trans_build_geometry`` (decomp ``0x080576d4``):
+    two square spirals on the same metal (METAL), interleaved by a
+    double-pitch + a half-pitch offset so the secondary's tracks
+    fit between the primary's. The secondary is built with a flip
+    in both axes via ``cmd_flipv_apply`` + ``cmd_fliph_apply``.
+
+    For the canonical ``TRANS PNAME=TP:SNAME=TS:LEN=L:W=W:S=S:N=N``
+    case both coils have identical dimensions. The primary's
+    internal lower-left corner sits at::
+
+        (XORG + (W + S), YORG + (2W + S))
+
+    and each coil uses an effective spacing of ``W + 2·S`` so the
+    inter-turn pitch is ``2·(W + S)`` — leaving room for the
+    secondary's interleaved turns.
+
+    The C builder leaves both coils linked and ``CIFSAVE``
+    addresses each by name. Use ``which="primary"`` (default) or
+    ``which="secondary"`` to pick the coil to materialise.
+
+    Both legacy positional kwargs (``length``, ``width``,
+    ``spacing``, ``turns``) and the test-harness primary/secondary
+    pair are accepted; missing fields default to the corresponding
+    ``primary_*`` value or vice versa.
     """
-    primary = square_spiral(
-        f"{name}_pri",
-        length=length,
-        width=width,
-        spacing=spacing,
-        turns=turns,
-        tech=tech,
-        metal=metal_primary,
-        x_origin=x_origin,
-        y_origin=y_origin,
+    # Normalise kwargs: prefer primary_* over generic, fall back to
+    # the other side if missing.
+    L = primary_length if primary_length is not None else (
+        length if length is not None else secondary_length
     )
-    secondary_metal = (
-        metal_secondary if metal_secondary is not None else metal_primary
+    W = primary_width if primary_width is not None else (
+        width if width is not None else secondary_width
     )
-    secondary = square_spiral(
-        f"{name}_sec",
-        length=length,
-        width=width,
-        spacing=spacing,
-        turns=turns,
-        tech=tech,
-        metal=secondary_metal,
-        x_origin=x_origin + length + spacing * 2.0,
-        y_origin=y_origin,
-        phase=math.pi,  # rotate 180° so currents oppose
+    S = primary_spacing if primary_spacing is not None else (
+        spacing if spacing is not None else secondary_spacing
     )
+    N = primary_turns if primary_turns is not None else (
+        turns if turns is not None else secondary_turns
+    )
+    if L is None or W is None or S is None or N is None:
+        raise ValueError("transformer: must specify length/width/spacing/turns")
+
+    # Metal resolution: prefer 'metal' over the legacy 'metal_primary'.
+    coil_metal = metal if metal is not None else metal_primary
+    if coil_metal is None:
+        raise ValueError("transformer: must specify metal=...")
+    coil_idx = _resolve_metal(tech, coil_metal).index
+    exit_idx: int | None = None
+    if exit_metal is not None:
+        exit_idx = _resolve_metal(tech, exit_metal).index
+    elif metal_secondary is not None:
+        # Legacy 'metal_secondary' was used for the secondary's metal
+        # in the earlier (incorrect) port. The C uses ONE metal for
+        # both coils with a separate EXIT routing layer. If a caller
+        # supplies metal_secondary we assume they meant exit_metal.
+        exit_idx = _resolve_metal(tech, metal_secondary).index
+
+    # Both coils share dimensions in the canonical TRANS form, but
+    # are placed at different internal origins so their tracks
+    # interleave with a single (W + S) gap. Decoded from gold
+    # trans_200x8x3x3_m3_m2_*.cif:
+    #   primary  internal LL = (XORG + W + S, YORG + 2W + S) = (11, 19)
+    #   secondary internal LL = (XORG,        YORG + W)       = (0,  8)
+    # Each coil uses spacing = W + 2S so its inter-turn pitch is
+    # 2*(W+S) — leaving room for the other coil's interleaved turns.
+    primary_x = x_origin + (W + S)
+    primary_y = y_origin + (2 * W + S)
+    secondary_x = x_origin
+    secondary_y = y_origin + W
+    coil_spacing = W + 2 * S  # so pitch = W + (W+2S) = 2*(W+S)
+
+    coil_x = primary_x if which == "primary" else secondary_x
+    coil_y = primary_y if which == "primary" else secondary_y
+
+    base_sp = square_spiral(
+        f"{name}_{which}",
+        length=L, width=W, spacing=coil_spacing, turns=N,
+        tech=tech, metal=coil_idx,
+        x_origin=coil_x, y_origin=coil_y,
+    )
+    base_shape = Shape(
+        name=name, polygons=base_sp.polygons,
+        width=W, length=L, spacing=coil_spacing, turns=N, sides=4,
+        metal=coil_idx, exit_metal=exit_idx,
+        x_origin=coil_x, y_origin=coil_y, kind="square",
+    )
+
+    if which == "primary":
+        return base_shape
+
+    if which != "secondary":
+        raise ValueError(f"which must be 'primary' or 'secondary', not {which!r}")
+
+    # Lay out the secondary's basic spiral, then mirror about the
+    # SPIRAL's own bbox centerlines (NOT the post-access-routing
+    # bbox, which includes the M2 lead extension whose post-flip
+    # direction we want to flip too). The spiral occupies the
+    # known box ``[coil_x, coil_x+L] × [coil_y, coil_y+L]``.
+    base_polys = layout_polygons(base_shape, tech)
+    spiral_y_axis = coil_y + (coil_y + L)
+    spiral_x_axis = coil_x + (coil_x + L)
+    secondary_polys = _polygon_flipv_apply(
+        _polygon_fliph_apply(base_polys, y_axis=spiral_y_axis),
+        x_axis=spiral_x_axis,
+    )
+
     return Shape(
-        name=name,
-        polygons=primary.polygons + secondary.polygons,
-        width=width,
-        length=length,
-        spacing=spacing,
-        turns=turns,
-        sides=4,
-        metal=primary.metal,
-        exit_metal=secondary.metal,
-        x_origin=x_origin,
-        y_origin=y_origin,
-        kind="transformer",
+        name=name, polygons=secondary_polys,
+        width=W, length=L, spacing=coil_spacing, turns=N, sides=4,
+        metal=coil_idx, exit_metal=exit_idx,
+        x_origin=coil_x, y_origin=coil_y,
+        kind="transformer_secondary",
     )
 
 

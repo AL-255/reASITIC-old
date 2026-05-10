@@ -16,7 +16,7 @@ implementation in `src/reasitic/geometry.py`.
 | `MMSquare` | `cmd_mmsquare_build_geometry @ 0805af5c` | done | 2/2 |
 | `Symmetric square` | `cmd_symsq_build_geometry @ 08059854` | broken | 0/3 |
 | `Symmetric polygon` | `cmd_sympoly_build_geometry @ 0805a45c` | broken | 0/2 |
-| `Transformer` | `cmd_trans_build_geometry @ 080576d4` | broken | 0/2 |
+| `Transformer` | `cmd_trans_build_geometry @ 080576d4` | partial (M2/VIA3 match, M3 12/13) | 2/2 cases routed |
 | `Balun` (3D Transformer) | `cmd_3dtrans_build_geometry @ 08057d40` | broken | 0/2 |
 | `Via` | `cmd_via_build_geometry @ 08057b78` | covered indirectly | (no standalone golden) |
 
@@ -197,12 +197,37 @@ into the same display list, each addressable by name. ASITIC's
 `CIFSAVE TP file.cif` saves only the primary's polygons. Our
 golden cases include both `_primary.cif` and `_secondary.cif`.
 
-**Python status (broken):** `transformer()` produces a single
-shape combining both coils — but each coil's geometry uses the
-basic `square_spiral` without the exit-metal access routing or
-the secondary translation/flip. The signature also doesn't
-accept the kwargs the test harness expects (`primary_length`,
-`primary_width`, etc.).
+**Python status (mostly done — M2 + VIA3 match perfectly,
+M3 12/13).** `transformer()` accepts the C-style
+`metal=` + `exit_metal=` plus a `which="primary"|"secondary"`
+selector to materialise one coil at a time. Internal layout
+decoded from the gold:
+
+- primary internal LL = `(XORG + W + S, YORG + 2W + S)` (= (11, 19))
+- secondary internal LL = `(XORG, YORG + W)` (= (0, 8))
+- coil spacing = `W + 2S` so inter-turn pitch is `2*(W+S)`,
+  leaving room for the other coil's interleaved turns.
+
+Secondary is built by laying out the basic spiral (with M2
+exit routing) at its own internal origin, then applying
+`_polygon_fliph_apply` + `_polygon_flipv_apply` with
+spiral-bbox-derived axes (NOT post-access-routing-bbox axes,
+since the M2 lead extension would shift the mirror axis).
+
+**Outstanding:** the entry-lead extension. The C extends the
+outermost top-side leftward back to `x = 0` (chip edge); the
+Python entry lead stops at the spiral's lower-left x. One
+polygon difference per coil (12/13 M3 match). The lead
+extension lives somewhere in the C `cmd_square_build_geometry`
+inside the EXIT-routing branch but I didn't decode the exact
+"how much" formula — likely `extend_terminal_segment` or
+similar.
+
+Also fixed the via-array sizing bug in
+`_square_access_polygons` while doing this:
+`n = floor((W − 2·op + via_s) / (via_w + via_s))` matches the
+C convention (was using `round`, which over-counted vias for
+W=10 and W=8 in different ways).
 
 ## `cmd_3dtrans_build_geometry` (`0x08057d40`)
 

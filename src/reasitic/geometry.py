@@ -994,6 +994,8 @@ def layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
         return list(shape.polygons)
     if shape.kind == "symsq":
         return _symsq_layout_polygons(shape, tech)
+    if shape.kind == "sympoly":
+        return _sympoly_layout_polygons(shape, tech)
     if shape.kind == "balun_primary":
         return _balun_primary_layout_polygons(shape, tech)
     if shape.kind == "balun_secondary":
@@ -2182,56 +2184,59 @@ def symmetric_polygon(
     width: float,
     spacing: float,
     turns: float,
+    ilen: float = 0.0,
     sides: int = 8,
     tech: Tech,
     metal: int | str = 0,
+    primary_metal: int | str | None = None,
+    exit_metal: int | str | None = None,
     x_origin: float = 0.0,
     y_origin: float = 0.0,
 ) -> Shape:
     """Symmetric centre-tapped polygon spiral (``SymPoly``, case 17).
 
-    Two interleaved polygon spirals with mirrored entry points; the
-    centre tap is implicit (no explicit bridge segment is emitted).
-    Mirrors ``cmd_sympoly_build_geometry``.
+    Mirrors ``cmd_sympoly_build_geometry`` (decomp ``0x0805a45c``):
+    one continuous polygon spiral that runs ``2N`` half-turns from
+    outer-to-inner-to-outer with a centre-tap stub at the apex and
+    cross-ring slants at every other transition. The structure is
+    decoded by :func:`_sympoly_layout_polygons`; this builder just
+    wires the parameters through.
+
+    Args:
+        radius: outer-corner polygon radius R (μm).
+        width: metal trace width W (μm).
+        spacing: edge-to-edge gap S between turns (μm).
+        turns: integer turn count N.
+        ilen: centre-tap span (ASITIC's ``ILEN`` parameter; defaults
+            to ``W + S`` per the C edit_args fallback).
+        sides: polygon side count (must be even, ≥ 4).
+        metal / primary_metal: trace metal layer.
+        exit_metal: alternating slant + via-cluster metal (typically
+            one layer below ``metal``).
     """
-    arm_a = polygon_spiral(
-        f"{name}_a",
-        radius=radius * 0.5,
-        width=width,
-        spacing=spacing,
-        turns=turns,
-        sides=sides,
-        tech=tech,
-        metal=metal,
-        x_origin=x_origin - radius * 0.25,
-        y_origin=y_origin,
-    )
-    arm_b = polygon_spiral(
-        f"{name}_b",
-        radius=radius * 0.5,
-        width=width,
-        spacing=spacing,
-        turns=turns,
-        sides=sides,
-        tech=tech,
-        metal=metal,
-        x_origin=x_origin + radius * 0.25,
-        y_origin=y_origin,
-        phase=math.pi,
-    )
+    if primary_metal is not None:
+        metal = primary_metal
+    metal_idx = _resolve_metal(tech, metal).index
+    exit_idx: int | None = None
+    if exit_metal is not None:
+        exit_idx = _resolve_metal(tech, exit_metal).index
+    if ilen <= 0:
+        ilen = width + spacing
     return Shape(
         name=name,
-        polygons=arm_a.polygons + arm_b.polygons,
+        polygons=[],
         width=width,
         length=radius * 2.0,
         spacing=spacing,
         turns=turns,
         sides=sides,
-        metal=arm_a.metal,
+        metal=metal_idx,
+        exit_metal=exit_idx,
         x_origin=x_origin,
         y_origin=y_origin,
         radius=radius,
-        kind="symmetric_polygon",
+        ilen=ilen,
+        kind="sympoly",
     )
 
 
@@ -2444,6 +2449,203 @@ def balun(
         ilen=2.0 * (width + spacing),
         kind="balun_primary" if which == "primary" else "balun_secondary",
     )
+
+
+def _sympoly_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
+    """CIF-equivalent polygons for a SYMPOLY centre-tapped polygon spiral.
+
+    Direct port of ``cmd_sympoly_build_geometry`` (decomp ``0x0805a45c``).
+    The C function runs ``2N`` half-turn iterations of a polygon spiral
+    that tracks four state variables in the polygon scratch record:
+    ``angle`` (incremented by ``2π/sides`` per inner step),
+    ``R_curr`` (radius, stepped by ``±(W+S)/cos(π/sides)`` between
+    rings), ``y_off`` (= ``ILEN/2``, sign-flipped between half-turns),
+    and ``metal_alt`` (toggled between primary and exit at every
+    via-cluster transition).
+
+    Per half-turn (``sides/2`` polygons each):
+
+    * Inner loop emits ``sides/2`` ring polygons at the current
+      ``R_curr`` and ``y_off``.
+    * After the loop, ``y_off`` flips, the polygon's curr corners
+      collapse to prev, and one of three transitions runs:
+
+      - ``half == N``: centre-tap stub. The curr corner Y is shifted
+        by ``2 * y_off`` (= ``-ILEN``). Emits one M3 stub polygon.
+      - ``half != N`` (via cluster): the metal alternates and the
+        curr corner gets shifted by ``±(W+S)`` in X and ``±ILEN``
+        in Y per ``sympoly_emit_polygon_layers`` cases 4-7. Emits
+        one slant polygon on the alternating metal. When the
+        alternating metal differs from primary, two ``n_vias × n_vias``
+        via-cluster pads are emitted at the chamfer corner of the
+        slant's pre-shift and post-shift positions.
+
+    Final post-pass: bounding-box centre is translated to
+    ``(x_origin, y_origin)`` (the binary's
+    ``shape_translate_inplace_xy`` step).
+    """
+    R = shape.radius
+    W = shape.width
+    S = shape.spacing
+    ILEN = shape.ilen if shape.ilen > 0 else (W + S)
+    N = int(round(shape.turns))
+    sides = shape.sides
+    if R <= 0 or W <= 0 or N < 1 or sides < 4 or sides % 2 != 0:
+        return []
+    XORG = shape.x_origin
+    YORG = shape.y_origin
+    primary_idx = shape.metal
+    exit_idx = shape.exit_metal if shape.exit_metal is not None else primary_idx
+    primary_rec = tech.metals[primary_idx]
+    exit_rec = tech.metals[exit_idx]
+
+    half_pi = math.pi / sides
+    cos_half = math.cos(half_pi)
+    side_step = 2.0 * math.pi / sides
+    radial_pitch = (W + S) / cos_half
+
+    angle = 0.0  # phase = 0, matches binary's default
+    R_curr = R
+    y_off = ILEN * 0.5
+
+    def end_corners(theta: float, R_: float, y_: float) -> tuple[
+        tuple[float, float], tuple[float, float], tuple[float, float],
+    ]:
+        c = math.cos(theta)
+        s = math.sin(theta)
+        return (
+            (R_ * c, R_ * s + y_),
+            ((R_ - W / (2.0 * cos_half)) * c, (R_ - W / (2.0 * cos_half)) * s + y_),
+            ((R_ - W / cos_half) * c, (R_ - W / cos_half) * s + y_),
+        )
+
+    o_curr, ch_curr, i_curr = end_corners(angle, R_curr, y_off)
+
+    # Each tagged-poly tuple is (metal_idx, [(x, y), ...]).
+    tagged: list[tuple[int, list[tuple[float, float]]]] = []
+    # Via-cluster locations: list of (chamfer_x, chamfer_y, sign).
+    # NOTE: pad-width decoding is incomplete — lookup_via_for_metal_pair
+    # emits a 7.5 × 7.5 polygon (per geom_emit_polygon_at) but the gold
+    # has 10.82 × 8.5 (W/cos(π/N) wide) for narrow pads and even wider
+    # for the pre-shift cluster of OUTWARD transitions (38.96 for r120,
+    # 34.91 for r100). Decoded structurally below; the wide-pad width
+    # formula is recorded as outstanding in docs/asitic_geometry_c.md.
+    cluster_centres: list[tuple[float, float, int]] = []
+    # The C reads an uninitialised local_13c that's compared against
+    # iVar6 (= primary). With a typical zero-initialised stack, the
+    # comparison fails on the first via-cluster transition so the
+    # first slant lands on PRIMARY (M3); the alternation then flips
+    # to EXIT (M2) on the second via cluster. We model that with an
+    # initial sentinel that 'looks like' exit.
+    metal_alt = 1  # 1 == "last was exit/sentinel" -> first toggle gives 0 (primary)
+
+    for half in range(1, 2 * N + 1):
+        for _ in range(sides // 2):
+            o_prev, ch_prev, i_prev = o_curr, ch_curr, i_curr
+            angle += side_step
+            o_curr, ch_curr, i_curr = end_corners(angle, R_curr, y_off)
+            tagged.append((primary_idx, [o_prev, o_curr, i_curr, i_prev]))
+
+        y_off = -y_off
+        # The C calls polygon_collapse_endpoints_2d after the flip;
+        # since prev was last set inside the loop, prev == curr is
+        # already the case here (no-op).
+
+        if half >= 2 * N:
+            break
+
+        if half == N:
+            # Centre-tap stub: shift end-side Y by 2 * (post-flip y_off).
+            shift_y = 2.0 * y_off
+            o_target = (o_curr[0], o_curr[1] + shift_y)
+            ch_target = (ch_curr[0], ch_curr[1] + shift_y)
+            i_target = (i_curr[0], i_curr[1] + shift_y)
+            tagged.append((primary_idx, [o_curr, o_target, i_target, i_curr]))
+            o_curr, ch_curr, i_curr = o_target, ch_target, i_target
+            continue
+
+        # Via-cluster transition. Toggle the alternating metal.
+        metal_alt = 1 - metal_alt
+        slant_metal = primary_idx if metal_alt == 0 else exit_idx
+
+        if half < N:
+            R_curr -= radial_pitch
+            if y_off >= 0:
+                case = 4
+            else:
+                case = 7
+        else:
+            R_curr += radial_pitch
+            if y_off < 0:
+                case = 6
+            else:
+                case = 5
+
+        # sympoly_emit_polygon_layers shifts curr corners. The four
+        # cases encode (sign_x, sign_y) for the X+Y shift of (W+S)
+        # and ILEN respectively.
+        if case == 4:
+            dx, dy = -(W + S), +ILEN
+        elif case == 5:
+            dx, dy = +(W + S), +ILEN
+        elif case == 6:
+            dx, dy = -(W + S), -ILEN
+        else:  # case == 7
+            dx, dy = +(W + S), -ILEN
+
+        # Pre-shift chamfer (== ch_curr at this point) is the centre
+        # of the FIRST via cluster pad; post-shift chamfer is the
+        # SECOND. The vertical offset by ± pad_h/2 is added below
+        # only when the alternating metal differs from primary.
+        # Sign convention (decoded from the C transition state):
+        # case 4: (sign1, sign2) = (-1, +1)  case 5: (-1, +1)
+        # case 6: (sign1, sign2) = (+1, -1)  case 7: (+1, -1)
+        if case in (4, 5):
+            sign1, sign2 = -1, +1
+        else:
+            sign1, sign2 = +1, -1
+
+        ch_pre = ch_curr
+        o_target = (o_curr[0] + dx, o_curr[1] + dy)
+        ch_target = (ch_curr[0] + dx, ch_curr[1] + dy)
+        i_target = (i_curr[0] + dx, i_curr[1] + dy)
+
+        if slant_metal != primary_idx:
+            cluster_centres.append((ch_pre[0], ch_pre[1], sign1))
+            cluster_centres.append((ch_target[0], ch_target[1], sign2))
+
+        tagged.append((slant_metal, [o_curr, o_target, i_target, i_curr]))
+        o_curr, ch_curr, i_curr = o_target, ch_target, i_target
+
+    if not tagged:
+        return []
+
+    # Bbox-center to (XORG, YORG).
+    all_x = [v[0] for _, p in tagged for v in p]
+    all_y = [v[1] for _, p in tagged for v in p]
+    cx = (min(all_x) + max(all_x)) * 0.5
+    cy = (min(all_y) + max(all_y)) * 0.5
+    dx_shift = XORG - cx
+    dy_shift = YORG - cy
+
+    polys: list[Polygon] = []
+    for metal_idx, p in tagged:
+        rec = tech.metals[metal_idx]
+        polys.append(_polygon_record_to_poly(
+            [(v[0] + dx_shift, v[1] + dy_shift) for v in p],
+            rec, W,
+        ))
+
+    # Via clusters: not yet emitted. The gold has M2/M3 box pads and
+    # VIA3 squares at every via-cluster transition; pad widths follow
+    # a still-unknown rule (10.82 = W/cos(π/N) for narrow,
+    # (3W+2S)/cos(π/N) ≈ 38.96 for one of the outward-step pre-shift
+    # pads, plus a third 8.91 case). Spiral parity stands on its own;
+    # the pads are documented as outstanding work.
+    _ = cluster_centres  # reserved for follow-up
+    _ = exit_rec
+
+    return polys
 
 
 def _balun_primary_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:

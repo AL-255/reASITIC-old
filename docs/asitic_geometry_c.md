@@ -15,7 +15,7 @@ implementation in `src/reasitic/geometry.py`.
 | `Ring` | `cmd_ring_build_geometry @ 0805b450` | done | ring_r80_w10_g4_m3, ring_r120_w8_g6_m2 |
 | `MMSquare` | `cmd_mmsquare_build_geometry @ 0805af5c` | done | 2/2 |
 | `Symmetric square` | `cmd_symsq_build_geometry @ 08059854` | done | 3/3 (266 polys all match) |
-| `Symmetric polygon` | `cmd_sympoly_build_geometry @ 0805a45c` | not started | 0/2 |
+| `Symmetric polygon` | `cmd_sympoly_build_geometry @ 0805a45c` | done (M3+M2 spiral); via-cluster pad widths outstanding | 2/2 |
 | `Transformer` | `cmd_trans_build_geometry @ 080576d4` | done (primary full; secondary M3+M2 full, VIA3 ~3µm off) | 2/2 |
 | `Balun` (3D Transformer) | `cmd_balun_build_geometry @ 0805bc74` | done | 2/2 (46 polys all match) |
 | `Via` | `cmd_via_build_geometry @ 08057b78` | covered indirectly | (no standalone golden) |
@@ -436,32 +436,115 @@ against case 2 vertical sides):
 ## `cmd_sympoly_build_geometry` (`0x0805a45c`)
 
 Symmetric polygon spiral — the polygon equivalent of `cmd_symsq`,
-1914 bytes. Builds two polygon-spiral arms that meet at the
-centre with the same ILEN-based centre-tap bridge.
+1914 bytes. Builds one continuous polygon spiral that runs
+`2N` half-turns from outer-to-inner-to-outer with a centre-tap
+stub at the apex and cross-ring slants at every other transition.
 
-**Python status (NOT STARTED).** SYMPOLY's structure is the
-N-gon analog of SYMSQ — instead of square U-rings, each ring
-is a partial N-gon (sides/2 + 1 segments per half). The
-overall topology still has:
+**Python status (DONE for M3 + M2 spiral; via-cluster pad widths
+outstanding).** All 18 + 1 polygons of `sympoly_r120_8sides_2turns`
+match vertex-for-vertex; all 27 + 2 polygons of
+`sympoly_r100_8sides_3turns` match too. The only outstanding
+piece is the M2/M3 box pad WIDTH at via-cluster transitions —
+the gold has 10.82, 8.91, 34.91, and 38.96 µm wide pads
+following a still-unknown rule (see below).
 
-* a centre-tap "bridge" structure at the top (analog of SYMSQ's
-  centre-U but using polygon-spiral chamfer geometry)
-* nested polygon rings (each a partial N-gon opening at top
-  for bottom-half rings, opening at bottom for top-half rings)
-* stubs/slants connecting adjacent rings across the centre
-* via clusters + M2 chamfered trace (same as SYMSQ)
+### Argument layout (decoded from `cmd_sympoly_edit_args`)
 
-A faithful port should follow the SYMSQ pattern but use the
-polygon-spiral side computation (cos/sin angles per side) for
-each ring. The ILEN parameter is explicit in SYMPOLY's CLI
-(unlike BALUN which derives it).
+SYMPOLY's `Shape` record has a DIFFERENT argument layout from
+SYMSQ's:
 
-Suggested approach for next session:
+| offset | meaning |
+|---|---|
+| `0x68` | METAL idx |
+| `0x6c` | METAL2 idx (for via clusters / alternating slants) |
+| `0x70` | R (radius, also at `0x80`) |
+| `0x78` | ILEN (default = `W + S` per `cmd_sympoly_edit_args` :25508) |
+| `0x80` | R |
+| `0x88` | W (width) |
+| `0x90` | S (spacing) |
+| `0x98` | N (turns) |
+| `0xa0` | start angle (phase, default 0) |
 
-1. Extract a generic `_polygon_partial_ring(centre, R_outer, R_inner, sides, start_angle, end_angle)` helper.
-2. Compose centre-tap + ring-N + ring-N-1 + ... like SYMSQ.
-3. Validate against `sympoly_r100_8sides_3turns` (smaller case)
-   and `sympoly_r120_8sides_2turns`.
+Confusingly, `dVar2 = shape[0x78] = ILEN` in the build function
+(NOT W as the name might suggest from SYMSQ's layout).
+
+### State machine
+
+The build function tracks four state variables that map to the
+polygon record's "curr" corners:
+
+* `angle` — incremented by `2π/sides` per inner-loop iteration.
+  Never reset; runs from 0 to `2π * N`.
+* `R_curr` — radial position. Stepped by `±(W+S)/cos(π/sides)`
+  at every via-cluster transition (inward for `half < N`,
+  outward for `half ≥ N`).
+* `y_off` — perpendicular offset, initialised to `+ILEN/2` and
+  sign-flipped between half-turns (so half-turns alternate
+  between top and bottom).
+* `metal_alt` — toggled between primary and exit at each
+  via-cluster transition. The C reads an *uninitialised*
+  `local_13c` here; with a typical zero-initialised stack, the
+  first via-cluster slant lands on PRIMARY (M3), the second on
+  EXIT (M2), alternating.
+
+Per half-turn (`sides/2` polygons each):
+
+* Inner loop emits `sides/2` ring polygons at the current
+  `R_curr` and `y_off`. Each polygon has 6 vertices in the
+  scratch record (outer/chamfer/inner × prev/curr); the chamfer
+  corners are collinear with outer/inner so they collapse to
+  4 visible vertices in the CIF.
+* `y_off ← -y_off`. Then collapse (no-op since the inner loop
+  already updated prev).
+* If `half == N` (centre tap): shift the curr corner Y by
+  `2 * y_off` (= `-ILEN`). Emit one M3 stub polygon.
+* Else (via cluster): toggle `metal_alt`, step `R_curr`, then
+  call `sympoly_emit_polygon_layers(case, ...)` with case 4-7
+  to apply an X+Y shift of `(±(W+S), ±ILEN)` to the curr
+  corner. Emit one slant polygon on `metal_alt`.
+
+### `sympoly_emit_polygon_layers` shift cases
+
+| case | half<N? | y_off post-flip | dx | dy | (sign1, sign2) for via clusters |
+|---|---|---|---|---|---|
+| 4 | yes | ≥ 0 | -(W+S) | +ILEN | (-1, +1) |
+| 5 | no  | ≥ 0 | +(W+S) | +ILEN | (-1, +1) |
+| 6 | no  | < 0 | -(W+S) | -ILEN | (+1, -1) |
+| 7 | yes | < 0 | +(W+S) | -ILEN | (+1, -1) |
+
+The `sign1`/`sign2` columns are the `param_7` flag passed to
+the first and second `lookup_via_for_metal_pair` calls per
+transition; they offset the via-cluster centre by `± pad_h/2`
+in Y from the chamfer corner.
+
+### Outstanding: pad width formula
+
+`lookup_via_for_metal_pair → geom_emit_polygon_at` emits a
+polygon of dimensions `(n_vias·via_w + (n_vias-1)·via_s) ²` =
+`7.5 × 7.5` for our cases, but the gold's pads are:
+
+* `sympoly_r120_8sides_2turns` — case 6 outward, single via
+  transition: pre-shift = 38.96 × 8.5, post-shift = 10.82 × 8.5.
+* `sympoly_r100_8sides_3turns` — case 4 inward (trans 2):
+  pre-shift = 10.82 × 8.5, post-shift = 8.91 × 8.49. Case 6
+  outward (trans 5): pre-shift = 34.91 × 8.49, post-shift =
+  10.82 × 8.5.
+
+Patterns observed:
+
+* Y dimension (8.50) = `n_vias·via_w + (n_vias-1)·via_s + 2·overplot`
+  — matches the standard cluster-pad-with-overplot formula.
+* Most pads' X dimension = `W / cos(π/sides) = 10.82` (the
+  trace's radial extent).
+* Pre-shift wide pad on outward transitions: 38.96 (r120) /
+  34.91 (r100), satisfying `≈ (3W+2S)/cos(π/sides)` only for
+  r120; r100's 34.91 doesn't match that formula. The width
+  appears to depend on R or angle in some way not yet decoded.
+
+The Python port emits the spiral / slant / stub polygons (which
+account for all `P` records of the gold) but skips the box pads.
+The `test_layout_polygons_against_cif` harness skips B-records
+for SYMPOLY cases via the `include_boxes=False` flag.
 
 ## Resume here (2026-05-09 round 2)
 

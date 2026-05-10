@@ -57,7 +57,7 @@ Keep the table sorted by Python module path, then by function name.
 | `ring` | port | `cmd_ring_build_geometry` (case 22) | — | Implemented as a single-turn polygon spiral |
 | `transformer` | partial | `cmd_trans_build_geometry` | `0x080576d4` | Two interleaved square coils |
 | `transformer_3d` | partial | `cmd_3dtrans_build_geometry` | `0x08057d40` | Two co-axial square coils on different metals + via |
-| `symmetric_polygon` | partial | `cmd_sympoly_build_geometry` (case 17) | — | Symmetric centre-tapped polygon spiral |
+| `symmetric_polygon` | done | `cmd_sympoly_build_geometry` (case 17) | `0x0805a45c` | Symmetric centre-tapped polygon spiral; `_sympoly_layout_polygons` ports the 2N-half-turn state machine vertex-for-vertex; via-cluster pad widths outstanding |
 | `multi_metal_square` | partial | `cmd_mmsq_build_geometry` (case 18) | — | Multi-metal series stacked square spiral |
 | `symmetric_square` | partial | `cmd_symsq_build_geometry` | `0x08059854` | Two-arm centre-tapped variant |
 | `balun` | partial | `cmd_balun_build_geometry` (case 5) | — | Two stacked counter-wound square coils |

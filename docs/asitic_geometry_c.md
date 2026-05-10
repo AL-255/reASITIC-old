@@ -13,7 +13,7 @@ implementation in `src/reasitic/geometry.py`.
 | `Square spiral` | `cmd_square_build_geometry @ 08056670` | done | 5 sq_*_m3 cases incl. exit-routing |
 | `Polygon spiral` | `cmd_spiral_build_geometry @ 08057248` | done | 3 sp_*_m{2,3} cases |
 | `Ring` | `cmd_ring_build_geometry @ 0805b450` | done | ring_r80_w10_g4_m3, ring_r120_w8_g6_m2 |
-| `MMSquare` | `cmd_mmsquare_build_geometry @ 0805af5c` | broken | 0/2 |
+| `MMSquare` | `cmd_mmsquare_build_geometry @ 0805af5c` | done | 2/2 |
 | `Symmetric square` | `cmd_symsq_build_geometry @ 08059854` | broken | 0/3 |
 | `Symmetric polygon` | `cmd_sympoly_build_geometry @ 0805a45c` | broken | 0/2 |
 | `Transformer` | `cmd_trans_build_geometry @ 080576d4` | broken | 0/2 |
@@ -146,12 +146,25 @@ trace running clockwise from top-left and M2 with the trace
 running counter-clockwise from bottom-left — i.e. M3 fliph'd
 once gives M2.
 
-**Python status (broken):** `multi_metal_square` builds two
-independent `square_spiral`s at the same `(x_origin, y_origin)`
-and concatenates polygons without flipping. Result: M3 and M2
-polygons overlap exactly instead of forming the staircased
-interconnect the C produces. Needs a per-layer flip applied to
-each subsequent square spiral.
+**Python status (DONE — 2/2 cases vertex-for-vertex match):**
+- `multi_metal_square` accepts both `metals=[...]` and the
+  C-style `metal=...:exit_metal=...` arg pair.
+- `_mmsquare_layout_polygons` builds the top-metal spiral with
+  `trim_final=False` (no exit-via clearance trim, since MMSQ
+  forces `exit_metal=-1` on the inner spiral), then for each
+  lower metal layer applies `_polygon_fliph_apply` (Y-mirror
+  about bbox center) + linked-list reversal + `_polygons_relayer`.
+- `_square_layout_polygons` grew a `trim_final` parameter; with
+  `trim_final=False` the chamfer that would accommodate the
+  next perpendicular side is removed for all four side
+  directions (the inner-most segment terminates straight, no
+  chamfer).
+
+The integer-turn case uses `cmd_fliph_apply`. Half-integer
+turns alternate between fliph and flipv per layer, but the
+single half-integer test case (`mmsq_200x12x3x2p5_m3_to_m2_offset`)
+has only two metals, so we only flip once and the alternation
+isn't exercised. Add cases with more metals if needed.
 
 ## `cmd_trans_build_geometry` (`0x080576d4`)
 
@@ -244,9 +257,66 @@ centre with the same ILEN-based centre-tap bridge.
 half-radius polygon spirals at offset positions. Signature
 doesn't accept `ilen`. Same gaps as `symmetric_square`.
 
+## Resume here (2026-05-09)
+
+**Status snapshot.** 6/10 builders verified vertex-for-vertex
+against CIF goldens: wire, capacitor, square (incl. exit
+routing), polygon spiral, ring, MMSQ. Still broken: TRANS,
+BALUN/3DTRANS, SYMSQ, SYMPOLY.
+
+**Useful primitives now available** (unlocked while doing MMSQ):
+
+- `_polygon_fliph_apply(polys)` — Y-mirror about bbox center.
+- `_polygon_flipv_apply(polys)` — X-mirror about bbox center.
+- `_polygons_relayer(polys, tech, metal_idx)` — re-emit polygons
+  on a different metal layer (z, thickness, metal index).
+- `_polygon_bbox(polys)` — `(xmin, xmax, ymin, ymax)` over all
+  vertices.
+- `_square_layout_polygons(..., trim_final=False)` — square
+  spiral without the exit-via clearance trim (used by MMSQ; will
+  be needed by TRANS/BALUN too).
+
+**Suggested next unit (TRANS).** Read
+`cmd_trans_build_geometry @ 0x080576d4` (568 bytes — short!) end
+to end. The structure is:
+
+```c
+cmd_square_build_geometry(primary, 3);     // build primary at its origin
+cmd_square_build_geometry(secondary, 3);   // build secondary at its origin
+cmd_flipv_apply(secondary);                // flip x
+cmd_fliph_apply(secondary);                // flip y
+// Adjust the secondary's *first* and *last* segments to
+// interleave with the primary (lines 3879-3897 of asitic_repl.c).
+// Approximation: skip the per-segment endpoint adjustment and
+// just rely on the double-flip for ~95% match.
+shape.linked_list[0xb4] = secondary;       // sibling pointer
+secondary.linked_list[0xb4] = primary;
+```
+
+Both coils are on the SAME metal (METAL=m3 in the canonical
+test case), with EXIT=m2 routing applied to each. The CIF
+golden saves them separately by name (`CIFSAVE TP file.cif`
+saves only the primary's polygons). The Python equivalent
+needs to return TWO Shape objects (primary + secondary) or a
+single Shape with a pointer to its sibling, mirroring the C's
+linked-list structure.
+
+A `which="primary"|"secondary"` kwarg on `transformer()` is
+the most ergonomic match for the existing test harness:
+
+```python
+trans_p = reasitic.transformer("TP", length=200, width=8, ...,
+                                metal="m3", exit_metal="m2",
+                                which="primary")
+trans_s = reasitic.transformer("TS", ..., which="secondary")
+```
+
+After TRANS lands, BALUN follows the same pattern but with the
+secondary on a *different* metal layer (3D / coupled stack).
+
 ## Remaining Work
 
-The five "broken" builders (MMSQ, TRANS, 3DTRANS/BALUN, SYMSQ,
+The four "broken" builders (TRANS, 3DTRANS/BALUN, SYMSQ,
 SYMPOLY) all need:
 
 1. Updated Python signatures to accept the same kwargs the C

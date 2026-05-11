@@ -1,0 +1,8 @@
+(CIF file written on Sun May 10 20:35:24 2026 by ASITIC);
+DS 1 1 1;
+9 W6;
+LM5;
+P5000    20000   35000   20000   35000   21200   5000    21200   ;
+DF;
+C 1;
+E

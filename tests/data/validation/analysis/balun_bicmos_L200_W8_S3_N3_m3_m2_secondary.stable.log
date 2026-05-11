@@ -1,0 +1,3269 @@
+
+ASITIC version 10.20.99.0.0.0
+Analysis & Simulation of Inductors and Transformers for ICs
+Reading technology file </home/yukidama/github/asitic-re/run/tek/BiCMOS.tek>...
+
+ASITIC>  
+ASITIC>  
+Total Metal Area of BL_200-S = 5264.000000 (microns^2).
+ASITIC>  
+Inductance of BL_200-S = 0.41468 (nH).
+ASITIC>  
+Resistance of BL_200-S = 1.645000 (Ohms).
+ASITIC>  
+BL_200-S: at 1.000000 GHz R = 1.665230.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 1.583898.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 75000.00, delta =  3.18
+
+maxL = 3750.00, maxT =  2.55, maxW =  2.55
+Performing Analysis at 1.00 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 1.00.
+Tried using . as path.
+
+
+Generating data at 1.00 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (24x24)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=1.00 GHz:  Q = 1.706,1.706,1.707
+L  = 0.448 nH	R  =  1.65
+Cs1=  48.7 fF	Rs1=   551
+Cs2=  33.4 fF	Rs2=   829	f_res = 34.05GHz
+ASITIC>  
+
+lambda = 75000.00, delta =  3.18
+
+maxL = 3750.00, maxT =  2.55, maxW =  2.55
+Performing Analysis at 1.00 GHz
+Generating capacitance matrix (16x16)..
+At 1.000 GHz:
+Total Capacitance = 82.125 (fF)
+Total Resistance = 330.838.
+Capacitance matrix:
+Z(0,0) =    2778 + j -1.673e+04 ( 9.5132 fF)
+Z(0,1) = -9.749e+04 + j -1.709e+05 ( 0.9314 fF)
+Z(0,2) = -9.996e+05 + j -1.31e+05 ( 1.2146 fF)
+Z(0,3) = -5.714e+06 + j -1.644e+06 ( 0.0968 fF)
+Z(0,4) = -8.673e+06 + j -2.262e+06 ( 0.0704 fF)
+Z(0,5) = -9.556e+05 + j -2.54e+05 ( 0.6265 fF)
+Z(0,6) = -4.057e+05 + j -1.061e+05 ( 1.4995 fF)
+Z(0,7) = -7.207e+05 + j -3.166e+05 ( 0.5028 fF)
+Z(1,1) =    1276 + j   -7570 (21.0240 fF)
+Z(1,2) = -9.71e+04 + j -1.701e+05 ( 0.9356 fF)
+Z(1,3) = -2.581e+06 + j 2.788e+04 (-5.7085 fF)
+Z(1,4) = -3.505e+06 + j -1.089e+06 ( 0.1462 fF)
+Z(1,5) = -4.102e+05 + j -1.081e+05 ( 1.4725 fF)
+Z(1,6) = -1.874e+05 + j -4.951e+04 ( 3.2143 fF)
+Z(1,7) = -4.102e+05 + j -1.073e+05 ( 1.4836 fF)
+Z(2,2) =    2966 + j -1.719e+04 ( 9.2597 fF)
+Z(2,3) = -4.415e+04 + j -4.541e+05 ( 0.3505 fF)
+Z(2,4) = -5.447e+06 + j 3.033e+06 (-0.0525 fF)
+Z(2,5) = -7.468e+05 + j -2.948e+05 ( 0.5399 fF)
+Z(2,6) = -4.053e+05 + j -1.066e+05 ( 1.4927 fF)
+Z(2,7) = -9.56e+05 + j -2.539e+05 ( 0.6269 fF)
+Z(3,3) = 1.844e+04 + j -1.055e+05 ( 1.5093 fF)
+Z(3,4) =   -4294 + j -3.917e+05 ( 0.4063 fF)
+Z(3,5) = -4.427e+06 + j -1.082e+06 ( 0.1471 fF)
+Z(3,6) = -2.314e+06 + j -6.64e+05 ( 0.2397 fF)
+Z(3,7) = -5.728e+06 + j -1.505e+06 ( 0.1057 fF)
+Z(4,4) = 2.758e+04 + j -1.578e+05 ( 1.0084 fF)
+Z(4,5) = -3.089e+04 + j -4.624e+05 ( 0.3442 fF)
+Z(4,6) = -3.696e+06 + j 5.532e+05 (-0.2877 fF)
+Z(4,7) = -8.405e+06 + j -2.52e+06 ( 0.0632 fF)
+Z(5,5) =    3008 + j -1.718e+04 ( 9.2619 fF)
+Z(5,6) = -9.801e+04 + j -1.664e+05 ( 0.9565 fF)
+Z(5,7) = -9.778e+05 + j -1.311e+05 ( 1.2137 fF)
+Z(6,6) =    1309 + j   -7567 (21.0341 fF)
+Z(6,7) = -9.843e+04 + j -1.677e+05 ( 0.9491 fF)
+Z(7,7) =    2811 + j -1.673e+04 ( 9.5152 fF)
+ASITIC>  
+
+lambda = 75000.00, delta =  3.18
+
+maxL = 3750.00, maxT =  2.55, maxW =  2.55
+Generating inductance matrix (24x24)..
+Inverting matrix......
+L =  4.483e-10		R =     1.6500
+ASITIC>  
+BL_200-S: at 1.500000 GHz R = 1.682278.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 2.375847.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 50000.00, delta =  2.60
+
+maxL = 2500.00, maxT =  2.08, maxW =  2.08
+Performing Analysis at 1.50 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 1.50.
+Tried using . as path.
+
+
+Generating data at 1.50 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (32x32)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=1.50 GHz:  Q = 2.541,2.544,2.547
+L  =  0.45 nH	R  =  1.66
+Cs1=  48.1 fF	Rs1=   550
+Cs2=    33 fF	Rs2=   820	f_res = 34.21GHz
+ASITIC>  
+
+lambda = 50000.00, delta =  2.60
+
+maxL = 2500.00, maxT =  2.08, maxW =  2.08
+Performing Analysis at 1.50 GHz
+Generating capacitance matrix (16x16)..
+At 1.500 GHz:
+Total Capacitance = 81.049 (fF)
+Total Resistance = 329.166.
+Capacitance matrix:
+Z(0,0) =    2762 + j -1.131e+04 ( 9.3826 fF)
+Z(0,1) = -6.19e+04 + j -8.828e+04 ( 1.2019 fF)
+Z(0,2) = -4.453e+05 + j -1.339e+05 ( 0.7927 fF)
+Z(0,3) = -2.525e+06 + j -1.042e+06 ( 0.1018 fF)
+Z(0,4) = -3.831e+06 + j -1.507e+06 ( 0.0704 fF)
+Z(0,5) = -4.217e+05 + j -1.687e+05 ( 0.6288 fF)
+Z(0,6) = -1.795e+05 + j -6.964e+04 ( 1.5235 fF)
+Z(0,7) = -3.275e+05 + j -1.605e+05 ( 0.6611 fF)
+Z(1,1) =    1269 + j   -5115 (20.7428 fF)
+Z(1,2) = -6.162e+04 + j -8.787e+04 ( 1.2075 fF)
+Z(1,3) = -1.185e+06 + j -2.222e+05 ( 0.4776 fF)
+Z(1,4) = -1.557e+06 + j -6.47e+05 ( 0.1640 fF)
+Z(1,5) = -1.814e+05 + j -7.089e+04 ( 1.4967 fF)
+Z(1,6) = -8.277e+04 + j -3.28e+04 ( 3.2353 fF)
+Z(1,7) = -1.815e+05 + j -7.037e+04 ( 1.5077 fF)
+Z(2,2) =    2952 + j -1.161e+04 ( 9.1409 fF)
+Z(2,3) = -3.962e+04 + j -2.935e+05 ( 0.3615 fF)
+Z(2,4) = -3.188e+06 + j 7.259e+05 (-0.1462 fF)
+Z(2,5) = -3.364e+05 + j -1.554e+05 ( 0.6828 fF)
+Z(2,6) = -1.793e+05 + j -6.995e+04 ( 1.5169 fF)
+Z(2,7) = -4.219e+05 + j -1.686e+05 ( 0.6292 fF)
+Z(3,3) = 1.836e+04 + j -7.119e+04 ( 1.4904 fF)
+Z(3,4) =   -4084 + j -2.605e+05 ( 0.4072 fF)
+Z(3,5) = -1.98e+06 + j -6.666e+05 ( 0.1592 fF)
+Z(3,6) = -1.027e+06 + j -4.091e+05 ( 0.2594 fF)
+Z(3,7) = -2.53e+06 + j -9.995e+05 ( 0.1062 fF)
+Z(4,4) = 2.746e+04 + j -1.066e+05 ( 0.9958 fF)
+Z(4,5) = -2.823e+04 + j -3.023e+05 ( 0.3510 fF)
+Z(4,6) = -1.782e+06 + j -1.578e+05 ( 0.6723 fF)
+Z(4,7) = -3.715e+06 + j -1.565e+06 ( 0.0678 fF)
+Z(5,5) =    2994 + j -1.16e+04 ( 9.1463 fF)
+Z(5,6) = -6.155e+04 + j -8.538e+04 ( 1.2427 fF)
+Z(5,7) = -4.354e+05 + j -1.32e+05 ( 0.8038 fF)
+Z(6,6) =    1303 + j   -5110 (20.7650 fF)
+Z(6,7) = -6.188e+04 + j -8.611e+04 ( 1.2322 fF)
+Z(7,7) =    2795 + j -1.13e+04 ( 9.3869 fF)
+ASITIC>  
+
+lambda = 50000.00, delta =  2.60
+
+maxL = 2500.00, maxT =  2.08, maxW =  2.08
+Generating inductance matrix (32x32)..
+Inverting matrix......
+L =  4.501e-10		R =     1.6653
+ASITIC>  
+BL_200-S: at 2.000000 GHz R = 1.702620.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 3.167796.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 37500.00, delta =  2.25
+
+maxL = 1875.00, maxT =  1.80, maxW =  1.80
+Performing Analysis at 2.00 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 2.00.
+Tried using . as path.
+
+
+Generating data at 2.00 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (32x32)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=2.00 GHz:  Q = 3.347,3.354,3.361
+L  =  0.45 nH	R  =  1.68
+Cs1=  47.2 fF	Rs1=   547
+Cs2=  32.4 fF	Rs2=   812	f_res = 34.53GHz
+ASITIC>  
+
+lambda = 37500.00, delta =  2.25
+
+maxL = 1875.00, maxT =  1.80, maxW =  1.80
+Performing Analysis at 2.00 GHz
+Generating capacitance matrix (16x16)..
+At 2.000 GHz:
+Total Capacitance = 79.607 (fF)
+Total Resistance = 326.856.
+Capacitance matrix:
+Z(0,0) =    2739 + j   -8642 ( 9.2081 fF)
+Z(0,1) = -4.1e+04 + j -5.491e+04 ( 1.4492 fF)
+Z(0,2) = -2.49e+05 + j -1.128e+05 ( 0.7056 fF)
+Z(0,3) = -1.408e+06 + j -7.678e+05 ( 0.1036 fF)
+Z(0,4) = -2.136e+06 + j -1.131e+06 ( 0.0704 fF)
+Z(0,5) = -2.348e+05 + j -1.265e+05 ( 0.6293 fF)
+Z(0,6) = -1.004e+05 + j -5.196e+04 ( 1.5316 fF)
+Z(0,7) = -1.861e+05 + j -1.067e+05 ( 0.7459 fF)
+Z(1,1) =    1260 + j   -3907 (20.3666 fF)
+Z(1,2) = -4.08e+04 + j -5.466e+04 ( 1.4559 fF)
+Z(1,3) = -6.729e+05 + j -2.33e+05 ( 0.3416 fF)
+Z(1,4) = -8.737e+05 + j -4.646e+05 ( 0.1713 fF)
+Z(1,5) = -1.014e+05 + j -5.288e+04 ( 1.5048 fF)
+Z(1,6) = -4.615e+04 + j -2.455e+04 ( 3.2413 fF)
+Z(1,7) = -1.015e+05 + j -5.25e+04 ( 1.5159 fF)
+Z(2,2) =    2933 + j   -8860 ( 8.9815 fF)
+Z(2,3) = -3.472e+04 + j -2.127e+05 ( 0.3742 fF)
+Z(2,4) = -2.025e+06 + j 4.542e+04 (-1.7521 fF)
+Z(2,5) = -1.904e+05 + j -1.055e+05 ( 0.7540 fF)
+Z(2,6) = -1.002e+05 + j -5.218e+04 ( 1.5251 fF)
+Z(2,7) = -2.35e+05 + j -1.264e+05 ( 0.6298 fF)
+Z(3,3) = 1.824e+04 + j -5.431e+04 ( 1.4651 fF)
+Z(3,4) =   -3832 + j -1.949e+05 ( 0.4084 fF)
+Z(3,5) = -1.123e+06 + j -4.848e+05 ( 0.1642 fF)
+Z(3,6) = -5.759e+05 + j -2.98e+05 ( 0.2670 fF)
+Z(3,7) = -1.411e+06 + j -7.489e+05 ( 0.1063 fF)
+Z(4,4) = 2.729e+04 + j -8.129e+04 ( 0.9789 fF)
+Z(4,5) = -2.525e+04 + j -2.217e+05 ( 0.3590 fF)
+Z(4,6) = -1.03e+06 + j -2.736e+05 ( 0.2909 fF)
+Z(4,7) = -2.072e+06 + j -1.144e+06 ( 0.0695 fF)
+Z(5,5) =    2976 + j   -8851 ( 8.9909 fF)
+Z(5,6) = -4.051e+04 + j -5.297e+04 ( 1.5024 fF)
+Z(5,7) = -2.434e+05 + j -1.109e+05 ( 0.7177 fF)
+Z(6,6) =    1294 + j   -3900 (20.4041 fF)
+Z(6,7) = -4.075e+04 + j -5.344e+04 ( 1.4892 fF)
+Z(7,7) =    2774 + j   -8635 ( 9.2152 fF)
+ASITIC>  
+
+lambda = 37500.00, delta =  2.25
+
+maxL = 1875.00, maxT =  1.80, maxW =  1.80
+Generating inductance matrix (32x32)..
+Inverting matrix......
+L =  4.499e-10		R =     1.6812
+ASITIC>  
+BL_200-S: at 2.500000 GHz R = 1.725894.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 3.959745.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 30000.00, delta =  2.01
+
+maxL = 1500.00, maxT =  1.61, maxW =  1.61
+Performing Analysis at 2.50 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 2.50.
+Tried using . as path.
+
+
+Generating data at 2.50 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (40x40)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=2.50 GHz:  Q = 4.136,4.152,4.167
+L  = 0.451 nH	R  =  1.69
+Cs1=  46.2 fF	Rs1=   543
+Cs2=  31.7 fF	Rs2=   804	f_res = 34.86GHz
+ASITIC>  
+
+lambda = 30000.00, delta =  2.01
+
+maxL = 1500.00, maxT =  1.61, maxW =  1.61
+Performing Analysis at 2.50 GHz
+Generating capacitance matrix (16x16)..
+At 2.500 GHz:
+Total Capacitance = 77.856 (fF)
+Total Resistance = 323.936.
+Capacitance matrix:
+Z(0,0) =    2711 + j   -7076 ( 8.9968 fF)
+Z(0,1) = -2.862e+04 + j -3.857e+04 ( 1.6507 fF)
+Z(0,2) = -1.578e+05 + j -9.486e+04 ( 0.6711 fF)
+Z(0,3) = -8.91e+05 + j -6.094e+05 ( 0.1045 fF)
+Z(0,4) = -1.352e+06 + j -9.052e+05 ( 0.0703 fF)
+Z(0,5) = -1.483e+05 + j -1.012e+05 ( 0.6293 fF)
+Z(0,6) = -6.372e+04 + j -4.148e+04 ( 1.5349 fF)
+Z(0,7) = -1.199e+05 + j -8.018e+04 ( 0.7939 fF)
+Z(1,1) =    1248 + j   -3197 (19.9105 fF)
+Z(1,2) = -2.848e+04 + j -3.839e+04 ( 1.6582 fF)
+Z(1,3) = -4.311e+05 + j -2.115e+05 ( 0.3011 fF)
+Z(1,4) = -5.57e+05 + j -3.64e+05 ( 0.1749 fF)
+Z(1,5) = -6.431e+04 + j -4.222e+04 ( 1.5080 fF)
+Z(1,6) = -2.92e+04 + j -1.963e+04 ( 3.2426 fF)
+Z(1,7) = -6.445e+04 + j -4.191e+04 ( 1.5191 fF)
+Z(2,2) =    2908 + j   -7244 ( 8.7877 fF)
+Z(2,3) = -3.007e+04 + j -1.644e+05 ( 0.3872 fF)
+Z(2,4) = -1.385e+06 + j -1.821e+05 ( 0.3495 fF)
+Z(2,5) = -1.223e+05 + j -8.029e+04 ( 0.7929 fF)
+Z(2,6) = -6.356e+04 + j -4.165e+04 ( 1.5284 fF)
+Z(2,7) = -1.485e+05 + j -1.011e+05 ( 0.6297 fF)
+Z(3,3) = 1.81e+04 + j -4.439e+04 ( 1.4343 fF)
+Z(3,4) =   -3565 + j -1.554e+05 ( 0.4096 fF)
+Z(3,5) = -7.254e+05 + j -3.815e+05 ( 0.1669 fF)
+Z(3,6) = -3.671e+05 + j -2.352e+05 ( 0.2707 fF)
+Z(3,7) = -8.925e+05 + j -5.991e+05 ( 0.1063 fF)
+Z(4,4) = 2.707e+04 + j -6.644e+04 ( 0.9583 fF)
+Z(4,5) = -2.231e+04 + j -1.733e+05 ( 0.3673 fF)
+Z(4,6) = -6.66e+05 + j -2.791e+05 ( 0.2281 fF)
+Z(4,7) = -1.311e+06 + j -9.05e+05 ( 0.0703 fF)
+Z(5,5) =    2953 + j   -7233 ( 8.8015 fF)
+Z(5,6) = -2.817e+04 + j -3.718e+04 ( 1.7125 fF)
+Z(5,7) = -1.541e+05 + j -9.314e+04 ( 0.6835 fF)
+Z(6,6) =    1283 + j   -3189 (19.9649 fF)
+Z(6,7) = -2.835e+04 + j -3.751e+04 ( 1.6972 fF)
+Z(7,7) =    2747 + j   -7068 ( 9.0071 fF)
+ASITIC>  
+
+lambda = 30000.00, delta =  2.01
+
+maxL = 1500.00, maxT =  1.61, maxW =  1.61
+Generating inductance matrix (40x40)..
+Inverting matrix......
+L =  4.515e-10		R =     1.7003
+ASITIC>  
+BL_200-S: at 3.000000 GHz R = 1.751878.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 4.751694.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 25000.00, delta =  1.84
+
+maxL = 1250.00, maxT =  1.47, maxW =  1.47
+Performing Analysis at 3.00 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 3.00.
+Tried using . as path.
+
+
+Generating data at 3.00 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (40x40)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=3.00 GHz:  Q = 4.871,4.902,4.930
+L  = 0.451 nH	R  =  1.71
+Cs1=    45 fF	Rs1=   537
+Cs2=  30.9 fF	Rs2=   795	f_res = 35.33GHz
+ASITIC>  
+
+lambda = 25000.00, delta =  1.84
+
+maxL = 1250.00, maxT =  1.47, maxW =  1.47
+Performing Analysis at 3.00 GHz
+Generating capacitance matrix (16x16)..
+At 3.000 GHz:
+Total Capacitance = 75.859 (fF)
+Total Resistance = 320.441.
+Capacitance matrix:
+Z(0,0) =    2678 + j   -6058 ( 8.7569 fF)
+Z(0,1) = -2.093e+04 + j -2.936e+04 ( 1.8071 fF)
+Z(0,2) = -1.081e+05 + j -8.118e+04 ( 0.6535 fF)
+Z(0,3) = -6.102e+05 + j -5.059e+05 ( 0.1049 fF)
+Z(0,4) = -9.255e+05 + j -7.549e+05 ( 0.0703 fF)
+Z(0,5) = -1.014e+05 + j -8.435e+04 ( 0.6289 fF)
+Z(0,6) = -4.382e+04 + j -3.454e+04 ( 1.5361 fF)
+Z(0,7) = -8.377e+04 + j -6.443e+04 ( 0.8234 fF)
+Z(1,1) =    1234 + j   -2736 (19.3911 fF)
+Z(1,2) = -2.082e+04 + j -2.923e+04 ( 1.8152 fF)
+Z(1,3) = -2.986e+05 + j -1.877e+05 ( 0.2827 fF)
+Z(1,4) = -3.849e+05 + j -2.999e+05 ( 0.1769 fF)
+Z(1,5) = -4.418e+04 + j -3.515e+04 ( 1.5092 fF)
+Z(1,6) = -1.999e+04 + j -1.637e+04 ( 3.2417 fF)
+Z(1,7) = -4.433e+04 + j -3.489e+04 ( 1.5204 fF)
+Z(2,2) =    2878 + j   -6193 ( 8.5662 fF)
+Z(2,3) = -2.594e+04 + j -1.328e+05 ( 0.3996 fF)
+Z(2,4) = -1.004e+06 + j -2.59e+05 ( 0.2048 fF)
+Z(2,5) = -8.524e+04 + j -6.5e+04 ( 0.8162 fF)
+Z(2,6) = -4.367e+04 + j -3.468e+04 ( 1.5296 fF)
+Z(2,7) = -1.015e+05 + j -8.429e+04 ( 0.6294 fF)
+Z(3,3) = 1.793e+04 + j -3.792e+04 ( 1.3990 fF)
+Z(3,4) =   -3301 + j -1.292e+05 ( 0.4108 fF)
+Z(3,5) = -5.096e+05 + j -3.145e+05 ( 0.1687 fF)
+Z(3,6) = -2.537e+05 + j -1.945e+05 ( 0.2727 fF)
+Z(3,7) = -6.111e+05 + j -4.995e+05 ( 0.1062 fF)
+Z(4,4) = 2.681e+04 + j -5.676e+04 ( 0.9346 fF)
+Z(4,5) = -1.96e+04 + j -1.414e+05 ( 0.3753 fF)
+Z(4,6) = -4.635e+05 + j -2.605e+05 ( 0.2037 fF)
+Z(4,7) = -8.982e+05 + j -7.497e+05 ( 0.0708 fF)
+Z(5,5) =    2925 + j   -6180 ( 8.5846 fF)
+Z(5,6) = -2.055e+04 + j -2.83e+04 ( 1.8748 fF)
+Z(5,7) = -1.056e+05 + j -7.966e+04 ( 0.6660 fF)
+Z(6,6) =    1270 + j   -2726 (19.4629 fF)
+Z(6,7) = -2.069e+04 + j -2.856e+04 ( 1.8578 fF)
+Z(7,7) =    2715 + j   -6049 ( 8.7703 fF)
+ASITIC>  
+
+lambda = 25000.00, delta =  1.84
+
+maxL = 1250.00, maxT =  1.47, maxW =  1.47
+Generating inductance matrix (40x40)..
+Inverting matrix......
+L =  4.511e-10		R =     1.7224
+ASITIC>  
+BL_200-S: at 3.500000 GHz R = 1.780422.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 5.543643.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 21428.57, delta =  1.70
+
+maxL = 1071.43, maxT =  1.36, maxW =  1.36
+Performing Analysis at 3.50 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 3.50.
+Tried using . as path.
+
+
+Generating data at 3.50 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (48x48)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=3.50 GHz:  Q = 5.547,5.599,5.648
+L  = 0.451 nH	R  =  1.74
+Cs1=  43.7 fF	Rs1=   531
+Cs2=  30.1 fF	Rs2=   785	f_res = 35.83GHz
+ASITIC>  
+
+lambda = 21428.57, delta =  1.70
+
+maxL = 1071.43, maxT =  1.36, maxW =  1.36
+Performing Analysis at 3.50 GHz
+Generating capacitance matrix (16x16)..
+At 3.500 GHz:
+Total Capacitance = 73.679 (fF)
+Total Resistance = 316.412.
+Capacitance matrix:
+Z(0,0) =    2640 + j   -5352 ( 8.4963 fF)
+Z(0,1) = -1.591e+04 + j -2.36e+04 ( 1.9269 fF)
+Z(0,2) = -7.808e+04 + j -7.071e+04 ( 0.6431 fF)
+Z(0,3) = -4.408e+05 + j -4.328e+05 ( 0.1051 fF)
+Z(0,4) = -6.686e+05 + j -6.477e+05 ( 0.0702 fF)
+Z(0,5) = -7.304e+04 + j -7.237e+04 ( 0.6284 fF)
+Z(0,6) = -3.182e+04 + j -2.96e+04 ( 1.5362 fF)
+Z(0,7) = -6.192e+04 + j -5.396e+04 ( 0.8427 fF)
+Z(1,1) =    1217 + j   -2415 (18.8256 fF)
+Z(1,2) = -1.582e+04 + j -2.35e+04 ( 1.9354 fF)
+Z(1,3) = -2.183e+05 + j -1.669e+05 ( 0.2725 fF)
+Z(1,4) = -2.811e+05 + j -2.553e+05 ( 0.1781 fF)
+Z(1,5) = -3.204e+04 + j -3.013e+04 ( 1.5093 fF)
+Z(1,6) = -1.444e+04 + j -1.404e+04 ( 3.2395 fF)
+Z(1,7) = -3.219e+04 + j -2.991e+04 ( 1.5205 fF)
+Z(2,2) =    2844 + j   -5463 ( 8.3241 fF)
+Z(2,3) = -2.243e+04 + j -1.107e+05 ( 0.4109 fF)
+Z(2,4) = -7.619e+05 + j -2.796e+05 ( 0.1627 fF)
+Z(2,5) = -6.284e+04 + j -5.47e+04 ( 0.8313 fF)
+Z(2,6) = -3.168e+04 + j -2.973e+04 ( 1.5297 fF)
+Z(2,7) = -7.312e+04 + j -7.231e+04 ( 0.6289 fF)
+Z(3,3) = 1.773e+04 + j -3.343e+04 ( 1.3603 fF)
+Z(3,4) =   -3054 + j -1.104e+05 ( 0.4119 fF)
+Z(3,5) = -3.793e+05 + j -2.673e+05 ( 0.1701 fF)
+Z(3,6) = -1.852e+05 + j -1.66e+05 ( 0.2739 fF)
+Z(3,7) = -4.414e+05 + j -4.285e+05 ( 0.1061 fF)
+Z(4,4) = 2.651e+04 + j -5.004e+04 ( 0.9088 fF)
+Z(4,5) = -1.722e+04 + j -1.188e+05 ( 0.3827 fF)
+Z(4,6) = -3.397e+05 + j -2.379e+05 ( 0.1911 fF)
+Z(4,7) = -6.49e+05 + j -6.406e+05 ( 0.0710 fF)
+Z(5,5) =    2892 + j   -5448 ( 8.3469 fF)
+Z(5,6) = -1.559e+04 + j -2.275e+04 ( 1.9986 fF)
+Z(5,7) = -7.623e+04 + j -6.936e+04 ( 0.6556 fF)
+Z(6,6) =    1255 + j   -2404 (18.9138 fF)
+Z(6,7) = -1.57e+04 + j -2.296e+04 ( 1.9804 fF)
+Z(7,7) =    2679 + j   -5342 ( 8.5126 fF)
+ASITIC>  
+
+lambda = 21428.57, delta =  1.70
+
+maxL = 1071.43, maxT =  1.36, maxW =  1.36
+Generating inductance matrix (48x48)..
+Inverting matrix......
+L =  4.518e-10		R =     1.7557
+ASITIC>  
+BL_200-S: at 4.000000 GHz R = 1.811424.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 6.335593.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 18750.00, delta =  1.59
+
+maxL = 937.50, maxT =  1.27, maxW =  1.27
+Performing Analysis at 4.00 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 4.00.
+Tried using . as path.
+
+
+Generating data at 4.00 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (96x96)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=4.00 GHz:  Q = 6.365,6.453,6.535
+L  = 0.463 nH	R  =  1.75
+Cs1=  42.3 fF	Rs1=   523
+Cs2=  29.2 fF	Rs2=   773	f_res = 35.93GHz
+ASITIC>  
+
+lambda = 18750.00, delta =  1.59
+
+maxL = 937.50, maxT =  1.27, maxW =  1.27
+Performing Analysis at 4.00 GHz
+Generating capacitance matrix (16x16)..
+At 4.000 GHz:
+Total Capacitance = 71.379 (fF)
+Total Resistance = 311.896.
+Capacitance matrix:
+Z(0,0) =    2597 + j   -4839 ( 8.2226 fF)
+Z(0,1) = -1.247e+04 + j -1.971e+04 ( 2.0188 fF)
+Z(0,2) = -5.86e+04 + j -6.253e+04 ( 0.6363 fF)
+Z(0,3) = -3.309e+05 + j -3.784e+05 ( 0.1051 fF)
+Z(0,4) = -5.019e+05 + j -5.674e+05 ( 0.0701 fF)
+Z(0,5) = -5.466e+04 + j -6.339e+04 ( 0.6277 fF)
+Z(0,6) = -2.403e+04 + j -2.591e+04 ( 1.5357 fF)
+Z(0,7) = -4.77e+04 + j -4.646e+04 ( 0.8564 fF)
+Z(1,1) =    1199 + j   -2183 (18.2302 fF)
+Z(1,2) = -1.24e+04 + j -1.962e+04 ( 2.0276 fF)
+Z(1,3) = -1.66e+05 + j -1.494e+05 ( 0.2662 fF)
+Z(1,4) = -2.137e+05 + j -2.224e+05 ( 0.1789 fF)
+Z(1,5) = -2.417e+04 + j -2.637e+04 ( 1.5088 fF)
+Z(1,6) = -1.084e+04 + j -1.229e+04 ( 3.2364 fF)
+Z(1,7) = -2.432e+04 + j -2.618e+04 ( 1.5201 fF)
+Z(2,2) =    2805 + j   -4932 ( 8.0680 fF)
+Z(2,3) = -1.95e+04 + j -9.452e+04 ( 0.4209 fF)
+Z(2,4) = -5.988e+05 + j -2.776e+05 ( 0.1433 fF)
+Z(2,5) = -4.828e+04 + j -4.726e+04 ( 0.8419 fF)
+Z(2,6) = -2.39e+04 + j -2.602e+04 ( 1.5292 fF)
+Z(2,7) = -5.473e+04 + j -6.334e+04 ( 0.6282 fF)
+Z(3,3) = 1.75e+04 + j -3.016e+04 ( 1.3193 fF)
+Z(3,4) =   -2829 + j -9.634e+04 ( 0.4130 fF)
+Z(3,5) = -2.947e+05 + j -2.321e+05 ( 0.1714 fF)
+Z(3,6) = -1.408e+05 + j -1.449e+05 ( 0.2747 fF)
+Z(3,7) = -3.313e+05 + j -3.753e+05 ( 0.1060 fF)
+Z(4,4) = 2.618e+04 + j -4.514e+04 ( 0.8814 fF)
+Z(4,5) = -1.518e+04 + j -1.022e+05 ( 0.3894 fF)
+Z(4,6) = -2.588e+05 + j -2.166e+05 ( 0.1837 fF)
+Z(4,7) = -4.872e+05 + j -5.597e+05 ( 0.0711 fF)
+Z(5,5) =    2856 + j   -4915 ( 8.0949 fF)
+Z(5,6) = -1.221e+04 + j -1.901e+04 ( 2.0934 fF)
+Z(5,7) = -5.718e+04 + j -6.132e+04 ( 0.6488 fF)
+Z(6,6) =    1238 + j   -2170 (18.3329 fF)
+Z(6,7) = -1.23e+04 + j -1.918e+04 ( 2.0743 fF)
+Z(7,7) =    2637 + j   -4828 ( 8.2413 fF)
+ASITIC>  
+
+lambda = 18750.00, delta =  1.59
+
+maxL = 937.50, maxT =  1.27, maxW =  1.27
+Generating inductance matrix (96x96)..
+Inverting matrix......
+L =  4.638e-10		R =     1.7790
+ASITIC>  
+BL_200-S: at 4.500000 GHz R = 1.844812.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 7.127541.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 16666.67, delta =  1.50
+
+maxL = 833.33, maxT =  1.20, maxW =  1.20
+Performing Analysis at 4.50 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 4.50.
+Tried using . as path.
+
+
+Generating data at 4.50 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (112x112)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=4.50 GHz:  Q = 6.959,7.087,7.209
+L  = 0.463 nH	R  =  1.77
+Cs1=  40.9 fF	Rs1=   515
+Cs2=  28.2 fF	Rs2=   761	f_res = 36.57GHz
+ASITIC>  
+
+lambda = 16666.67, delta =  1.50
+
+maxL = 833.33, maxT =  1.20, maxW =  1.20
+Performing Analysis at 4.50 GHz
+Generating capacitance matrix (16x16)..
+At 4.500 GHz:
+Total Capacitance = 69.013 (fF)
+Total Resistance = 306.941.
+Capacitance matrix:
+Z(0,0) =    2550 + j   -4453 ( 7.9427 fF)
+Z(0,1) = -1.003e+04 + j -1.692e+04 ( 2.0903 fF)
+Z(0,2) = -4.524e+04 + j -5.6e+04 ( 0.6315 fF)
+Z(0,3) = -2.556e+05 + j -3.364e+05 ( 0.1051 fF)
+Z(0,4) = -3.876e+05 + j -5.05e+05 ( 0.0700 fF)
+Z(0,5) = -4.206e+04 + j -5.642e+04 ( 0.6269 fF)
+Z(0,6) = -1.87e+04 + j -2.304e+04 ( 1.5347 fF)
+Z(0,7) = -3.794e+04 + j -4.081e+04 ( 0.8666 fF)
+Z(1,1) =    1178 + j   -2007 (17.6195 fF)
+Z(1,2) =   -9971 + j -1.685e+04 ( 2.0992 fF)
+Z(1,3) = -1.301e+05 + j -1.35e+05 ( 0.2621 fF)
+Z(1,4) = -1.675e+05 + j -1.972e+05 ( 0.1794 fF)
+Z(1,5) = -1.877e+04 + j -2.346e+04 ( 1.5077 fF)
+Z(1,6) =   -8371 + j -1.094e+04 ( 3.2325 fF)
+Z(1,7) = -1.892e+04 + j -2.328e+04 ( 1.5192 fF)
+Z(2,2) =    2763 + j   -4532 ( 7.8041 fF)
+Z(2,3) = -1.708e+04 + j -8.23e+04 ( 0.4298 fF)
+Z(2,4) = -4.842e+05 + j -2.666e+05 ( 0.1327 fF)
+Z(2,5) = -3.829e+04 + j -4.163e+04 ( 0.8496 fF)
+Z(2,6) = -1.856e+04 + j -2.314e+04 ( 1.5282 fF)
+Z(2,7) = -4.213e+04 + j -5.637e+04 ( 0.6274 fF)
+Z(3,3) = 1.726e+04 + j -2.77e+04 ( 1.2769 fF)
+Z(3,4) =   -2629 + j -8.543e+04 ( 0.4140 fF)
+Z(3,5) = -2.365e+05 + j -2.049e+05 ( 0.1726 fF)
+Z(3,6) = -1.104e+05 + j -1.285e+05 ( 0.2752 fF)
+Z(3,7) = -2.558e+05 + j -3.34e+05 ( 0.1059 fF)
+Z(4,4) = 2.581e+04 + j -4.146e+04 ( 0.8530 fF)
+Z(4,5) = -1.345e+04 + j -8.947e+04 ( 0.3953 fF)
+Z(4,6) = -2.03e+05 + j -1.977e+05 ( 0.1789 fF)
+Z(4,7) = -3.764e+05 + j -4.973e+05 ( 0.0711 fF)
+Z(5,5) =    2816 + j   -4514 ( 7.8344 fF)
+Z(5,6) =   -9814 + j -1.632e+04 ( 2.1669 fF)
+Z(5,7) = -4.412e+04 + j -5.492e+04 ( 0.6440 fF)
+Z(6,6) =    1220 + j   -1994 (17.7339 fF)
+Z(6,7) =   -9882 + j -1.647e+04 ( 2.1470 fF)
+Z(7,7) =    2592 + j   -4441 ( 7.9632 fF)
+ASITIC>  
+
+lambda = 16666.67, delta =  1.50
+
+maxL = 833.33, maxT =  1.20, maxW =  1.20
+Generating inductance matrix (112x112)..
+Inverting matrix......
+L =  4.633e-10		R =     1.8104
+ASITIC>  
+BL_200-S: at 5.000000 GHz R = 1.880535.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 7.919491.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 15000.00, delta =  1.42
+
+maxL = 750.00, maxT =  1.14, maxW =  1.14
+Performing Analysis at 5.00 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 5.00.
+Tried using . as path.
+
+
+Generating data at 5.00 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (112x112)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=5.00 GHz:  Q = 7.527,7.707,7.879
+L  = 0.462 nH	R  =  1.78
+Cs1=  39.5 fF	Rs1=   506
+Cs2=  27.3 fF	Rs2=   748	f_res = 37.23GHz
+ASITIC>  
+
+lambda = 15000.00, delta =  1.42
+
+maxL = 750.00, maxT =  1.14, maxW =  1.14
+Performing Analysis at 5.00 GHz
+Generating capacitance matrix (16x16)..
+At 5.000 GHz:
+Total Capacitance = 66.630 (fF)
+Total Resistance = 301.597.
+Capacitance matrix:
+Z(0,0) =    2499 + j   -4154 ( 7.6622 fF)
+Z(0,1) =   -8244 + j -1.483e+04 ( 2.1466 fF)
+Z(0,2) = -3.568e+04 + j -5.069e+04 ( 0.6279 fF)
+Z(0,3) = -2.017e+05 + j -3.029e+05 ( 0.1051 fF)
+Z(0,4) = -3.059e+05 + j -4.551e+05 ( 0.0699 fF)
+Z(0,5) = -3.305e+04 + j -5.085e+04 ( 0.6259 fF)
+Z(0,6) = -1.488e+04 + j -2.076e+04 ( 1.5335 fF)
+Z(0,7) = -3.095e+04 + j -3.64e+04 ( 0.8745 fF)
+Z(1,1) =    1157 + j   -1872 (17.0059 fF)
+Z(1,2) =   -8189 + j -1.477e+04 ( 2.1557 fF)
+Z(1,3) = -1.043e+05 + j -1.228e+05 ( 0.2591 fF)
+Z(1,4) = -1.345e+05 + j -1.771e+05 ( 0.1797 fF)
+Z(1,5) = -1.491e+04 + j -2.113e+04 ( 1.5064 fF)
+Z(1,6) =   -6605 + j   -9861 ( 3.2280 fF)
+Z(1,7) = -1.506e+04 + j -2.097e+04 ( 1.5179 fF)
+Z(2,2) =    2718 + j   -4223 ( 7.5378 fF)
+Z(2,3) = -1.509e+04 + j -7.276e+04 ( 0.4375 fF)
+Z(2,4) = -4.007e+05 + j -2.522e+05 ( 0.1262 fF)
+Z(2,5) = -3.113e+04 + j -3.72e+04 ( 0.8557 fF)
+Z(2,6) = -1.475e+04 + j -2.085e+04 ( 1.5269 fF)
+Z(2,7) = -3.311e+04 + j -5.081e+04 ( 0.6265 fF)
+Z(3,3) = 1.699e+04 + j -2.579e+04 ( 1.2340 fF)
+Z(3,4) =   -2453 + j -7.673e+04 ( 0.4149 fF)
+Z(3,5) = -1.948e+05 + j -1.831e+05 ( 0.1738 fF)
+Z(3,6) = -8.862e+04 + j -1.155e+05 ( 0.2755 fF)
+Z(3,7) = -2.018e+05 + j -3.01e+05 ( 0.1058 fF)
+Z(4,4) = 2.541e+04 + j -3.861e+04 ( 0.8244 fF)
+Z(4,5) = -1.199e+04 + j -7.947e+04 ( 0.4005 fF)
+Z(4,6) = -1.629e+05 + j -1.813e+05 ( 0.1755 fF)
+Z(4,7) = -2.971e+05 + j -4.476e+05 ( 0.0711 fF)
+Z(5,5) =    2773 + j   -4205 ( 7.5706 fF)
+Z(5,6) =   -8057 + j -1.431e+04 ( 2.2249 fF)
+Z(5,7) = -3.477e+04 + j -4.97e+04 ( 0.6404 fF)
+Z(6,6) =    1200 + j   -1858 (17.1290 fF)
+Z(6,7) =   -8114 + j -1.444e+04 ( 2.2043 fF)
+Z(7,7) =    2544 + j   -4143 ( 7.6839 fF)
+ASITIC>  
+
+lambda = 15000.00, delta =  1.42
+
+maxL = 750.00, maxT =  1.14, maxW =  1.14
+Generating inductance matrix (112x112)..
+Inverting matrix......
+L =  4.627e-10		R =     1.8363
+ASITIC>  
+BL_200-S: at 5.500000 GHz R = 1.918559.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 8.711440.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 13636.36, delta =  1.36
+
+maxL = 681.82, maxT =  1.09, maxW =  1.09
+Performing Analysis at 5.50 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 5.50.
+Tried using . as path.
+
+
+Generating data at 5.50 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (112x112)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=5.50 GHz:  Q = 8.055,8.295,8.528
+L  = 0.462 nH	R  =   1.8
+Cs1=  38.1 fF	Rs1=   496
+Cs2=  26.3 fF	Rs2=   734	f_res = 37.93GHz
+ASITIC>  
+
+lambda = 13636.36, delta =  1.36
+
+maxL = 681.82, maxT =  1.09, maxW =  1.09
+Performing Analysis at 5.50 GHz
+Generating capacitance matrix (16x16)..
+At 5.500 GHz:
+Total Capacitance = 64.270 (fF)
+Total Resistance = 295.916.
+Capacitance matrix:
+Z(0,0) =    2445 + j   -3918 ( 7.3860 fF)
+Z(0,1) =   -6894 + j -1.32e+04 ( 2.1917 fF)
+Z(0,2) = -2.861e+04 + j -4.629e+04 ( 0.6251 fF)
+Z(0,3) = -1.619e+05 + j -2.756e+05 ( 0.1050 fF)
+Z(0,4) = -2.455e+05 + j -4.144e+05 ( 0.0698 fF)
+Z(0,5) = -2.638e+04 + j -4.631e+04 ( 0.6249 fF)
+Z(0,6) = -1.206e+04 + j -1.889e+04 ( 1.5319 fF)
+Z(0,7) = -2.576e+04 + j -3.284e+04 ( 0.8811 fF)
+Z(1,1) =    1133 + j   -1764 (16.3997 fF)
+Z(1,2) =   -6846 + j -1.315e+04 ( 2.2009 fF)
+Z(1,3) = -8.526e+04 + j -1.126e+05 ( 0.2569 fF)
+Z(1,4) = -1.1e+05 + j -1.608e+05 ( 0.1799 fF)
+Z(1,5) = -1.205e+04 + j -1.923e+04 ( 1.5047 fF)
+Z(1,6) =   -5299 + j   -8979 ( 3.2229 fF)
+Z(1,7) = -1.221e+04 + j -1.908e+04 ( 1.5164 fF)
+Z(2,2) =    2669 + j   -3979 ( 7.2733 fF)
+Z(2,3) = -1.343e+04 + j -6.515e+04 ( 0.4442 fF)
+Z(2,4) = -3.38e+05 + j -2.371e+05 ( 0.1220 fF)
+Z(2,5) = -2.583e+04 + j -3.362e+04 ( 0.8607 fF)
+Z(2,6) = -1.193e+04 + j -1.897e+04 ( 1.5253 fF)
+Z(2,7) = -2.645e+04 + j -4.627e+04 ( 0.6254 fF)
+Z(3,3) = 1.671e+04 + j -2.429e+04 ( 1.1913 fF)
+Z(3,4) =   -2299 + j -6.961e+04 ( 0.4157 fF)
+Z(3,5) = -1.639e+05 + j -1.653e+05 ( 0.1750 fF)
+Z(3,6) = -7.25e+04 + j -1.05e+05 ( 0.2757 fF)
+Z(3,7) = -1.618e+05 + j -2.74e+05 ( 0.1056 fF)
+Z(4,4) = 2.499e+04 + j -3.636e+04 ( 0.7958 fF)
+Z(4,5) = -1.077e+04 + j -7.143e+04 ( 0.4051 fF)
+Z(4,6) = -1.332e+05 + j -1.671e+05 ( 0.1731 fF)
+Z(4,7) = -2.384e+05 + j -4.072e+05 ( 0.0711 fF)
+Z(5,5) =    2727 + j   -3960 ( 7.3080 fF)
+Z(5,6) =   -6733 + j -1.274e+04 ( 2.2713 fF)
+Z(5,7) = -2.786e+04 + j -4.539e+04 ( 0.6376 fF)
+Z(6,6) =    1179 + j   -1751 (16.5281 fF)
+Z(6,7) =   -6781 + j -1.286e+04 ( 2.2501 fF)
+Z(7,7) =    2492 + j   -3906 ( 7.4081 fF)
+ASITIC>  
+
+lambda = 13636.36, delta =  1.36
+
+maxL = 681.82, maxT =  1.09, maxW =  1.09
+Generating inductance matrix (112x112)..
+Inverting matrix......
+L =  4.622e-10		R =     1.8617
+ASITIC>  
+BL_200-S: at 6.000000 GHz R = 1.958863.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 9.503389.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 12500.00, delta =  1.30
+
+maxL = 625.00, maxT =  1.04, maxW =  1.04
+Performing Analysis at 6.00 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 6.00.
+Tried using . as path.
+
+
+Generating data at 6.00 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (128x128)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=6.00 GHz:  Q = 8.529,8.839,9.144
+L  = 0.461 nH	R  =  1.81
+Cs1=  36.8 fF	Rs1=   486
+Cs2=  25.4 fF	Rs2=   720	f_res = 38.63GHz
+ASITIC>  
+
+lambda = 12500.00, delta =  1.30
+
+maxL = 625.00, maxT =  1.04, maxW =  1.04
+Performing Analysis at 6.00 GHz
+Generating capacitance matrix (16x16)..
+At 6.000 GHz:
+Total Capacitance = 61.963 (fF)
+Total Resistance = 289.951.
+Capacitance matrix:
+Z(0,0) =    2389 + j   -3727 ( 7.1176 fF)
+Z(0,1) =   -5852 + j -1.19e+04 ( 2.2285 fF)
+Z(0,2) = -2.323e+04 + j -4.26e+04 ( 0.6227 fF)
+Z(0,3) = -1.316e+05 + j -2.53e+05 ( 0.1048 fF)
+Z(0,4) = -1.995e+05 + j -3.805e+05 ( 0.0697 fF)
+Z(0,5) = -2.131e+04 + j -4.253e+04 ( 0.6238 fF)
+Z(0,6) =   -9910 + j -1.734e+04 ( 1.5301 fF)
+Z(0,7) = -2.181e+04 + j -2.992e+04 ( 0.8867 fF)
+Z(1,1) =    1109 + j   -1678 (15.8088 fF)
+Z(1,2) =   -5809 + j -1.185e+04 ( 2.2378 fF)
+Z(1,3) = -7.075e+04 + j -1.039e+05 ( 0.2553 fF)
+Z(1,4) = -9.14e+04 + j -1.473e+05 ( 0.1801 fF)
+Z(1,5) =   -9879 + j -1.765e+04 ( 1.5028 fF)
+Z(1,6) =   -4306 + j   -8245 ( 3.2172 fF)
+Z(1,7) = -1.004e+04 + j -1.751e+04 ( 1.5146 fF)
+Z(2,2) =    2618 + j   -3782 ( 7.0142 fF)
+Z(2,3) = -1.206e+04 + j -5.893e+04 ( 0.4501 fF)
+Z(2,4) = -2.897e+05 + j -2.224e+05 ( 0.1193 fF)
+Z(2,5) = -2.179e+04 + j -3.067e+04 ( 0.8649 fF)
+Z(2,6) =   -9783 + j -1.741e+04 ( 1.5235 fF)
+Z(2,7) = -2.138e+04 + j -4.249e+04 ( 0.6243 fF)
+Z(3,3) = 1.641e+04 + j -2.308e+04 ( 1.1494 fF)
+Z(3,4) =   -2165 + j -6.37e+04 ( 0.4164 fF)
+Z(3,5) = -1.403e+05 + j -1.505e+05 ( 0.1763 fF)
+Z(3,6) = -6.025e+04 + j -9.616e+04 ( 0.2758 fF)
+Z(3,7) = -1.315e+05 + j -2.516e+05 ( 0.1054 fF)
+Z(4,4) = 2.454e+04 + j -3.455e+04 ( 0.7678 fF)
+Z(4,5) =   -9739 + j -6.482e+04 ( 0.4092 fF)
+Z(4,6) = -1.105e+05 + j -1.548e+05 ( 0.1713 fF)
+Z(4,7) = -1.938e+05 + j -3.737e+05 ( 0.0710 fF)
+Z(5,5) =    2679 + j   -3763 ( 7.0498 fF)
+Z(5,6) =   -5711 + j -1.149e+04 ( 2.3091 fF)
+Z(5,7) = -2.259e+04 + j -4.176e+04 ( 0.6352 fF)
+Z(6,6) =    1157 + j   -1664 (15.9392 fF)
+Z(6,7) =   -5753 + j -1.16e+04 ( 2.2874 fF)
+Z(7,7) =    2438 + j   -3715 ( 7.1394 fF)
+ASITIC>  
+
+lambda = 12500.00, delta =  1.30
+
+maxL = 625.00, maxT =  1.04, maxW =  1.04
+Generating inductance matrix (128x128)..
+Inverting matrix......
+L =   4.62e-10		R =     1.8906
+ASITIC>  
+BL_200-S: at 6.500000 GHz R = 1.853733.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 10.295337.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 11538.46, delta =  1.25
+
+maxL = 576.92, maxT =  1.00, maxW =  1.00
+Performing Analysis at 6.50 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 6.50.
+Tried using . as path.
+
+
+Generating data at 6.50 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (128x128)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=6.50 GHz:  Q = 8.975,9.364,9.753
+L  = 0.461 nH	R  =  1.82
+Cs1=  35.5 fF	Rs1=   476
+Cs2=  24.5 fF	Rs2=   704	f_res = 39.36GHz
+ASITIC>  
+
+lambda = 11538.46, delta =  1.25
+
+maxL = 576.92, maxT =  1.00, maxW =  1.00
+Performing Analysis at 6.50 GHz
+Generating capacitance matrix (16x16)..
+At 6.500 GHz:
+Total Capacitance = 59.733 (fF)
+Total Resistance = 283.751.
+Capacitance matrix:
+Z(0,0) =    2331 + j   -3570 ( 6.8595 fF)
+Z(0,1) =   -5031 + j -1.084e+04 ( 2.2590 fF)
+Z(0,2) = -1.904e+04 + j -3.945e+04 ( 0.6206 fF)
+Z(0,3) = -1.08e+05 + j -2.339e+05 ( 0.1047 fF)
+Z(0,4) = -1.638e+05 + j -3.519e+05 ( 0.0696 fF)
+Z(0,5) = -1.737e+04 + j -3.933e+04 ( 0.6225 fF)
+Z(0,6) =   -8240 + j -1.602e+04 ( 1.5280 fF)
+Z(0,7) = -1.873e+04 + j -2.746e+04 ( 0.8916 fF)
+Z(1,1) =    1084 + j   -1607 (15.2391 fF)
+Z(1,2) =   -4992 + j -1.079e+04 ( 2.2683 fF)
+Z(1,3) = -5.945e+04 + j -9.643e+04 ( 0.2539 fF)
+Z(1,4) = -7.693e+04 + j -1.359e+05 ( 0.1802 fF)
+Z(1,5) =   -8191 + j -1.632e+04 ( 1.5007 fF)
+Z(1,6) =   -3533 + j   -7625 ( 3.2111 fF)
+Z(1,7) =   -8349 + j -1.619e+04 ( 1.5126 fF)
+Z(2,2) =    2565 + j   -3620 ( 6.7632 fF)
+Z(2,3) = -1.09e+04 + j -5.377e+04 ( 0.4554 fF)
+Z(2,4) = -2.517e+05 + j -2.085e+05 ( 0.1175 fF)
+Z(2,5) = -1.864e+04 + j -2.819e+04 ( 0.8686 fF)
+Z(2,6) =   -8114 + j -1.609e+04 ( 1.5214 fF)
+Z(2,7) = -1.743e+04 + j -3.93e+04 ( 0.6231 fF)
+Z(3,3) = 1.61e+04 + j -2.209e+04 ( 1.1087 fF)
+Z(3,4) =   -2048 + j -5.871e+04 ( 0.4171 fF)
+Z(3,5) = -1.218e+05 + j -1.379e+05 ( 0.1775 fF)
+Z(3,6) = -5.071e+04 + j -8.874e+04 ( 0.2759 fF)
+Z(3,7) = -1.079e+05 + j -2.327e+05 ( 0.1052 fF)
+Z(4,4) = 2.408e+04 + j -3.306e+04 ( 0.7406 fF)
+Z(4,5) =   -8865 + j -5.931e+04 ( 0.4128 fF)
+Z(4,6) = -9.283e+04 + j -1.441e+05 ( 0.1699 fF)
+Z(4,7) = -1.591e+05 + j -3.454e+05 ( 0.0709 fF)
+Z(5,5) =    2629 + j   -3601 ( 6.7990 fF)
+Z(5,6) =   -4907 + j -1.046e+04 ( 2.3405 fF)
+Z(5,7) = -1.85e+04 + j -3.868e+04 ( 0.6331 fF)
+Z(6,6) =    1134 + j   -1593 (15.3682 fF)
+Z(6,7) =   -4944 + j -1.056e+04 ( 2.3184 fF)
+Z(7,7) =    2381 + j   -3559 ( 6.8804 fF)
+ASITIC>  
+
+lambda = 11538.46, delta =  1.25
+
+maxL = 576.92, maxT =  1.00, maxW =  1.00
+Generating inductance matrix (128x128)..
+Inverting matrix......
+L =  4.615e-10		R =     1.9150
+ASITIC>  
+BL_200-S: at 7.000000 GHz R = 1.886291.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 11.087287.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 10714.29, delta =  1.20
+
+maxL = 535.71, maxT =  0.96, maxW =  0.96
+Performing Analysis at 7.00 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 7.00.
+Tried using . as path.
+
+
+Generating data at 7.00 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (128x128)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=7.00 GHz:  Q = 9.384,9.861,10.345
+L  = 0.461 nH	R  =  1.82
+Cs1=  34.2 fF	Rs1=   465
+Cs2=  23.6 fF	Rs2=   689	f_res = 40.10GHz
+ASITIC>  
+
+lambda = 10714.29, delta =  1.20
+
+maxL = 535.71, maxT =  0.96, maxW =  0.96
+Performing Analysis at 7.00 GHz
+Generating capacitance matrix (16x16)..
+At 7.000 GHz:
+Total Capacitance = 57.595 (fF)
+Total Resistance = 277.364.
+Capacitance matrix:
+Z(0,0) =    2271 + j   -3438 ( 6.6135 fF)
+Z(0,1) =   -4374 + j   -9952 ( 2.2847 fF)
+Z(0,2) = -1.572e+04 + j -3.674e+04 ( 0.6188 fF)
+Z(0,3) = -8.933e+04 + j -2.176e+05 ( 0.1045 fF)
+Z(0,4) = -1.354e+05 + j -3.274e+05 ( 0.0694 fF)
+Z(0,5) = -1.424e+04 + j -3.66e+04 ( 0.6212 fF)
+Z(0,6) =   -6916 + j -1.49e+04 ( 1.5258 fF)
+Z(0,7) = -1.628e+04 + j -2.537e+04 ( 0.8961 fF)
+Z(1,1) =    1058 + j   -1547 (14.6946 fF)
+Z(1,2) =   -4337 + j   -9911 ( 2.2940 fF)
+Z(1,3) = -5.048e+04 + j -8.993e+04 ( 0.2528 fF)
+Z(1,4) = -6.544e+04 + j -1.261e+05 ( 0.1802 fF)
+Z(1,5) =   -6852 + j -1.517e+04 ( 1.4984 fF)
+Z(1,6) =   -2921 + j   -7095 ( 3.2045 fF)
+Z(1,7) =   -7010 + j -1.505e+04 ( 1.5105 fF)
+Z(2,2) =    2511 + j   -3486 ( 6.5221 fF)
+Z(2,3) =   -9932 + j -4.942e+04 ( 0.4601 fF)
+Z(2,4) = -2.211e+05 + j -1.955e+05 ( 0.1163 fF)
+Z(2,5) = -1.614e+04 + j -2.607e+04 ( 0.8720 fF)
+Z(2,6) =   -6791 + j -1.497e+04 ( 1.5192 fF)
+Z(2,7) = -1.43e+04 + j -3.657e+04 ( 0.6217 fF)
+Z(3,3) = 1.578e+04 + j -2.126e+04 ( 1.0694 fF)
+Z(3,4) =   -1946 + j -5.443e+04 ( 0.4177 fF)
+Z(3,5) = -1.07e+05 + j -1.271e+05 ( 0.1789 fF)
+Z(3,6) = -4.314e+04 + j -8.24e+04 ( 0.2759 fF)
+Z(3,7) = -8.915e+04 + j -2.165e+05 ( 0.1050 fF)
+Z(4,4) = 2.36e+04 + j -3.183e+04 ( 0.7144 fF)
+Z(4,5) =   -8120 + j -5.464e+04 ( 0.4161 fF)
+Z(4,6) = -7.88e+04 + j -1.347e+05 ( 0.1688 fF)
+Z(4,7) = -1.316e+05 + j -3.212e+05 ( 0.0708 fF)
+Z(5,5) =    2577 + j   -3467 ( 6.5573 fF)
+Z(5,6) =   -4263 + j   -9606 ( 2.3670 fF)
+Z(5,7) = -1.525e+04 + j -3.602e+04 ( 0.6312 fF)
+Z(6,6) =    1110 + j   -1534 (14.8196 fF)
+Z(6,7) =   -4296 + j   -9698 ( 2.3444 fF)
+Z(7,7) =    2324 + j   -3428 ( 6.6331 fF)
+ASITIC>  
+
+lambda = 10714.29, delta =  1.20
+
+maxL = 535.71, maxT =  0.96, maxW =  0.96
+Generating inductance matrix (128x128)..
+Inverting matrix......
+L =   4.61e-10		R =     1.9385
+ASITIC>  
+BL_200-S: at 7.500000 GHz R = 1.920036.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 11.879236.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 10000.00, delta =  1.16
+
+maxL = 500.00, maxT =  0.93, maxW =  0.93
+Performing Analysis at 7.50 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 7.50.
+Tried using . as path.
+
+
+Generating data at 7.50 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (144x144)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=7.50 GHz:  Q = 9.682,10.247,10.828
+L  =  0.46 nH	R  =  1.84
+Cs1=    33 fF	Rs1=   454
+Cs2=  22.8 fF	Rs2=   673	f_res = 40.84GHz
+ASITIC>  
+
+lambda = 10000.00, delta =  1.16
+
+maxL = 500.00, maxT =  0.93, maxW =  0.93
+Performing Analysis at 7.50 GHz
+Generating capacitance matrix (16x16)..
+At 7.500 GHz:
+Total Capacitance = 55.562 (fF)
+Total Resistance = 270.838.
+Capacitance matrix:
+Z(0,0) =    2211 + j   -3326 ( 6.3808 fF)
+Z(0,1) =   -3839 + j   -9200 ( 2.3067 fF)
+Z(0,2) = -1.304e+04 + j -3.439e+04 ( 0.6171 fF)
+Z(0,3) = -7.427e+04 + j -2.035e+05 ( 0.1043 fF)
+Z(0,4) = -1.126e+05 + j -3.062e+05 ( 0.0693 fF)
+Z(0,5) = -1.172e+04 + j -3.424e+04 ( 0.6197 fF)
+Z(0,6) =   -5849 + j -1.393e+04 ( 1.5234 fF)
+Z(0,7) = -1.43e+04 + j -2.357e+04 ( 0.9003 fF)
+Z(1,1) =    1032 + j   -1497 (14.1778 fF)
+Z(1,2) =   -3805 + j   -9163 ( 2.3160 fF)
+Z(1,3) = -4.325e+04 + j -8.423e+04 ( 0.2519 fF)
+Z(1,4) = -5.618e+04 + j -1.177e+05 ( 0.1803 fF)
+Z(1,5) =   -5773 + j -1.419e+04 ( 1.4959 fF)
+Z(1,6) =   -2428 + j   -6637 ( 3.1974 fF)
+Z(1,7) =   -5931 + j -1.407e+04 ( 1.5082 fF)
+Z(2,2) =    2455 + j   -3373 ( 6.2922 fF)
+Z(2,3) =   -9104 + j -4.57e+04 ( 0.4644 fF)
+Z(2,4) = -1.962e+05 + j -1.837e+05 ( 0.1155 fF)
+Z(2,5) = -1.412e+04 + j -2.425e+04 ( 0.8751 fF)
+Z(2,6) =   -5724 + j -1.399e+04 ( 1.5167 fF)
+Z(2,7) = -1.178e+04 + j -3.421e+04 ( 0.6203 fF)
+Z(3,3) = 1.545e+04 + j -2.056e+04 ( 1.0319 fF)
+Z(3,4) =   -1856 + j -5.073e+04 ( 0.4183 fF)
+Z(3,5) = -9.503e+04 + j -1.178e+05 ( 0.1802 fF)
+Z(3,6) = -3.704e+04 + j -7.691e+04 ( 0.2759 fF)
+Z(3,7) = -7.405e+04 + j -2.025e+05 ( 0.1048 fF)
+Z(4,4) = 2.31e+04 + j -3.078e+04 ( 0.6893 fF)
+Z(4,5) =   -7481 + j -5.064e+04 ( 0.4190 fF)
+Z(4,6) = -6.747e+04 + j -1.264e+05 ( 0.1678 fF)
+Z(4,7) = -1.095e+05 + j -3.004e+05 ( 0.0706 fF)
+Z(5,5) =    2523 + j   -3354 ( 6.3261 fF)
+Z(5,6) =   -3738 + j   -8880 ( 2.3897 fF)
+Z(5,7) = -1.263e+04 + j -3.371e+04 ( 0.6295 fF)
+Z(6,6) =    1085 + j   -1484 (14.2962 fF)
+Z(6,7) =   -3768 + j   -8966 ( 2.3667 fF)
+Z(7,7) =    2265 + j   -3317 ( 6.3984 fF)
+ASITIC>  
+
+lambda = 10000.00, delta =  1.16
+
+maxL = 500.00, maxT =  0.93, maxW =  0.93
+Generating inductance matrix (144x144)..
+Inverting matrix......
+L =  4.605e-10		R =     1.9775
+ASITIC>  
+BL_200-S: at 8.000000 GHz R = 1.954586.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 12.671185.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 9375.00, delta =  1.13
+
+maxL = 468.75, maxT =  0.90, maxW =  0.90
+Performing Analysis at 8.00 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 8.00.
+Tried using . as path.
+
+
+Generating data at 8.00 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (144x144)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=8.00 GHz:  Q = 10.013,10.679,11.375
+L  =  0.46 nH	R  =  1.84
+Cs1=  31.9 fF	Rs1=   442
+Cs2=    22 fF	Rs2=   657	f_res = 41.57GHz
+ASITIC>  
+
+lambda = 9375.00, delta =  1.13
+
+maxL = 468.75, maxT =  0.90, maxW =  0.90
+Performing Analysis at 8.00 GHz
+Generating capacitance matrix (16x16)..
+At 8.000 GHz:
+Total Capacitance = 53.638 (fF)
+Total Resistance = 264.215.
+Capacitance matrix:
+Z(0,0) =    2149 + j   -3229 ( 6.1618 fF)
+Z(0,1) =   -3397 + j   -8554 ( 2.3257 fF)
+Z(0,2) = -1.085e+04 + j -3.232e+04 ( 0.6155 fF)
+Z(0,3) = -6.196e+04 + j -1.911e+05 ( 0.1041 fF)
+Z(0,4) = -9.387e+04 + j -2.877e+05 ( 0.0691 fF)
+Z(0,5) =   -9663 + j -3.218e+04 ( 0.6182 fF)
+Z(0,6) =   -4977 + j -1.308e+04 ( 1.5209 fF)
+Z(0,7) = -1.267e+04 + j -2.2e+04 ( 0.9042 fF)
+Z(1,1) =    1005 + j   -1453 (13.6901 fF)
+Z(1,2) =   -3365 + j   -8520 ( 2.3350 fF)
+Z(1,3) = -3.732e+04 + j -7.921e+04 ( 0.2512 fF)
+Z(1,4) = -4.86e+04 + j -1.104e+05 ( 0.1802 fF)
+Z(1,5) =   -4890 + j -1.332e+04 ( 1.4932 fF)
+Z(1,6) =   -2024 + j   -6237 ( 3.1899 fF)
+Z(1,7) =   -5049 + j -1.321e+04 ( 1.5057 fF)
+Z(2,2) =    2398 + j   -3275 ( 6.0742 fF)
+Z(2,3) =   -8395 + j -4.249e+04 ( 0.4682 fF)
+Z(2,4) = -1.757e+05 + j -1.728e+05 ( 0.1151 fF)
+Z(2,5) = -1.246e+04 + j -2.266e+04 ( 0.8780 fF)
+Z(2,6) =   -4852 + j -1.314e+04 ( 1.5141 fF)
+Z(2,7) =   -9722 + j -3.215e+04 ( 0.6188 fF)
+Z(3,3) = 1.512e+04 + j -1.997e+04 ( 0.9963 fF)
+Z(3,4) =   -1777 + j -4.75e+04 ( 0.4188 fF)
+Z(3,5) = -8.514e+04 + j -1.096e+05 ( 0.1816 fF)
+Z(3,6) = -3.204e+04 + j -7.211e+04 ( 0.2759 fF)
+Z(3,7) = -6.171e+04 + j -1.902e+05 ( 0.1046 fF)
+Z(4,4) = 2.26e+04 + j -2.989e+04 ( 0.6655 fF)
+Z(4,5) =   -6930 + j -4.717e+04 ( 0.4217 fF)
+Z(4,6) = -5.819e+04 + j -1.191e+05 ( 0.1671 fF)
+Z(4,7) = -9.133e+04 + j -2.822e+05 ( 0.0705 fF)
+Z(5,5) =    2469 + j   -3258 ( 6.1062 fF)
+Z(5,6) =   -3306 + j   -8257 ( 2.4093 fF)
+Z(5,7) = -1.049e+04 + j -3.168e+04 ( 0.6279 fF)
+Z(6,6) =    1060 + j   -1442 (13.7997 fF)
+Z(6,7) =   -3334 + j   -8338 ( 2.3860 fF)
+Z(7,7) =    2205 + j   -3221 ( 6.1771 fF)
+ASITIC>  
+
+lambda = 9375.00, delta =  1.13
+
+maxL = 468.75, maxT =  0.90, maxW =  0.90
+Generating inductance matrix (144x144)..
+Inverting matrix......
+L =  4.601e-10		R =     2.0009
+ASITIC>  
+BL_200-S: at 8.500000 GHz R = 1.989656.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 13.463134.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 8823.53, delta =  1.09
+
+maxL = 441.18, maxT =  0.87, maxW =  0.87
+Performing Analysis at 8.50 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 8.50.
+Tried using . as path.
+
+
+Generating data at 8.50 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (144x144)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=8.50 GHz:  Q = 10.311,11.084,11.906
+L  =  0.46 nH	R  =  1.85
+Cs1=  30.8 fF	Rs1=   431
+Cs2=  21.3 fF	Rs2=   641	f_res = 42.30GHz
+ASITIC>  
+
+lambda = 8823.53, delta =  1.09
+
+maxL = 441.18, maxT =  0.87, maxW =  0.87
+Performing Analysis at 8.50 GHz
+Generating capacitance matrix (16x16)..
+At 8.500 GHz:
+Total Capacitance = 51.826 (fF)
+Total Resistance = 257.535.
+Capacitance matrix:
+Z(0,0) =    2087 + j   -3143 ( 5.9566 fF)
+Z(0,1) =   -3029 + j   -7993 ( 2.3424 fF)
+Z(0,2) =   -9034 + j -3.05e+04 ( 0.6140 fF)
+Z(0,3) = -5.176e+04 + j -1.803e+05 ( 0.1038 fF)
+Z(0,4) = -7.841e+04 + j -2.715e+05 ( 0.0690 fF)
+Z(0,5) =   -7958 + j -3.037e+04 ( 0.6166 fF)
+Z(0,6) =   -4255 + j -1.233e+04 ( 1.5182 fF)
+Z(0,7) = -1.132e+04 + j -2.062e+04 ( 0.9079 fF)
+Z(1,1) =   978.1 + j   -1415 (13.2319 fF)
+Z(1,2) =   -2999 + j   -7962 ( 2.3517 fF)
+Z(1,3) = -3.242e+04 + j -7.475e+04 ( 0.2505 fF)
+Z(1,4) = -4.232e+04 + j -1.039e+05 ( 0.1802 fF)
+Z(1,5) =   -4160 + j -1.256e+04 ( 1.4904 fF)
+Z(1,6) =   -1691 + j   -5885 ( 3.1819 fF)
+Z(1,7) =   -4319 + j -1.246e+04 ( 1.5030 fF)
+Z(2,2) =    2341 + j   -3191 ( 5.8684 fF)
+Z(2,3) =   -7782 + j -3.968e+04 ( 0.4718 fF)
+Z(2,4) = -1.584e+05 + j -1.628e+05 ( 0.1150 fF)
+Z(2,5) = -1.108e+04 + j -2.126e+04 ( 0.8808 fF)
+Z(2,6) =   -4130 + j -1.239e+04 ( 1.5114 fF)
+Z(2,7) =   -8016 + j -3.034e+04 ( 0.6172 fF)
+Z(3,3) = 1.478e+04 + j -1.945e+04 ( 0.9625 fF)
+Z(3,4) =   -1708 + j -4.465e+04 ( 0.4193 fF)
+Z(3,5) = -7.688e+04 + j -1.023e+05 ( 0.1830 fF)
+Z(3,6) = -2.79e+04 + j -6.789e+04 ( 0.2758 fF)
+Z(3,7) = -5.149e+04 + j -1.795e+05 ( 0.1043 fF)
+Z(4,4) = 2.21e+04 + j -2.912e+04 ( 0.6430 fF)
+Z(4,5) =   -6450 + j -4.414e+04 ( 0.4242 fF)
+Z(4,6) = -5.05e+04 + j -1.125e+05 ( 0.1664 fF)
+Z(4,7) = -7.633e+04 + j -2.662e+05 ( 0.0703 fF)
+Z(5,5) =    2414 + j   -3175 ( 5.8980 fF)
+Z(5,6) =   -2945 + j   -7716 ( 2.4266 fF)
+Z(5,7) =   -8717 + j -2.989e+04 ( 0.6263 fF)
+Z(6,6) =    1035 + j   -1405 (13.3308 fF)
+Z(6,7) =   -2971 + j   -7792 ( 2.4029 fF)
+Z(7,7) =    2145 + j   -3137 ( 5.9692 fF)
+ASITIC>  
+
+lambda = 8823.53, delta =  1.09
+
+maxL = 441.18, maxT =  0.87, maxW =  0.87
+Generating inductance matrix (144x144)..
+Inverting matrix......
+L =  4.598e-10		R =     2.0234
+ASITIC>  
+BL_200-S: at 8.999999 GHz R = 2.025038.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 14.255082.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 8333.33, delta =  1.06
+
+maxL = 416.67, maxT =  0.85, maxW =  0.85
+Performing Analysis at 9.00 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 9.00.
+Tried using . as path.
+
+
+Generating data at 9.00 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (144x144)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=9.00 GHz:  Q = 10.577,11.462,12.421
+L  = 0.459 nH	R  =  1.84
+Cs1=  29.8 fF	Rs1=   420
+Cs2=  20.6 fF	Rs2=   625	f_res = 43.01GHz
+ASITIC>  
+
+lambda = 8333.33, delta =  1.06
+
+maxL = 416.67, maxT =  0.85, maxW =  0.85
+Performing Analysis at 9.00 GHz
+Generating capacitance matrix (16x16)..
+At 9.000 GHz:
+Total Capacitance = 50.125 (fF)
+Total Resistance = 250.835.
+Capacitance matrix:
+Z(0,0) =    2026 + j   -3067 ( 5.7650 fF)
+Z(0,1) =   -2718 + j   -7502 ( 2.3573 fF)
+Z(0,2) =   -7514 + j -2.887e+04 ( 0.6125 fF)
+Z(0,3) = -4.324e+04 + j -1.707e+05 ( 0.1036 fF)
+Z(0,4) = -6.547e+04 + j -2.57e+05 ( 0.0688 fF)
+Z(0,5) =   -6531 + j -2.876e+04 ( 0.6149 fF)
+Z(0,6) =   -3651 + j -1.167e+04 ( 1.5153 fF)
+Z(0,7) = -1.018e+04 + j -1.94e+04 ( 0.9116 fF)
+Z(1,1) =   951.2 + j   -1381 (12.8028 fF)
+Z(1,2) =   -2689 + j   -7473 ( 2.3665 fF)
+Z(1,3) = -2.83e+04 + j -7.077e+04 ( 0.2499 fF)
+Z(1,4) = -3.706e+04 + j -9.816e+04 ( 0.1802 fF)
+Z(1,5) =   -3549 + j -1.189e+04 ( 1.4874 fF)
+Z(1,6) =   -1411 + j   -5572 ( 3.1736 fF)
+Z(1,7) =   -3708 + j -1.179e+04 ( 1.5003 fF)
+Z(2,2) =    2283 + j   -3116 ( 5.6748 fF)
+Z(2,3) =   -7249 + j -3.722e+04 ( 0.4751 fF)
+Z(2,4) = -1.438e+05 + j -1.537e+05 ( 0.1151 fF)
+Z(2,5) =   -9920 + j -2.002e+04 ( 0.8834 fF)
+Z(2,6) =   -3526 + j -1.172e+04 ( 1.5085 fF)
+Z(2,7) =   -6588 + j -2.873e+04 ( 0.6155 fF)
+Z(3,3) = 1.444e+04 + j -1.9e+04 ( 0.9307 fF)
+Z(3,4) =   -1646 + j -4.213e+04 ( 0.4198 fF)
+Z(3,5) = -6.988e+04 + j -9.588e+04 ( 0.1844 fF)
+Z(3,6) = -2.443e+04 + j -6.414e+04 ( 0.2757 fF)
+Z(3,7) = -4.294e+04 + j -1.699e+05 ( 0.1041 fF)
+Z(4,4) = 2.159e+04 + j -2.844e+04 ( 0.6217 fF)
+Z(4,5) =   -6031 + j -4.146e+04 ( 0.4265 fF)
+Z(4,6) = -4.405e+04 + j -1.066e+05 ( 0.1659 fF)
+Z(4,7) = -6.377e+04 + j -2.52e+05 ( 0.0702 fF)
+Z(5,5) =    2359 + j   -3102 ( 5.7017 fF)
+Z(5,6) =   -2641 + j   -7242 ( 2.4420 fF)
+Z(5,7) =   -7230 + j -2.83e+04 ( 0.6248 fF)
+Z(6,6) =    1010 + j   -1372 (12.8896 fF)
+Z(6,7) =   -2665 + j   -7314 ( 2.4180 fF)
+Z(7,7) =    2085 + j   -3062 ( 5.7747 fF)
+ASITIC>  
+
+lambda = 8333.33, delta =  1.06
+
+maxL = 416.67, maxT =  0.85, maxW =  0.85
+Generating inductance matrix (144x144)..
+Inverting matrix......
+L =  4.594e-10		R =     2.0452
+ASITIC>  
+BL_200-S: at 9.500000 GHz R = 2.060572.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 15.047033.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 7894.74, delta =  1.03
+
+maxL = 394.74, maxT =  0.83, maxW =  0.83
+Performing Analysis at 9.50 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 9.50.
+Tried using . as path.
+
+
+Generating data at 9.50 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (160x160)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=9.50 GHz:  Q = 10.866,11.878,12.995
+L  = 0.459 nH	R  =  1.83
+Cs1=  28.9 fF	Rs1=   408
+Cs2=    20 fF	Rs2=   608	f_res = 43.71GHz
+ASITIC>  
+
+lambda = 7894.74, delta =  1.03
+
+maxL = 394.74, maxT =  0.83, maxW =  0.83
+Performing Analysis at 9.50 GHz
+Generating capacitance matrix (16x16)..
+At 9.500 GHz:
+Total Capacitance = 48.532 (fF)
+Total Resistance = 244.145.
+Capacitance matrix:
+Z(0,0) =    1965 + j   -2999 ( 5.5866 fF)
+Z(0,1) =   -2453 + j   -7067 ( 2.3706 fF)
+Z(0,2) =   -6229 + j -2.742e+04 ( 0.6110 fF)
+Z(0,3) = -3.603e+04 + j -1.622e+05 ( 0.1033 fF)
+Z(0,4) = -5.453e+04 + j -2.442e+05 ( 0.0686 fF)
+Z(0,5) =   -5325 + j -2.732e+04 ( 0.6131 fF)
+Z(0,6) =   -3140 + j -1.108e+04 ( 1.5123 fF)
+Z(0,7) =   -9209 + j -1.831e+04 ( 0.9151 fF)
+Z(1,1) =   924.4 + j   -1351 (12.4022 fF)
+Z(1,2) =   -2426 + j   -7040 ( 2.3798 fF)
+Z(1,3) = -2.482e+04 + j -6.719e+04 ( 0.2493 fF)
+Z(1,4) = -3.261e+04 + j -9.303e+04 ( 0.1801 fF)
+Z(1,5) =   -3033 + j -1.129e+04 ( 1.4843 fF)
+Z(1,6) =   -1175 + j   -5294 ( 3.1648 fF)
+Z(1,7) =   -3192 + j -1.119e+04 ( 1.4974 fF)
+Z(2,2) =    2225 + j   -3050 ( 5.4932 fF)
+Z(2,3) =   -6782 + j -3.503e+04 ( 0.4783 fF)
+Z(2,4) = -1.312e+05 + j -1.453e+05 ( 0.1153 fF)
+Z(2,5) =   -8935 + j -1.891e+04 ( 0.8860 fF)
+Z(2,6) =   -3016 + j -1.113e+04 ( 1.5054 fF)
+Z(2,7) =   -5381 + j -2.73e+04 ( 0.6138 fF)
+Z(3,3) = 1.41e+04 + j -1.86e+04 ( 0.9007 fF)
+Z(3,4) =   -1590 + j -3.986e+04 ( 0.4203 fF)
+Z(3,5) = -6.39e+04 + j -9.012e+04 ( 0.1859 fF)
+Z(3,6) = -2.15e+04 + j -6.079e+04 ( 0.2756 fF)
+Z(3,7) = -3.572e+04 + j -1.614e+05 ( 0.1038 fF)
+Z(4,4) = 2.108e+04 + j -2.784e+04 ( 0.6017 fF)
+Z(4,5) =   -5662 + j -3.908e+04 ( 0.4287 fF)
+Z(4,6) = -3.859e+04 + j -1.013e+05 ( 0.1654 fF)
+Z(4,7) = -5.317e+04 + j -2.394e+05 ( 0.0700 fF)
+Z(5,5) =    2303 + j   -3037 ( 5.5170 fF)
+Z(5,6) =   -2381 + j   -6822 ( 2.4558 fF)
+Z(5,7) =   -5973 + j -2.688e+04 ( 0.6233 fF)
+Z(6,6) =   984.6 + j   -1343 (12.4756 fF)
+Z(6,7) =   -2404 + j   -6890 ( 2.4315 fF)
+Z(7,7) =    2025 + j   -2995 ( 5.5932 fF)
+ASITIC>  
+
+lambda = 7894.74, delta =  1.03
+
+maxL = 394.74, maxT =  0.83, maxW =  0.83
+Generating inductance matrix (160x160)..
+Inverting matrix......
+L =  4.591e-10		R =     2.0545
+ASITIC>  
+BL_200-S: at 10.000000 GHz R = 2.096139.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 15.838981.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 7500.00, delta =  1.01
+
+maxL = 375.00, maxT =  0.81, maxW =  0.81
+Performing Analysis at 10.00 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 10.00.
+Tried using . as path.
+
+
+Generating data at 10.00 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (160x160)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=10.00 GHz:  Q = 11.076,12.211,13.487
+L  = 0.459 nH	R  =  1.82
+Cs1=    28 fF	Rs1=   397
+Cs2=  19.4 fF	Rs2=   592	f_res = 44.40GHz
+ASITIC>  
+
+lambda = 7500.00, delta =  1.01
+
+maxL = 375.00, maxT =  0.81, maxW =  0.81
+Performing Analysis at 10.00 GHz
+Generating capacitance matrix (16x16)..
+At 10.000 GHz:
+Total Capacitance = 47.045 (fF)
+Total Resistance = 237.496.
+Capacitance matrix:
+Z(0,0) =    1904 + j   -2936 ( 5.4207 fF)
+Z(0,1) =   -2226 + j   -6679 ( 2.3828 fF)
+Z(0,2) =   -5132 + j -2.611e+04 ( 0.6095 fF)
+Z(0,3) = -2.989e+04 + j -1.545e+05 ( 0.1030 fF)
+Z(0,4) = -4.522e+04 + j -2.326e+05 ( 0.0684 fF)
+Z(0,5) =   -4297 + j -2.604e+04 ( 0.6112 fF)
+Z(0,6) =   -2705 + j -1.055e+04 ( 1.5092 fF)
+Z(0,7) =   -8378 + j -1.733e+04 ( 0.9185 fF)
+Z(1,1) =   897.8 + j   -1323 (12.0287 fF)
+Z(1,2) =   -2200 + j   -6654 ( 2.3919 fF)
+Z(1,3) = -2.185e+04 + j -6.396e+04 ( 0.2488 fF)
+Z(1,4) = -2.881e+04 + j -8.842e+04 ( 0.1800 fF)
+Z(1,5) =   -2593 + j -1.075e+04 ( 1.4810 fF)
+Z(1,6) =  -974.5 + j   -5043 ( 3.1557 fF)
+Z(1,7) =   -2752 + j -1.065e+04 ( 1.4943 fF)
+Z(2,2) =    2168 + j   -2990 ( 5.3233 fF)
+Z(2,3) =   -6369 + j -3.307e+04 ( 0.4812 fF)
+Z(2,4) = -1.204e+05 + j -1.377e+05 ( 0.1156 fF)
+Z(2,5) =   -8091 + j -1.791e+04 ( 0.8885 fF)
+Z(2,6) =   -2581 + j -1.059e+04 ( 1.5022 fF)
+Z(2,7) =   -4353 + j -2.601e+04 ( 0.6119 fF)
+Z(3,3) = 1.376e+04 + j -1.824e+04 ( 0.8726 fF)
+Z(3,4) =   -1540 + j -3.783e+04 ( 0.4207 fF)
+Z(3,5) = -5.874e+04 + j -8.494e+04 ( 0.1874 fF)
+Z(3,6) = -1.899e+04 + j -5.778e+04 ( 0.2755 fF)
+Z(3,7) = -2.956e+04 + j -1.538e+05 ( 0.1035 fF)
+Z(4,4) = 2.057e+04 + j -2.73e+04 ( 0.5830 fF)
+Z(4,5) =   -5334 + j -3.695e+04 ( 0.4307 fF)
+Z(4,6) = -3.392e+04 + j -9.651e+04 ( 0.1649 fF)
+Z(4,7) = -4.413e+04 + j -2.28e+05 ( 0.0698 fF)
+Z(5,5) =    2248 + j   -2978 ( 5.3436 fF)
+Z(5,6) =   -2159 + j   -6448 ( 2.4683 fF)
+Z(5,7) =   -4901 + j -2.56e+04 ( 0.6218 fF)
+Z(6,6) =   959.4 + j   -1317 (12.0878 fF)
+Z(6,7) =   -2180 + j   -6513 ( 2.4438 fF)
+Z(7,7) =    1965 + j   -2934 ( 5.4241 fF)
+ASITIC>  
+
+lambda = 7500.00, delta =  1.01
+
+maxL = 375.00, maxT =  0.81, maxW =  0.81
+Generating inductance matrix (160x160)..
+Inverting matrix......
+L =  4.588e-10		R =     2.0736
+ASITIC>  
+BL_200-S: at 10.500000 GHz R = 2.131649.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 16.630930.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 7142.86, delta =  0.98
+
+maxL = 357.14, maxT =  0.79, maxW =  0.79
+Performing Analysis at 10.50 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 10.50.
+Tried using . as path.
+
+
+Generating data at 10.50 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (240x240)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=10.50 GHz:  Q = 11.354,12.642,14.124
+L  = 0.461 nH	R  =   1.8
+Cs1=  27.2 fF	Rs1=   386
+Cs2=  18.8 fF	Rs2=   576	f_res = 44.96GHz
+ASITIC>  
+
+lambda = 7142.86, delta =  0.98
+
+maxL = 357.14, maxT =  0.79, maxW =  0.79
+Performing Analysis at 10.50 GHz
+Generating capacitance matrix (16x16)..
+At 10.500 GHz:
+Total Capacitance = 45.657 (fF)
+Total Resistance = 230.912.
+Capacitance matrix:
+Z(0,0) =    1844 + j   -2878 ( 5.2667 fF)
+Z(0,1) =   -2029 + j   -6332 ( 2.3939 fF)
+Z(0,2) =   -4189 + j -2.493e+04 ( 0.6080 fF)
+Z(0,3) = -2.462e+04 + j -1.475e+05 ( 0.1027 fF)
+Z(0,4) = -3.722e+04 + j -2.222e+05 ( 0.0682 fF)
+Z(0,5) =   -3415 + j -2.488e+04 ( 0.6093 fF)
+Z(0,6) =   -2332 + j -1.006e+04 ( 1.5060 fF)
+Z(0,7) =   -7659 + j -1.644e+04 ( 0.9219 fF)
+Z(1,1) =   871.6 + j   -1298 (11.6811 fF)
+Z(1,2) =   -2004 + j   -6308 ( 2.4029 fF)
+Z(1,3) = -1.93e+04 + j -6.103e+04 ( 0.2484 fF)
+Z(1,4) = -2.554e+04 + j -8.426e+04 ( 0.1799 fF)
+Z(1,5) =   -2215 + j -1.026e+04 ( 1.4776 fF)
+Z(1,6) =  -802.1 + j   -4818 ( 3.1462 fF)
+Z(1,7) =   -2374 + j -1.016e+04 ( 1.4912 fF)
+Z(2,2) =    2111 + j   -2935 ( 5.1643 fF)
+Z(2,3) =   -6002 + j -3.132e+04 ( 0.4840 fF)
+Z(2,4) = -1.11e+05 + j -1.307e+05 ( 0.1160 fF)
+Z(2,5) =   -7361 + j -1.701e+04 ( 0.8910 fF)
+Z(2,6) =   -2207 + j -1.011e+04 ( 1.4989 fF)
+Z(2,7) =   -3471 + j -2.485e+04 ( 0.6100 fF)
+Z(3,3) = 1.342e+04 + j -1.791e+04 ( 0.8463 fF)
+Z(3,4) =   -1495 + j -3.599e+04 ( 0.4211 fF)
+Z(3,5) = -5.424e+04 + j -8.026e+04 ( 0.1889 fF)
+Z(3,6) = -1.683e+04 + j -5.506e+04 ( 0.2753 fF)
+Z(3,7) = -2.427e+04 + j -1.469e+05 ( 0.1032 fF)
+Z(4,4) = 2.006e+04 + j -2.681e+04 ( 0.5654 fF)
+Z(4,5) =   -5042 + j -3.503e+04 ( 0.4327 fF)
+Z(4,6) = -2.991e+04 + j -9.214e+04 ( 0.1645 fF)
+Z(4,7) = -3.637e+04 + j -2.178e+05 ( 0.0696 fF)
+Z(5,5) =    2193 + j   -2926 ( 5.1811 fF)
+Z(5,6) =   -1966 + j   -6112 ( 2.4798 fF)
+Z(5,7) =   -3979 + j -2.444e+04 ( 0.6203 fF)
+Z(6,6) =   934.4 + j   -1293 (11.7252 fF)
+Z(6,7) =   -1986 + j   -6174 ( 2.4550 fF)
+Z(7,7) =    1906 + j   -2878 ( 5.2667 fF)
+ASITIC>  
+
+lambda = 7142.86, delta =  0.98
+
+maxL = 357.14, maxT =  0.79, maxW =  0.79
+Generating inductance matrix (240x240)..
+Inverting matrix......
+L =  4.607e-10		R =     2.0773
+ASITIC>  
+BL_200-S: at 11.000001 GHz R = 2.167034.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 17.422880.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 6818.18, delta =  0.96
+
+maxL = 340.91, maxT =  0.77, maxW =  0.77
+Performing Analysis at 11.00 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 11.00.
+Tried using . as path.
+
+
+Generating data at 11.00 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (240x240)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=11.00 GHz:  Q = 11.511,12.929,14.594
+L  = 0.461 nH	R  =  1.79
+Cs1=  26.4 fF	Rs1=   375
+Cs2=  18.3 fF	Rs2=   560	f_res = 45.61GHz
+ASITIC>  
+
+lambda = 6818.18, delta =  0.96
+
+maxL = 340.91, maxT =  0.77, maxW =  0.77
+Performing Analysis at 11.00 GHz
+Generating capacitance matrix (16x16)..
+At 11.000 GHz:
+Total Capacitance = 44.364 (fF)
+Total Resistance = 224.416.
+Capacitance matrix:
+Z(0,0) =    1786 + j   -2824 ( 5.1239 fF)
+Z(0,1) =   -1857 + j   -6018 ( 2.4041 fF)
+Z(0,2) =   -3373 + j -2.385e+04 ( 0.6066 fF)
+Z(0,3) = -2.007e+04 + j -1.413e+05 ( 0.1024 fF)
+Z(0,4) = -3.03e+04 + j -2.127e+05 ( 0.0680 fF)
+Z(0,5) =   -2653 + j -2.383e+04 ( 0.6073 fF)
+Z(0,6) =   -2009 + j   -9629 ( 1.5027 fF)
+Z(0,7) =   -7032 + j -1.564e+04 ( 0.9252 fF)
+Z(1,1) =   845.7 + j   -1274 (11.3579 fF)
+Z(1,2) =   -1833 + j   -5996 ( 2.4130 fF)
+Z(1,3) = -1.708e+04 + j -5.836e+04 ( 0.2479 fF)
+Z(1,4) = -2.271e+04 + j -8.047e+04 ( 0.1798 fF)
+Z(1,5) =   -1889 + j   -9815 ( 1.4741 fF)
+Z(1,6) =  -653.2 + j   -4613 ( 3.1364 fF)
+Z(1,7) =   -2048 + j   -9724 ( 1.4879 fF)
+Z(2,2) =    2055 + j   -2885 ( 5.0159 fF)
+Z(2,3) =   -5674 + j -2.973e+04 ( 0.4867 fF)
+Z(2,4) = -1.027e+05 + j -1.242e+05 ( 0.1165 fF)
+Z(2,5) =   -6726 + j -1.62e+04 ( 0.8934 fF)
+Z(2,6) =   -1884 + j   -9675 ( 1.4954 fF)
+Z(2,7) =   -2707 + j -2.38e+04 ( 0.6080 fF)
+Z(3,3) = 1.309e+04 + j -1.761e+04 ( 0.8217 fF)
+Z(3,4) =   -1454 + j -3.432e+04 ( 0.4215 fF)
+Z(3,5) = -5.029e+04 + j -7.6e+04 ( 0.1904 fF)
+Z(3,6) = -1.496e+04 + j -5.258e+04 ( 0.2751 fF)
+Z(3,7) = -1.97e+04 + j -1.406e+05 ( 0.1029 fF)
+Z(4,4) = 1.956e+04 + j -2.636e+04 ( 0.5489 fF)
+Z(4,5) =   -4780 + j -3.33e+04 ( 0.4345 fF)
+Z(4,6) = -2.643e+04 + j -8.816e+04 ( 0.1641 fF)
+Z(4,7) = -2.966e+04 + j -2.085e+05 ( 0.0694 fF)
+Z(5,5) =    2138 + j   -2877 ( 5.0289 fF)
+Z(5,6) =   -1797 + j   -5810 ( 2.4904 fF)
+Z(5,7) =   -3181 + j -2.338e+04 ( 0.6188 fF)
+Z(6,6) =   909.6 + j   -1271 (11.3865 fF)
+Z(6,7) =   -1817 + j   -5869 ( 2.4653 fF)
+Z(7,7) =    1849 + j   -2826 ( 5.1205 fF)
+ASITIC>  
+
+lambda = 6818.18, delta =  0.96
+
+maxL = 340.91, maxT =  0.77, maxW =  0.77
+Generating inductance matrix (240x240)..
+Inverting matrix......
+L =  4.605e-10		R =     2.0942
+ASITIC>  
+BL_200-S: at 11.500000 GHz R = 2.202242.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 18.214829.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 6521.74, delta =  0.94
+
+maxL = 326.09, maxT =  0.75, maxW =  0.75
+Performing Analysis at 11.50 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 11.50.
+Tried using . as path.
+
+
+Generating data at 11.50 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (264x264)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=11.50 GHz:  Q = 11.597,13.135,14.975
+L  = 0.461 nH	R  =  1.79
+Cs1=  25.7 fF	Rs1=   364
+Cs2=  17.8 fF	Rs2=   544	f_res = 46.24GHz
+ASITIC>  
+
+lambda = 6521.74, delta =  0.94
+
+maxL = 326.09, maxT =  0.75, maxW =  0.75
+Performing Analysis at 11.50 GHz
+Generating capacitance matrix (16x16)..
+At 11.500 GHz:
+Total Capacitance = 43.159 (fF)
+Total Resistance = 218.025.
+Capacitance matrix:
+Z(0,0) =    1729 + j   -2773 ( 4.9915 fF)
+Z(0,1) =   -1706 + j   -5734 ( 2.4136 fF)
+Z(0,2) =   -2662 + j -2.287e+04 ( 0.6051 fF)
+Z(0,3) = -1.61e+04 + j -1.356e+05 ( 0.1021 fF)
+Z(0,4) = -2.429e+04 + j -2.041e+05 ( 0.0678 fF)
+Z(0,5) =   -1990 + j -2.287e+04 ( 0.6052 fF)
+Z(0,6) =   -1728 + j   -9231 ( 1.4992 fF)
+Z(0,7) =   -6481 + j -1.491e+04 ( 0.9285 fF)
+Z(1,1) =   820.4 + j   -1252 (11.0574 fF)
+Z(1,2) =   -1682 + j   -5713 ( 2.4224 fF)
+Z(1,3) = -1.515e+04 + j -5.592e+04 ( 0.2475 fF)
+Z(1,4) = -2.024e+04 + j -7.703e+04 ( 0.1797 fF)
+Z(1,5) =   -1605 + j   -9412 ( 1.4705 fF)
+Z(1,6) =  -523.7 + j   -4427 ( 3.1262 fF)
+Z(1,7) =   -1764 + j   -9322 ( 1.4846 fF)
+Z(2,2) =    1999 + j   -2837 ( 4.8774 fF)
+Z(2,3) =   -5380 + j -2.829e+04 ( 0.4892 fF)
+Z(2,4) = -9.539e+04 + j -1.182e+05 ( 0.1171 fF)
+Z(2,5) =   -6169 + j -1.545e+04 ( 0.8958 fF)
+Z(2,6) =   -1603 + j   -9277 ( 1.4919 fF)
+Z(2,7) =   -2044 + j -2.284e+04 ( 0.6059 fF)
+Z(3,3) = 1.276e+04 + j -1.733e+04 ( 0.7986 fF)
+Z(3,4) =   -1417 + j -3.28e+04 ( 0.4220 fF)
+Z(3,5) = -4.68e+04 + j -7.213e+04 ( 0.1919 fF)
+Z(3,6) = -1.333e+04 + j -5.033e+04 ( 0.2750 fF)
+Z(3,7) = -1.573e+04 + j -1.349e+05 ( 0.1026 fF)
+Z(4,4) = 1.907e+04 + j -2.594e+04 ( 0.5335 fF)
+Z(4,5) =   -4544 + j -3.172e+04 ( 0.4363 fF)
+Z(4,6) = -2.339e+04 + j -8.45e+04 ( 0.1638 fF)
+Z(4,7) = -2.383e+04 + j -2.001e+05 ( 0.0692 fF)
+Z(5,5) =    2084 + j   -2832 ( 4.8865 fF)
+Z(5,6) =   -1649 + j   -5535 ( 2.5002 fF)
+Z(5,7) =   -2485 + j -2.242e+04 ( 0.6173 fF)
+Z(6,6) =   885.2 + j   -1250 (11.0703 fF)
+Z(6,7) =   -1669 + j   -5592 ( 2.4749 fF)
+Z(7,7) =    1792 + j   -2776 ( 4.9847 fF)
+ASITIC>  
+
+lambda = 6521.74, delta =  0.94
+
+maxL = 326.09, maxT =  0.75, maxW =  0.75
+Generating inductance matrix (264x264)..
+Inverting matrix......
+L =  4.602e-10		R =     2.1204
+ASITIC>  
+BL_200-S: at 12.000000 GHz R = 2.237233.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 19.006778.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 6250.00, delta =  0.92
+
+maxL = 312.50, maxT =  0.74, maxW =  0.74
+Performing Analysis at 12.00 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 12.00.
+Tried using . as path.
+
+
+Generating data at 12.00 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (264x264)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=12.00 GHz:  Q = 11.698,13.367,15.403
+L  =  0.46 nH	R  =  1.78
+Cs1=  25.1 fF	Rs1=   354
+Cs2=  17.3 fF	Rs2=   529	f_res = 46.85GHz
+ASITIC>  
+
+lambda = 6250.00, delta =  0.92
+
+maxL = 312.50, maxT =  0.74, maxW =  0.74
+Performing Analysis at 12.00 GHz
+Generating capacitance matrix (16x16)..
+At 12.000 GHz:
+Total Capacitance = 42.037 (fF)
+Total Resistance = 211.755.
+Capacitance matrix:
+Z(0,0) =    1673 + j   -2724 ( 4.8688 fF)
+Z(0,1) =   -1573 + j   -5475 ( 2.4225 fF)
+Z(0,2) =   -2040 + j -2.197e+04 ( 0.6036 fF)
+Z(0,3) = -1.264e+04 + j -1.303e+05 ( 0.1018 fF)
+Z(0,4) = -1.903e+04 + j -1.962e+05 ( 0.0676 fF)
+Z(0,5) =   -1410 + j -2.199e+04 ( 0.6030 fF)
+Z(0,6) =   -1482 + j   -8868 ( 1.4957 fF)
+Z(0,7) =   -5995 + j -1.423e+04 ( 0.9317 fF)
+Z(1,1) =   795.6 + j   -1231 (10.7782 fF)
+Z(1,2) =   -1550 + j   -5455 ( 2.4312 fF)
+Z(1,3) = -1.346e+04 + j -5.367e+04 ( 0.2471 fF)
+Z(1,4) = -1.808e+04 + j -7.387e+04 ( 0.1795 fF)
+Z(1,5) =   -1356 + j   -9042 ( 1.4668 fF)
+Z(1,6) =  -410.5 + j   -4257 ( 3.1157 fF)
+Z(1,7) =   -1515 + j   -8955 ( 1.4811 fF)
+Z(2,2) =    1945 + j   -2793 ( 4.7482 fF)
+Z(2,3) =   -5113 + j -2.697e+04 ( 0.4917 fF)
+Z(2,4) = -8.888e+04 + j -1.127e+05 ( 0.1177 fF)
+Z(2,5) =   -5677 + j -1.477e+04 ( 0.8981 fF)
+Z(2,6) =   -1357 + j   -8912 ( 1.4882 fF)
+Z(2,7) =   -1463 + j -2.197e+04 ( 0.6038 fF)
+Z(3,3) = 1.244e+04 + j -1.707e+04 ( 0.7771 fF)
+Z(3,4) =   -1382 + j -3.14e+04 ( 0.4224 fF)
+Z(3,5) = -4.369e+04 + j -6.858e+04 ( 0.1934 fF)
+Z(3,6) = -1.19e+04 + j -4.827e+04 ( 0.2748 fF)
+Z(3,7) = -1.225e+04 + j -1.297e+05 ( 0.1022 fF)
+Z(4,4) = 1.858e+04 + j -2.555e+04 ( 0.5191 fF)
+Z(4,5) =   -4330 + j -3.028e+04 ( 0.4380 fF)
+Z(4,6) = -2.073e+04 + j -8.114e+04 ( 0.1635 fF)
+Z(4,7) = -1.873e+04 + j -1.924e+05 ( 0.0689 fF)
+Z(5,5) =    2031 + j   -2790 ( 4.7533 fF)
+Z(5,6) =   -1518 + j   -5286 ( 2.5093 fF)
+Z(5,7) =   -1876 + j -2.154e+04 ( 0.6157 fF)
+Z(6,6) =   861.2 + j   -1231 (10.7751 fF)
+Z(6,7) =   -1537 + j   -5340 ( 2.4839 fF)
+Z(7,7) =    1736 + j   -2730 ( 4.8586 fF)
+ASITIC>  
+
+lambda = 6250.00, delta =  0.92
+
+maxL = 312.50, maxT =  0.74, maxW =  0.74
+Generating inductance matrix (264x264)..
+Inverting matrix......
+L =  4.599e-10		R =     2.1368
+ASITIC>  
+BL_200-S: at 12.500000 GHz R = 2.271979.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 19.798726.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 6000.00, delta =  0.90
+
+maxL = 300.00, maxT =  0.72, maxW =  0.72
+Performing Analysis at 12.50 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 12.50.
+Tried using . as path.
+
+
+Generating data at 12.50 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (264x264)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=12.50 GHz:  Q = 11.776,13.574,15.813
+L  =  0.46 nH	R  =  1.76
+Cs1=  24.5 fF	Rs1=   343
+Cs2=  16.9 fF	Rs2=   514	f_res = 47.43GHz
+ASITIC>  
+
+lambda = 6000.00, delta =  0.90
+
+maxL = 300.00, maxT =  0.72, maxW =  0.72
+Performing Analysis at 12.50 GHz
+Generating capacitance matrix (16x16)..
+At 12.500 GHz:
+Total Capacitance = 40.992 (fF)
+Total Resistance = 205.618.
+Capacitance matrix:
+Z(0,0) =    1618 + j   -2678 ( 4.7550 fF)
+Z(0,1) =   -1455 + j   -5238 ( 2.4308 fF)
+Z(0,2) =   -1491 + j -2.115e+04 ( 0.6020 fF)
+Z(0,3) =   -9596 + j -1.255e+05 ( 0.1014 fF)
+Z(0,4) = -1.44e+04 + j -1.89e+05 ( 0.0674 fF)
+Z(0,5) =  -899.8 + j -2.119e+04 ( 0.6008 fF)
+Z(0,6) =   -1266 + j   -8534 ( 1.4920 fF)
+Z(0,7) =   -5563 + j -1.362e+04 ( 0.9349 fF)
+Z(1,1) =   771.4 + j   -1210 (10.5186 fF)
+Z(1,2) =   -1432 + j   -5220 ( 2.4394 fF)
+Z(1,3) = -1.197e+04 + j -5.161e+04 ( 0.2467 fF)
+Z(1,4) = -1.617e+04 + j -7.097e+04 ( 0.1794 fF)
+Z(1,5) =   -1138 + j   -8703 ( 1.4629 fF)
+Z(1,6) =  -311.1 + j   -4101 ( 3.1050 fF)
+Z(1,7) =   -1297 + j   -8617 ( 1.4776 fF)
+Z(2,2) =    1891 + j   -2751 ( 4.6276 fF)
+Z(2,3) =   -4871 + j -2.577e+04 ( 0.4941 fF)
+Z(2,4) = -8.305e+04 + j -1.076e+05 ( 0.1183 fF)
+Z(2,5) =   -5241 + j -1.414e+04 ( 0.9004 fF)
+Z(2,6) =   -1141 + j   -8577 ( 1.4844 fF)
+Z(2,7) =  -953.1 + j -2.116e+04 ( 0.6016 fF)
+Z(3,3) = 1.212e+04 + j -1.682e+04 ( 0.7569 fF)
+Z(3,4) =   -1350 + j -3.012e+04 ( 0.4228 fF)
+Z(3,5) = -4.091e+04 + j -6.533e+04 ( 0.1949 fF)
+Z(3,6) = -1.064e+04 + j -4.637e+04 ( 0.2746 fF)
+Z(3,7) =   -9190 + j -1.25e+05 ( 0.1019 fF)
+Z(4,4) = 1.811e+04 + j -2.518e+04 ( 0.5057 fF)
+Z(4,5) =   -4135 + j -2.896e+04 ( 0.4396 fF)
+Z(4,6) = -1.838e+04 + j -7.804e+04 ( 0.1631 fF)
+Z(4,7) = -1.425e+04 + j -1.853e+05 ( 0.0687 fF)
+Z(5,5) =    1978 + j   -2751 ( 4.6287 fF)
+Z(5,6) =   -1402 + j   -5057 ( 2.5178 fF)
+Z(5,7) =   -1339 + j -2.073e+04 ( 0.6141 fF)
+Z(6,6) =   837.6 + j   -1213 (10.4997 fF)
+Z(6,7) =   -1421 + j   -5109 ( 2.4923 fF)
+Z(7,7) =    1682 + j   -2685 ( 4.7414 fF)
+ASITIC>  
+
+lambda = 6000.00, delta =  0.90
+
+maxL = 300.00, maxT =  0.72, maxW =  0.72
+Generating inductance matrix (264x264)..
+Inverting matrix......
+L =  4.597e-10		R =     2.1527
+ASITIC>  
+BL_200-S: at 12.999999 GHz R = 2.306458.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 20.590675.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 5769.23, delta =  0.88
+
+maxL = 288.46, maxT =  0.71, maxW =  0.71
+Performing Analysis at 13.00 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 13.00.
+Tried using . as path.
+
+
+Generating data at 13.00 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (264x264)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=13.00 GHz:  Q = 11.830,13.756,16.203
+L  =  0.46 nH	R  =  1.75
+Cs1=  23.9 fF	Rs1=   333
+Cs2=  16.5 fF	Rs2=   499	f_res = 48.00GHz
+ASITIC>  
+
+lambda = 5769.23, delta =  0.88
+
+maxL = 288.46, maxT =  0.71, maxW =  0.71
+Performing Analysis at 13.00 GHz
+Generating capacitance matrix (16x16)..
+At 13.000 GHz:
+Total Capacitance = 40.019 (fF)
+Total Resistance = 199.626.
+Capacitance matrix:
+Z(0,0) =    1565 + j   -2633 ( 4.6495 fF)
+Z(0,1) =   -1349 + j   -5020 ( 2.4387 fF)
+Z(0,2) =   -1005 + j -2.039e+04 ( 0.6005 fF)
+Z(0,3) =   -6909 + j -1.211e+05 ( 0.1011 fF)
+Z(0,4) = -1.032e+04 + j -1.824e+05 ( 0.0671 fF)
+Z(0,5) =  -449.8 + j -2.046e+04 ( 0.5985 fF)
+Z(0,6) =   -1075 + j   -8226 ( 1.4883 fF)
+Z(0,7) =   -5177 + j -1.305e+04 ( 0.9380 fF)
+Z(1,1) =   747.9 + j   -1191 (10.2774 fF)
+Z(1,2) =   -1327 + j   -5003 ( 2.4471 fF)
+Z(1,3) = -1.064e+04 + j -4.97e+04 ( 0.2463 fF)
+Z(1,4) = -1.448e+04 + j -6.83e+04 ( 0.1793 fF)
+Z(1,5) =    -945 + j   -8391 ( 1.4590 fF)
+Z(1,6) =  -223.3 + j   -3957 ( 3.0939 fF)
+Z(1,7) =   -1104 + j   -8306 ( 1.4739 fF)
+Z(2,2) =    1839 + j   -2712 ( 4.5150 fF)
+Z(2,3) =   -4650 + j -2.466e+04 ( 0.4965 fF)
+Z(2,4) = -7.782e+04 + j -1.029e+05 ( 0.1190 fF)
+Z(2,5) =   -4852 + j -1.356e+04 ( 0.9026 fF)
+Z(2,6) =  -949.6 + j   -8269 ( 1.4805 fF)
+Z(2,7) =  -502.7 + j -2.043e+04 ( 0.5993 fF)
+Z(3,3) = 1.18e+04 + j -1.659e+04 ( 0.7380 fF)
+Z(3,4) =   -1321 + j -2.893e+04 ( 0.4231 fF)
+Z(3,5) = -3.841e+04 + j -6.234e+04 ( 0.1964 fF)
+Z(3,6) =   -9523 + j -4.462e+04 ( 0.2744 fF)
+Z(3,7) =   -6490 + j -1.206e+05 ( 0.1015 fF)
+Z(4,4) = 1.764e+04 + j -2.483e+04 ( 0.4931 fF)
+Z(4,5) =   -3957 + j -2.775e+04 ( 0.4413 fF)
+Z(4,6) = -1.63e+04 + j -7.518e+04 ( 0.1629 fF)
+Z(4,7) = -1.03e+04 + j -1.788e+05 ( 0.0685 fF)
+Z(5,5) =    1927 + j   -2713 ( 4.5122 fF)
+Z(5,6) =   -1299 + j   -4847 ( 2.5259 fF)
+Z(5,7) =  -863.7 + j -1.999e+04 ( 0.6125 fF)
+Z(6,6) =   814.5 + j   -1195 (10.2426 fF)
+Z(6,7) =   -1317 + j   -4897 ( 2.5002 fF)
+Z(7,7) =    1629 + j   -2643 ( 4.6326 fF)
+ASITIC>  
+
+lambda = 5769.23, delta =  0.88
+
+maxL = 288.46, maxT =  0.71, maxW =  0.71
+Generating inductance matrix (264x264)..
+Inverting matrix......
+L =  4.595e-10		R =     2.1682
+ASITIC>  
+BL_200-S: at 13.500000 GHz R = 2.340654.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 21.382625.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 5555.56, delta =  0.87
+
+maxL = 277.78, maxT =  0.69, maxW =  0.69
+Performing Analysis at 13.50 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 13.50.
+Tried using . as path.
+
+
+Generating data at 13.50 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (288x288)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=13.50 GHz:  Q = 11.760,13.775,16.378
+L  =  0.46 nH	R  =  1.76
+Cs1=  23.4 fF	Rs1=   323
+Cs2=  16.2 fF	Rs2=   485	f_res = 48.56GHz
+ASITIC>  
+
+lambda = 5555.56, delta =  0.87
+
+maxL = 277.78, maxT =  0.69, maxW =  0.69
+Performing Analysis at 13.50 GHz
+Generating capacitance matrix (16x16)..
+At 13.500 GHz:
+Total Capacitance = 39.112 (fF)
+Total Resistance = 193.785.
+Capacitance matrix:
+Z(0,0) =    1514 + j   -2590 ( 4.5516 fF)
+Z(0,1) =   -1254 + j   -4820 ( 2.4461 fF)
+Z(0,2) =  -573.4 + j -1.969e+04 ( 0.5989 fF)
+Z(0,3) =   -4527 + j -1.171e+05 ( 0.1007 fF)
+Z(0,4) =   -6700 + j -1.763e+05 ( 0.0669 fF)
+Z(0,5) =  -50.96 + j -1.978e+04 ( 0.5961 fF)
+Z(0,6) =  -906.2 + j   -7942 ( 1.4845 fF)
+Z(0,7) =   -4830 + j -1.253e+04 ( 0.9411 fF)
+Z(1,1) =     725 + j   -1173 (10.0529 fF)
+Z(1,2) =   -1232 + j   -4803 ( 2.4543 fF)
+Z(1,3) =   -9466 + j -4.793e+04 ( 0.2460 fF)
+Z(1,4) = -1.297e+04 + j -6.582e+04 ( 0.1791 fF)
+Z(1,5) =  -773.9 + j   -8103 ( 1.4550 fF)
+Z(1,6) =  -145.6 + j   -3824 ( 3.0826 fF)
+Z(1,7) =  -932.3 + j   -8019 ( 1.4702 fF)
+Z(2,2) =    1788 + j   -2673 ( 4.4099 fF)
+Z(2,3) =   -4447 + j -2.364e+04 ( 0.4987 fF)
+Z(2,4) = -7.309e+04 + j -9.851e+04 ( 0.1197 fF)
+Z(2,5) =   -4503 + j -1.303e+04 ( 0.9048 fF)
+Z(2,6) =  -780.1 + j   -7984 ( 1.4766 fF)
+Z(2,7) =  -103.4 + j -1.975e+04 ( 0.5970 fF)
+Z(3,3) = 1.15e+04 + j -1.637e+04 ( 0.7204 fF)
+Z(3,4) =   -1294 + j -2.784e+04 ( 0.4235 fF)
+Z(3,5) = -3.615e+04 + j -5.957e+04 ( 0.1979 fF)
+Z(3,6) =   -8527 + j -4.301e+04 ( 0.2741 fF)
+Z(3,7) =   -4095 + j -1.165e+05 ( 0.1012 fF)
+Z(4,4) = 1.718e+04 + j -2.45e+04 ( 0.4813 fF)
+Z(4,5) =   -3793 + j -2.662e+04 ( 0.4428 fF)
+Z(4,6) = -1.444e+04 + j -7.252e+04 ( 0.1626 fF)
+Z(4,7) =   -6789 + j -1.728e+05 ( 0.0682 fF)
+Z(5,5) =    1877 + j   -2677 ( 4.4032 fF)
+Z(5,6) =   -1206 + j   -4653 ( 2.5335 fF)
+Z(5,7) =  -441.2 + j -1.93e+04 ( 0.6109 fF)
+Z(6,6) =     792 + j   -1179 (10.0025 fF)
+Z(6,7) =   -1224 + j   -4701 ( 2.5077 fF)
+Z(7,7) =    1578 + j   -2602 ( 4.5314 fF)
+ASITIC>  
+
+lambda = 5555.56, delta =  0.87
+
+maxL = 277.78, maxT =  0.69, maxW =  0.69
+Generating inductance matrix (288x288)..
+Inverting matrix......
+L =   4.59e-10		R =     2.2090
+ASITIC>  
+BL_200-S: at 14.000000 GHz R = 2.374556.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 22.174574.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 5357.14, delta =  0.85
+
+maxL = 267.86, maxT =  0.68, maxW =  0.68
+Performing Analysis at 14.00 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 14.00.
+Tried using . as path.
+
+
+Generating data at 14.00 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (288x288)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=14.00 GHz:  Q = 11.770,13.903,16.716
+L  =  0.46 nH	R  =  1.75
+Cs1=  22.9 fF	Rs1=   314
+Cs2=  15.8 fF	Rs2=   471	f_res = 49.08GHz
+ASITIC>  
+
+lambda = 5357.14, delta =  0.85
+
+maxL = 267.86, maxT =  0.68, maxW =  0.68
+Performing Analysis at 14.00 GHz
+Generating capacitance matrix (16x16)..
+At 14.000 GHz:
+Total Capacitance = 38.267 (fF)
+Total Resistance = 188.102.
+Capacitance matrix:
+Z(0,0) =    1465 + j   -2549 ( 4.4607 fF)
+Z(0,1) =   -1169 + j   -4634 ( 2.4531 fF)
+Z(0,2) =    -188 + j -1.903e+04 ( 0.5973 fF)
+Z(0,3) =   -2408 + j -1.133e+05 ( 0.1003 fF)
+Z(0,4) =   -3479 + j -1.706e+05 ( 0.0666 fF)
+Z(0,5) =   303.9 + j -1.915e+04 ( 0.5937 fF)
+Z(0,6) =  -755.4 + j   -7678 ( 1.4806 fF)
+Z(0,7) =   -4518 + j -1.204e+04 ( 0.9442 fF)
+Z(1,1) =   702.8 + j   -1155 ( 9.8441 fF)
+Z(1,2) =   -1147 + j   -4619 ( 2.4612 fF)
+Z(1,3) =   -8413 + j -4.629e+04 ( 0.2456 fF)
+Z(1,4) = -1.162e+04 + j -6.353e+04 ( 0.1789 fF)
+Z(1,5) =  -621.6 + j   -7835 ( 1.4509 fF)
+Z(1,6) =  -76.56 + j   -3702 ( 3.0710 fF)
+Z(1,7) =  -779.8 + j   -7752 ( 1.4665 fF)
+Z(2,2) =    1738 + j   -2637 ( 4.3117 fF)
+Z(2,3) =   -4260 + j -2.269e+04 ( 0.5010 fF)
+Z(2,4) = -6.88e+04 + j -9.443e+04 ( 0.1204 fF)
+Z(2,5) =   -4189 + j -1.253e+04 ( 0.9069 fF)
+Z(2,6) =  -629.2 + j   -7720 ( 1.4725 fF)
+Z(2,7) =   251.9 + j -1.912e+04 ( 0.5946 fF)
+Z(3,3) = 1.12e+04 + j -1.615e+04 ( 0.7038 fF)
+Z(3,4) =   -1268 + j -2.682e+04 ( 0.4239 fF)
+Z(3,5) = -3.41e+04 + j -5.702e+04 ( 0.1994 fF)
+Z(3,6) =   -7637 + j -4.151e+04 ( 0.2739 fF)
+Z(3,7) =   -1965 + j -1.128e+05 ( 0.1008 fF)
+Z(4,4) = 1.673e+04 + j -2.417e+04 ( 0.4703 fF)
+Z(4,5) =   -3641 + j -2.558e+04 ( 0.4443 fF)
+Z(4,6) = -1.278e+04 + j -7.005e+04 ( 0.1623 fF)
+Z(4,7) =   -3670 + j -1.673e+05 ( 0.0680 fF)
+Z(5,5) =    1827 + j   -2643 ( 4.3011 fF)
+Z(5,6) =   -1122 + j   -4475 ( 2.5406 fF)
+Z(5,7) =  -64.04 + j -1.866e+04 ( 0.6093 fF)
+Z(6,6) =     770 + j   -1163 ( 9.7782 fF)
+Z(6,7) =   -1139 + j   -4521 ( 2.5148 fF)
+Z(7,7) =    1528 + j   -2562 ( 4.4373 fF)
+ASITIC>  
+
+lambda = 5357.14, delta =  0.85
+
+maxL = 267.86, maxT =  0.68, maxW =  0.68
+Generating inductance matrix (288x288)..
+Inverting matrix......
+L =  4.588e-10		R =     2.2251
+ASITIC>  
+BL_200-S: at 14.500000 GHz R = 2.408156.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 22.966522.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 5172.41, delta =  0.84
+
+maxL = 258.62, maxT =  0.67, maxW =  0.67
+Performing Analysis at 14.50 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 14.50.
+Tried using . as path.
+
+
+Generating data at 14.50 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (288x288)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=14.50 GHz:  Q = 11.760,14.009,17.034
+L  =  0.46 nH	R  =  1.73
+Cs1=  22.4 fF	Rs1=   304
+Cs2=  15.5 fF	Rs2=   458	f_res = 49.59GHz
+ASITIC>  
+
+lambda = 5172.41, delta =  0.84
+
+maxL = 258.62, maxT =  0.67, maxW =  0.67
+Performing Analysis at 14.50 GHz
+Generating capacitance matrix (16x16)..
+At 14.500 GHz:
+Total Capacitance = 37.477 (fF)
+Total Resistance = 182.579.
+Capacitance matrix:
+Z(0,0) =    1417 + j   -2508 ( 4.3763 fF)
+Z(0,1) =   -1091 + j   -4462 ( 2.4598 fF)
+Z(0,2) =   157.3 + j -1.843e+04 ( 0.5957 fF)
+Z(0,3) =  -516.9 + j -1.098e+05 ( 0.0999 fF)
+Z(0,4) =  -602.7 + j -1.653e+05 ( 0.0664 fF)
+Z(0,5) =   620.6 + j -1.857e+04 ( 0.5912 fF)
+Z(0,6) =  -620.7 + j   -7433 ( 1.4767 fF)
+Z(0,7) =   -4234 + j -1.159e+04 ( 0.9472 fF)
+Z(1,1) =   681.3 + j   -1137 ( 9.6495 fF)
+Z(1,2) =   -1070 + j   -4448 ( 2.4677 fF)
+Z(1,3) =   -7468 + j -4.476e+04 ( 0.2452 fF)
+Z(1,4) = -1.042e+04 + j -6.14e+04 ( 0.1788 fF)
+Z(1,5) =  -485.5 + j   -7587 ( 1.4467 fF)
+Z(1,6) =  -14.93 + j   -3588 ( 3.0593 fF)
+Z(1,7) =  -643.5 + j   -7505 ( 1.4626 fF)
+Z(2,2) =    1689 + j   -2601 ( 4.2200 fF)
+Z(2,3) =   -4088 + j -2.182e+04 ( 0.5031 fF)
+Z(2,4) = -6.489e+04 + j -9.063e+04 ( 0.1211 fF)
+Z(2,5) =   -3905 + j -1.207e+04 ( 0.9090 fF)
+Z(2,6) =  -494.3 + j   -7475 ( 1.4684 fF)
+Z(2,7) =     569 + j -1.854e+04 ( 0.5921 fF)
+Z(3,3) = 1.091e+04 + j -1.595e+04 ( 0.6883 fF)
+Z(3,4) =   -1244 + j -2.587e+04 ( 0.4243 fF)
+Z(3,5) = -3.222e+04 + j -5.465e+04 ( 0.2008 fF)
+Z(3,6) =   -6837 + j -4.011e+04 ( 0.2736 fF)
+Z(3,7) =  -61.65 + j -1.093e+05 ( 0.1004 fF)
+Z(4,4) = 1.629e+04 + j -2.387e+04 ( 0.4599 fF)
+Z(4,5) =   -3501 + j -2.462e+04 ( 0.4458 fF)
+Z(4,6) = -1.129e+04 + j -6.774e+04 ( 0.1620 fF)
+Z(4,7) =  -886.6 + j -1.622e+05 ( 0.0677 fF)
+Z(5,5) =    1779 + j   -2610 ( 4.2054 fF)
+Z(5,6) =   -1046 + j   -4309 ( 2.5474 fF)
+Z(5,7) =   273.9 + j -1.807e+04 ( 0.6076 fF)
+Z(6,6) =   748.5 + j   -1147 ( 9.5685 fF)
+Z(6,7) =   -1063 + j   -4353 ( 2.5215 fF)
+Z(7,7) =    1480 + j   -2523 ( 4.3498 fF)
+ASITIC>  
+
+lambda = 5172.41, delta =  0.84
+
+maxL = 258.62, maxT =  0.67, maxW =  0.67
+Generating inductance matrix (288x288)..
+Inverting matrix......
+L =  4.586e-10		R =     2.2408
+ASITIC>  
+BL_200-S: at 15.000001 GHz R = 2.441451.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 23.758473.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 5000.00, delta =  0.82
+
+maxL = 250.00, maxT =  0.66, maxW =  0.66
+Performing Analysis at 15.00 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 15.00.
+Tried using . as path.
+
+
+Generating data at 15.00 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (288x288)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=15.00 GHz:  Q = 11.732,14.093,17.331
+L  =  0.46 nH	R  =  1.72
+Cs1=    22 fF	Rs1=   295
+Cs2=  15.2 fF	Rs2=   444	f_res = 50.07GHz
+ASITIC>  
+
+lambda = 5000.00, delta =  0.82
+
+maxL = 250.00, maxT =  0.66, maxW =  0.66
+Performing Analysis at 15.00 GHz
+Generating capacitance matrix (16x16)..
+At 15.000 GHz:
+Total Capacitance = 36.741 (fF)
+Total Resistance = 177.221.
+Capacitance matrix:
+Z(0,0) =    1371 + j   -2469 ( 4.2978 fF)
+Z(0,1) =   -1021 + j   -4302 ( 2.4662 fF)
+Z(0,2) =   467.7 + j -1.786e+04 ( 0.5940 fF)
+Z(0,3) =    1176 + j -1.066e+05 ( 0.0995 fF)
+Z(0,4) =    1973 + j -1.604e+05 ( 0.0661 fF)
+Z(0,5) =   904.1 + j -1.802e+04 ( 0.5887 fF)
+Z(0,6) =    -500 + j   -7205 ( 1.4727 fF)
+Z(0,7) =   -3977 + j -1.117e+04 ( 0.9501 fF)
+Z(1,1) =   660.5 + j   -1121 ( 9.4681 fF)
+Z(1,2) =   -1001 + j   -4289 ( 2.4739 fF)
+Z(1,3) =   -6617 + j -4.333e+04 ( 0.2449 fF)
+Z(1,4) =   -9327 + j -5.941e+04 ( 0.1786 fF)
+Z(1,5) =  -363.5 + j   -7356 ( 1.4424 fF)
+Z(1,6) =   40.19 + j   -3482 ( 3.0472 fF)
+Z(1,7) =  -521.3 + j   -7274 ( 1.4587 fF)
+Z(2,2) =    1642 + j   -2567 ( 4.1341 fF)
+Z(2,3) =   -3928 + j -2.1e+04 ( 0.5052 fF)
+Z(2,4) = -6.132e+04 + j -8.709e+04 ( 0.1218 fF)
+Z(2,5) =   -3647 + j -1.165e+04 ( 0.9111 fF)
+Z(2,6) =  -373.3 + j   -7247 ( 1.4641 fF)
+Z(2,7) =     853 + j -1.8e+04 ( 0.5896 fF)
+Z(3,3) = 1.062e+04 + j -1.575e+04 ( 0.6738 fF)
+Z(3,4) =   -1222 + j -2.498e+04 ( 0.4247 fF)
+Z(3,5) = -3.051e+04 + j -5.245e+04 ( 0.2023 fF)
+Z(3,6) =   -6117 + j -3.881e+04 ( 0.2734 fF)
+Z(3,7) =    1643 + j -1.061e+05 ( 0.1000 fF)
+Z(4,4) = 1.587e+04 + j -2.357e+04 ( 0.4502 fF)
+Z(4,5) =   -3371 + j -2.372e+04 ( 0.4473 fF)
+Z(4,6) =   -9948 + j -6.559e+04 ( 0.1618 fF)
+Z(4,7) =    1605 + j -1.574e+05 ( 0.0674 fF)
+Z(5,5) =    1732 + j   -2578 ( 4.1158 fF)
+Z(5,6) =  -976.9 + j   -4155 ( 2.5538 fF)
+Z(5,7) =   577.8 + j -1.751e+04 ( 0.6059 fF)
+Z(6,6) =   727.7 + j   -1132 ( 9.3723 fF)
+Z(6,7) =  -994.3 + j   -4197 ( 2.5279 fF)
+Z(7,7) =    1434 + j   -2486 ( 4.2683 fF)
+ASITIC>  
+
+lambda = 5000.00, delta =  0.82
+
+maxL = 250.00, maxT =  0.66, maxW =  0.66
+Generating inductance matrix (288x288)..
+Inverting matrix......
+L =  4.584e-10		R =     2.2562
+ASITIC>  
+BL_200-S: at 15.500000 GHz R = 2.474438.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 24.550421.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 4838.71, delta =  0.81
+
+maxL = 241.94, maxT =  0.65, maxW =  0.65
+Performing Analysis at 15.50 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 15.50.
+Tried using . as path.
+
+
+Generating data at 15.50 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (288x288)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=15.50 GHz:  Q = 11.688,14.155,17.607
+L  =  0.46 nH	R  =   1.7
+Cs1=  21.6 fF	Rs1=   287
+Cs2=  14.9 fF	Rs2=   432	f_res = 50.53GHz
+ASITIC>  
+
+lambda = 4838.71, delta =  0.81
+
+maxL = 241.94, maxT =  0.65, maxW =  0.65
+Performing Analysis at 15.50 GHz
+Generating capacitance matrix (16x16)..
+At 15.500 GHz:
+Total Capacitance = 36.052 (fF)
+Total Resistance = 172.028.
+Capacitance matrix:
+Z(0,0) =    1326 + j   -2431 ( 4.2247 fF)
+Z(0,1) =    -957 + j   -4153 ( 2.4723 fF)
+Z(0,2) =   747.7 + j -1.734e+04 ( 0.5923 fF)
+Z(0,3) =    2696 + j -1.036e+05 ( 0.0991 fF)
+Z(0,4) =    4286 + j -1.559e+05 ( 0.0659 fF)
+Z(0,5) =    1159 + j -1.752e+04 ( 0.5861 fF)
+Z(0,6) =  -391.4 + j   -6992 ( 1.4686 fF)
+Z(0,7) =   -3742 + j -1.077e+04 ( 0.9530 fF)
+Z(1,1) =   640.4 + j   -1104 ( 9.2989 fF)
+Z(1,2) =  -936.8 + j   -4141 ( 2.4798 fF)
+Z(1,3) =   -5848 + j -4.199e+04 ( 0.2445 fF)
+Z(1,4) =   -8344 + j -5.755e+04 ( 0.1784 fF)
+Z(1,5) =  -253.9 + j   -7140 ( 1.4381 fF)
+Z(1,6) =   89.65 + j   -3383 ( 3.0350 fF)
+Z(1,7) =  -411.4 + j   -7058 ( 1.4547 fF)
+Z(2,2) =    1596 + j   -2533 ( 4.0537 fF)
+Z(2,3) =   -3779 + j -2.024e+04 ( 0.5073 fF)
+Z(2,4) = -5.804e+04 + j -8.378e+04 ( 0.1226 fF)
+Z(2,5) =   -3411 + j -1.125e+04 ( 0.9131 fF)
+Z(2,6) =  -264.5 + j   -7034 ( 1.4598 fF)
+Z(2,7) =    1108 + j -1.749e+04 ( 0.5870 fF)
+Z(3,3) = 1.034e+04 + j -1.555e+04 ( 0.6602 fF)
+Z(3,4) =   -1200 + j -2.416e+04 ( 0.4251 fF)
+Z(3,5) = -2.894e+04 + j -5.04e+04 ( 0.2037 fF)
+Z(3,6) =   -5466 + j -3.76e+04 ( 0.2731 fF)
+Z(3,7) =    3174 + j -1.03e+05 ( 0.0996 fF)
+Z(4,4) = 1.545e+04 + j -2.328e+04 ( 0.4411 fF)
+Z(4,5) =   -3249 + j -2.288e+04 ( 0.4487 fF)
+Z(4,6) =   -8735 + j -6.358e+04 ( 0.1615 fF)
+Z(4,7) =    3842 + j -1.529e+05 ( 0.0671 fF)
+Z(5,5) =    1686 + j   -2547 ( 4.0317 fF)
+Z(5,6) =    -914 + j   -4011 ( 2.5599 fF)
+Z(5,7) =   851.8 + j -1.7e+04 ( 0.6041 fF)
+Z(6,6) =   707.4 + j   -1117 ( 9.1886 fF)
+Z(6,7) =  -931.3 + j   -4052 ( 2.5340 fF)
+Z(7,7) =    1389 + j   -2449 ( 4.1923 fF)
+ASITIC>  
+
+lambda = 4838.71, delta =  0.81
+
+maxL = 241.94, maxT =  0.65, maxW =  0.65
+Generating inductance matrix (288x288)..
+Inverting matrix......
+L =  4.583e-10		R =     2.2713
+ASITIC>  
+BL_200-S: at 16.000000 GHz R = 2.507116.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 25.342370.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 4687.50, delta =  0.80
+
+maxL = 234.38, maxT =  0.64, maxW =  0.64
+Performing Analysis at 16.00 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 16.00.
+Tried using . as path.
+
+
+Generating data at 16.00 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (312x312)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=16.00 GHz:  Q = 11.672,14.260,17.960
+L  =  0.46 nH	R  =  1.67
+Cs1=  21.2 fF	Rs1=   278
+Cs2=  14.7 fF	Rs2=   419	f_res = 50.97GHz
+ASITIC>  
+
+lambda = 4687.50, delta =  0.80
+
+maxL = 234.38, maxT =  0.64, maxW =  0.64
+Performing Analysis at 16.00 GHz
+Generating capacitance matrix (16x16)..
+At 16.000 GHz:
+Total Capacitance = 35.408 (fF)
+Total Resistance = 167.000.
+Capacitance matrix:
+Z(0,0) =    1283 + j   -2393 ( 4.1565 fF)
+Z(0,1) =  -898.4 + j   -4014 ( 2.4781 fF)
+Z(0,2) =    1001 + j -1.684e+04 ( 0.5906 fF)
+Z(0,3) =    4064 + j -1.008e+05 ( 0.0987 fF)
+Z(0,4) =    6368 + j -1.516e+05 ( 0.0656 fF)
+Z(0,5) =    1388 + j -1.705e+04 ( 0.5834 fF)
+Z(0,6) =  -293.4 + j   -6792 ( 1.4645 fF)
+Z(0,7) =   -3526 + j -1.041e+04 ( 0.9558 fF)
+Z(1,1) =   620.9 + j   -1088 ( 9.1408 fF)
+Z(1,2) =  -878.6 + j   -4002 ( 2.4854 fF)
+Z(1,3) =   -5151 + j -4.074e+04 ( 0.2442 fF)
+Z(1,4) =   -7453 + j -5.581e+04 ( 0.1782 fF)
+Z(1,5) =    -155 + j   -6938 ( 1.4337 fF)
+Z(1,6) =   134.1 + j   -3291 ( 3.0226 fF)
+Z(1,7) =  -312.2 + j   -6857 ( 1.4507 fF)
+Z(2,2) =    1552 + j   -2500 ( 3.9784 fF)
+Z(2,3) =   -3639 + j -1.953e+04 ( 0.5094 fF)
+Z(2,4) = -5.503e+04 + j -8.068e+04 ( 0.1233 fF)
+Z(2,5) =   -3196 + j -1.087e+04 ( 0.9151 fF)
+Z(2,6) =  -166.4 + j   -6834 ( 1.4555 fF)
+Z(2,7) =    1337 + j -1.702e+04 ( 0.5844 fF)
+Z(3,3) = 1.007e+04 + j -1.537e+04 ( 0.6474 fF)
+Z(3,4) =   -1180 + j -2.338e+04 ( 0.4255 fF)
+Z(3,5) = -2.749e+04 + j -4.849e+04 ( 0.2052 fF)
+Z(3,6) =   -4876 + j -3.646e+04 ( 0.2728 fF)
+Z(3,7) =    4553 + j -1.002e+05 ( 0.0992 fF)
+Z(4,4) = 1.505e+04 + j -2.299e+04 ( 0.4326 fF)
+Z(4,5) =   -3136 + j -2.21e+04 ( 0.4501 fF)
+Z(4,6) =   -7634 + j -6.169e+04 ( 0.1612 fF)
+Z(4,7) =    5854 + j -1.488e+05 ( 0.0669 fF)
+Z(5,5) =    1642 + j   -2517 ( 3.9528 fF)
+Z(5,6) =  -856.5 + j   -3877 ( 2.5657 fF)
+Z(5,7) =    1100 + j -1.651e+04 ( 0.6023 fF)
+Z(6,6) =   687.7 + j   -1103 ( 9.0165 fF)
+Z(6,7) =  -873.7 + j   -3916 ( 2.5399 fF)
+Z(7,7) =    1345 + j   -2414 ( 4.1214 fF)
+ASITIC>  
+
+lambda = 4687.50, delta =  0.80
+
+maxL = 234.38, maxT =  0.64, maxW =  0.64
+Generating inductance matrix (312x312)..
+Inverting matrix......
+L =  4.582e-10		R =     2.2732
+ASITIC>  
+BL_200-S: at 16.500000 GHz R = 2.539487.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 26.134319.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 4545.45, delta =  0.78
+
+maxL = 227.27, maxT =  0.63, maxW =  0.63
+Performing Analysis at 16.50 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 16.50.
+Tried using . as path.
+
+
+Generating data at 16.50 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (312x312)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=16.50 GHz:  Q = 11.598,14.283,18.198
+L  =  0.46 nH	R  =  1.65
+Cs1=  20.9 fF	Rs1=   270
+Cs2=  14.4 fF	Rs2=   407	f_res = 51.39GHz
+ASITIC>  
+
+lambda = 4545.45, delta =  0.78
+
+maxL = 227.27, maxT =  0.63, maxW =  0.63
+Performing Analysis at 16.50 GHz
+Generating capacitance matrix (16x16)..
+At 16.500 GHz:
+Total Capacitance = 34.804 (fF)
+Total Resistance = 162.135.
+Capacitance matrix:
+Z(0,0) =    1242 + j   -2357 ( 4.0930 fF)
+Z(0,1) =  -844.7 + j   -3884 ( 2.4837 fF)
+Z(0,2) =    1231 + j -1.638e+04 ( 0.5888 fF)
+Z(0,3) =    5297 + j -9.811e+04 ( 0.0983 fF)
+Z(0,4) =    8247 + j -1.476e+05 ( 0.0653 fF)
+Z(0,5) =    1594 + j -1.661e+04 ( 0.5808 fF)
+Z(0,6) =  -204.9 + j   -6605 ( 1.4603 fF)
+Z(0,7) =   -3328 + j -1.006e+04 ( 0.9586 fF)
+Z(1,1) =   602.2 + j   -1073 ( 8.9929 fF)
+Z(1,2) =  -825.1 + j   -3873 ( 2.4908 fF)
+Z(1,3) =   -4518 + j -3.956e+04 ( 0.2438 fF)
+Z(1,4) =   -6643 + j -5.418e+04 ( 0.1780 fF)
+Z(1,5) =  -65.72 + j   -6749 ( 1.4293 fF)
+Z(1,6) =   174.2 + j   -3204 ( 3.0101 fF)
+Z(1,7) =  -222.7 + j   -6668 ( 1.4466 fF)
+Z(2,2) =    1509 + j   -2468 ( 3.9077 fF)
+Z(2,3) =   -3509 + j -1.886e+04 ( 0.5114 fF)
+Z(2,4) = -5.225e+04 + j -7.777e+04 ( 0.1240 fF)
+Z(2,5) =   -2999 + j -1.052e+04 ( 0.9170 fF)
+Z(2,6) =  -77.74 + j   -6647 ( 1.4511 fF)
+Z(2,7) =    1544 + j -1.658e+04 ( 0.5818 fF)
+Z(3,3) =    9810 + j -1.518e+04 ( 0.6353 fF)
+Z(3,4) =   -1161 + j -2.265e+04 ( 0.4258 fF)
+Z(3,5) = -2.615e+04 + j -4.67e+04 ( 0.2066 fF)
+Z(3,6) =   -4339 + j -3.54e+04 ( 0.2725 fF)
+Z(3,7) =    5797 + j -9.76e+04 ( 0.0988 fF)
+Z(4,4) = 1.465e+04 + j -2.272e+04 ( 0.4246 fF)
+Z(4,5) =   -3029 + j -2.136e+04 ( 0.4515 fF)
+Z(4,6) =   -6633 + j -5.992e+04 ( 0.1610 fF)
+Z(4,7) =    7668 + j -1.449e+05 ( 0.0666 fF)
+Z(5,5) =    1598 + j   -2487 ( 3.8786 fF)
+Z(5,6) =  -803.8 + j   -3751 ( 2.5712 fF)
+Z(5,7) =    1325 + j -1.606e+04 ( 0.6005 fF)
+Z(6,6) =   668.6 + j   -1089 ( 8.8551 fF)
+Z(6,7) =  -820.9 + j   -3789 ( 2.5454 fF)
+Z(7,7) =    1303 + j   -2379 ( 4.0551 fF)
+ASITIC>  
+
+lambda = 4545.45, delta =  0.78
+
+maxL = 227.27, maxT =  0.63, maxW =  0.63
+Generating inductance matrix (312x312)..
+Inverting matrix......
+L =  4.581e-10		R =     2.2871
+ASITIC>  
+BL_200-S: at 16.999999 GHz R = 2.571552.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 26.926267.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 4411.76, delta =  0.77
+
+maxL = 220.59, maxT =  0.62, maxW =  0.62
+Performing Analysis at 17.00 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 17.00.
+Tried using . as path.
+
+
+Generating data at 17.00 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (312x312)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=17.00 GHz:  Q = 11.512,14.287,18.413
+L  =  0.46 nH	R  =  1.63
+Cs1=  20.5 fF	Rs1=   262
+Cs2=  14.2 fF	Rs2=   396	f_res = 51.80GHz
+ASITIC>  
+
+lambda = 4411.76, delta =  0.77
+
+maxL = 220.59, maxT =  0.62, maxW =  0.62
+Performing Analysis at 17.00 GHz
+Generating capacitance matrix (16x16)..
+At 17.000 GHz:
+Total Capacitance = 34.239 (fF)
+Total Resistance = 157.433.
+Capacitance matrix:
+Z(0,0) =    1202 + j   -2321 ( 4.0337 fF)
+Z(0,1) =  -795.2 + j   -3761 ( 2.4890 fF)
+Z(0,2) =    1439 + j -1.595e+04 ( 0.5871 fF)
+Z(0,3) =    6411 + j -9.564e+04 ( 0.0979 fF)
+Z(0,4) =    9945 + j -1.439e+05 ( 0.0651 fF)
+Z(0,5) =    1780 + j -1.62e+04 ( 0.5780 fF)
+Z(0,6) =  -124.7 + j   -6430 ( 1.4561 fF)
+Z(0,7) =   -3146 + j   -9738 ( 0.9613 fF)
+Z(1,1) =   584.2 + j   -1057 ( 8.8546 fF)
+Z(1,2) =    -776 + j   -3751 ( 2.4959 fF)
+Z(1,3) =   -3940 + j -3.845e+04 ( 0.2435 fF)
+Z(1,4) =   -5904 + j -5.265e+04 ( 0.1778 fF)
+Z(1,5) =   15.16 + j   -6571 ( 1.4248 fF)
+Z(1,6) =   210.4 + j   -3123 ( 2.9973 fF)
+Z(1,7) =  -141.5 + j   -6490 ( 1.4425 fF)
+Z(2,2) =    1467 + j   -2437 ( 3.8414 fF)
+Z(2,3) =   -3386 + j -1.824e+04 ( 0.5134 fF)
+Z(2,4) = -4.968e+04 + j -7.505e+04 ( 0.1248 fF)
+Z(2,5) =   -2818 + j -1.019e+04 ( 0.9189 fF)
+Z(2,6) =   2.602 + j   -6472 ( 1.4466 fF)
+Z(2,7) =    1731 + j -1.617e+04 ( 0.5791 fF)
+Z(3,3) =    9556 + j -1.5e+04 ( 0.6240 fF)
+Z(3,4) =   -1143 + j -2.197e+04 ( 0.4262 fF)
+Z(3,5) = -2.491e+04 + j -4.502e+04 ( 0.2079 fF)
+Z(3,6) =   -3850 + j -3.439e+04 ( 0.2722 fF)
+Z(3,7) =    6922 + j -9.513e+04 ( 0.0984 fF)
+Z(4,4) = 1.427e+04 + j -2.245e+04 ( 0.4170 fF)
+Z(4,5) =   -2928 + j -2.067e+04 ( 0.4529 fF)
+Z(4,6) =   -5720 + j -5.825e+04 ( 0.1607 fF)
+Z(4,7) =    9307 + j -1.412e+05 ( 0.0663 fF)
+Z(5,5) =    1556 + j   -2458 ( 3.8088 fF)
+Z(5,6) =  -755.3 + j   -3634 ( 2.5765 fF)
+Z(5,7) =    1529 + j -1.564e+04 ( 0.5987 fF)
+Z(6,6) =     650 + j   -1076 ( 8.7035 fF)
+Z(6,7) =  -772.3 + j   -3670 ( 2.5508 fF)
+Z(7,7) =    1263 + j   -2345 ( 3.9932 fF)
+ASITIC>  
+
+lambda = 4411.76, delta =  0.77
+
+maxL = 220.59, maxT =  0.62, maxW =  0.62
+Generating inductance matrix (312x312)..
+Inverting matrix......
+L =   4.58e-10		R =     2.3007
+ASITIC>  
+BL_200-S: at 17.500000 GHz R = 2.603314.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 27.718218.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 4285.71, delta =  0.76
+
+maxL = 214.29, maxT =  0.61, maxW =  0.61
+Performing Analysis at 17.50 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 17.50.
+Tried using . as path.
+
+
+Generating data at 17.50 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (312x312)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=17.50 GHz:  Q = 11.413,14.272,18.607
+L  =  0.46 nH	R  =  1.61
+Cs1=  20.2 fF	Rs1=   255
+Cs2=    14 fF	Rs2=   384	f_res = 52.19GHz
+ASITIC>  
+
+lambda = 4285.71, delta =  0.76
+
+maxL = 214.29, maxT =  0.61, maxW =  0.61
+Performing Analysis at 17.50 GHz
+Generating capacitance matrix (16x16)..
+At 17.500 GHz:
+Total Capacitance = 33.708 (fF)
+Total Resistance = 152.890.
+Capacitance matrix:
+Z(0,0) =    1164 + j   -2286 ( 3.9782 fF)
+Z(0,1) =  -749.6 + j   -3646 ( 2.4941 fF)
+Z(0,2) =    1630 + j -1.554e+04 ( 0.5853 fF)
+Z(0,3) =    7419 + j -9.332e+04 ( 0.0975 fF)
+Z(0,4) = 1.148e+04 + j -1.404e+05 ( 0.0648 fF)
+Z(0,5) =    1949 + j -1.581e+04 ( 0.5753 fF)
+Z(0,6) =  -51.94 + j   -6264 ( 1.4518 fF)
+Z(0,7) =   -2978 + j   -9434 ( 0.9640 fF)
+Z(1,1) =   566.8 + j   -1042 ( 8.7249 fF)
+Z(1,2) =  -730.6 + j   -3637 ( 2.5008 fF)
+Z(1,3) =   -3412 + j -3.741e+04 ( 0.2431 fF)
+Z(1,4) =   -5229 + j -5.12e+04 ( 0.1776 fF)
+Z(1,5) =   88.55 + j   -6403 ( 1.4203 fF)
+Z(1,6) =   243.1 + j   -3047 ( 2.9845 fF)
+Z(1,7) =  -67.75 + j   -6323 ( 1.4383 fF)
+Z(2,2) =    1426 + j   -2407 ( 3.7790 fF)
+Z(2,3) =   -3271 + j -1.765e+04 ( 0.5153 fF)
+Z(2,4) = -4.73e+04 + j -7.248e+04 ( 0.1255 fF)
+Z(2,5) =   -2651 + j   -9878 ( 0.9207 fF)
+Z(2,6) =   75.54 + j   -6307 ( 1.4421 fF)
+Z(2,7) =    1900 + j -1.578e+04 ( 0.5763 fF)
+Z(3,3) =    9308 + j -1.483e+04 ( 0.6133 fF)
+Z(3,4) =   -1125 + j -2.132e+04 ( 0.4266 fF)
+Z(3,5) = -2.375e+04 + j -4.345e+04 ( 0.2093 fF)
+Z(3,6) =   -3403 + j -3.345e+04 ( 0.2719 fF)
+Z(3,7) =    7940 + j -9.281e+04 ( 0.0980 fF)
+Z(4,4) = 1.39e+04 + j -2.219e+04 ( 0.4099 fF)
+Z(4,5) =   -2834 + j -2.002e+04 ( 0.4542 fF)
+Z(4,6) =   -4885 + j -5.667e+04 ( 0.1605 fF)
+Z(4,7) = 1.079e+04 + j -1.378e+05 ( 0.0660 fF)
+Z(5,5) =    1515 + j   -2430 ( 3.7432 fF)
+Z(5,6) =  -710.6 + j   -3523 ( 2.5815 fF)
+Z(5,7) =    1716 + j -1.524e+04 ( 0.5968 fF)
+Z(6,6) =   632.1 + j   -1062 ( 8.5611 fF)
+Z(6,7) =  -727.4 + j   -3558 ( 2.5559 fF)
+Z(7,7) =    1224 + j   -2311 ( 3.9352 fF)
+ASITIC>  
+
+lambda = 4285.71, delta =  0.76
+
+maxL = 214.29, maxT =  0.61, maxW =  0.61
+Generating inductance matrix (312x312)..
+Inverting matrix......
+L =  4.578e-10		R =     2.3141
+ASITIC>  
+BL_200-S: at 17.999999 GHz R = 2.634778.
+ASITIC>  
+LF Extrapolated Q of BL_200-S = 28.510165.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 4166.67, delta =  0.75
+
+maxL = 208.33, maxT =  0.60, maxW =  0.60
+Performing Analysis at 18.00 GHz
+Generating capacitance matrix (16x16).
+Warning:  Could not open data file at frequency = 18.00.
+Tried using . as path.
+
+
+Generating data at 18.00 GHz...
+
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Calculating Green Function...
+Computing FFTs...            
+Writing data.....
+Generating inductance matrix (312x312)..
+Inverting matrix.....
+Solving node equations...(8x8)
+Pi Model at f=18.00 GHz:  Q = 11.303,14.241,18.779
+L  =  0.46 nH	R  =  1.59
+Cs1=  19.9 fF	Rs1=   247
+Cs2=  13.8 fF	Rs2=   374	f_res = 52.57GHz
+ASITIC>  
+
+lambda = 4166.67, delta =  0.75
+
+maxL = 208.33, maxT =  0.60, maxW =  0.60
+Performing Analysis at 18.00 GHz
+Generating capacitance matrix (16x16)..
+At 18.000 GHz:
+Total Capacitance = 33.210 (fF)
+Total Resistance = 148.504.
+Capacitance matrix:
+Z(0,0) =    1128 + j   -2252 ( 3.9263 fF)
+Z(0,1) =  -707.4 + j   -3538 ( 2.4990 fF)
+Z(0,2) =    1804 + j -1.515e+04 ( 0.5835 fF)
+Z(0,3) =    8333 + j -9.113e+04 ( 0.0970 fF)
+Z(0,4) = 1.288e+04 + j -1.371e+05 ( 0.0645 fF)
+Z(0,5) =    2102 + j -1.545e+04 ( 0.5725 fF)
+Z(0,6) =   14.29 + j   -6108 ( 1.4475 fF)
+Z(0,7) =   -2821 + j   -9147 ( 0.9666 fF)
+Z(1,1) =     550 + j   -1028 ( 8.6032 fF)
+Z(1,2) =  -688.7 + j   -3529 ( 2.5054 fF)
+Z(1,3) =   -2929 + j -3.642e+04 ( 0.2427 fF)
+Z(1,4) =   -4611 + j -4.984e+04 ( 0.1774 fF)
+Z(1,5) =   155.3 + j   -6246 ( 1.4157 fF)
+Z(1,6) =   272.7 + j   -2976 ( 2.9715 fF)
+Z(1,7) = -0.6733 + j   -6165 ( 1.4342 fF)
+Z(2,2) =    1387 + j   -2377 ( 3.7204 fF)
+Z(2,3) =   -3162 + j -1.71e+04 ( 0.5172 fF)
+Z(2,4) = -4.508e+04 + j -7.007e+04 ( 0.1262 fF)
+Z(2,5) =   -2496 + j   -9586 ( 0.9224 fF)
+Z(2,6) =   141.9 + j   -6151 ( 1.4375 fF)
+Z(2,7) =    2053 + j -1.542e+04 ( 0.5735 fF)
+Z(3,3) =    9068 + j -1.466e+04 ( 0.6033 fF)
+Z(3,4) =   -1108 + j -2.071e+04 ( 0.4270 fF)
+Z(3,5) = -2.268e+04 + j -4.198e+04 ( 0.2106 fF)
+Z(3,6) =   -2993 + j -3.256e+04 ( 0.2716 fF)
+Z(3,7) =    8865 + j -9.063e+04 ( 0.0976 fF)
+Z(4,4) = 1.354e+04 + j -2.193e+04 ( 0.4032 fF)
+Z(4,5) =   -2744 + j -1.941e+04 ( 0.4555 fF)
+Z(4,6) =   -4120 + j -5.518e+04 ( 0.1602 fF)
+Z(4,7) = 1.213e+04 + j -1.346e+05 ( 0.0657 fF)
+Z(5,5) =    1475 + j   -2402 ( 3.6813 fF)
+Z(5,6) =  -669.2 + j   -3419 ( 2.5862 fF)
+Z(5,7) =    1886 + j -1.486e+04 ( 0.5949 fF)
+Z(6,6) =   614.7 + j   -1049 ( 8.4272 fF)
+Z(6,7) =    -686 + j   -3453 ( 2.5607 fF)
+Z(7,7) =    1186 + j   -2278 ( 3.8809 fF)
+ASITIC>  
+
+lambda = 4166.67, delta =  0.75
+
+maxL = 208.33, maxT =  0.60, maxW =  0.60
+Generating inductance matrix (312x312)..
+Inverting matrix......
+L =  4.577e-10		R =     2.3273
+ASITIC>  XIO:  fatal IO error 29 (Illegal seek) on X server "localhost:133"
+      after 6469 requests (6469 known processed) with 2 events remaining.

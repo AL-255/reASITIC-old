@@ -1,0 +1,1665 @@
+
+ASITIC version 10.20.99.0.0.0
+Analysis & Simulation of Inductors and Transformers for ICs
+Reading technology file </home/yukidama/github/asitic-re/run/tek/BiCMOS.tek>...
+
+ASITIC>  
+ASITIC>  
+Total Metal Area of C4 = 32000.000000 (microns^2).
+ASITIC>  
+Inductance of C4 = 0.230805 (nH).
+ASITIC>  
+Resistance of C4 = 0.112000 (Ohms).
+ASITIC>  
+C4: at 1.000000 GHz R = 0.227234.
+ASITIC>  
+LF Extrapolated Q of C4 = 12.948118.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 75000.00, delta =  3.18
+
+maxL = 3750.00, maxT =  2.55, maxW =  2.55
+Performing Analysis at 1.00 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 1.00.
+Tried using . as path.
+
+
+Generating data at 1.00 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (78x78)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=1.00 GHz:  Q = 10.274,10.276,10.298
+L  = 0.222 nH	R  = 0.135
+Cs1=   104 fF	Rs1=   789
+Cs2=   106 fF	Rs2=   651	f_res = 33.19GHz
+ASITIC>  
+
+lambda = 75000.00, delta =  3.18
+
+maxL = 3750.00, maxT =  2.55, maxW =  2.55
+Performing Analysis at 1.00 GHz
+Generating capacitance matrix (50x50)..
+At 1.000 GHz:
+Total Capacitance = 209.638 (fF)
+Total Resistance = 358.694.
+Capacitance matrix:
+Z(0,0) = -1.241e+04 + j 2.137e+04 (-7.4477 fF)
+Z(0,1) =   3.029 + j  -391.8 (406.1807 fF)
+Z(1,1) =     349 + j  -733.4 (217.0224 fF)
+ASITIC>  
+
+lambda = 75000.00, delta =  3.18
+
+maxL = 3750.00, maxT =  2.55, maxW =  2.55
+Generating inductance matrix (78x78)..
+Inverting matrix......
+L =  2.219e-10		R =     0.1353
+ASITIC>  
+C4: at 1.500000 GHz R = 1.798733.
+ASITIC>  
+LF Extrapolated Q of C4 = 19.422177.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 50000.00, delta =  2.60
+
+maxL = 2500.00, maxT =  2.08, maxW =  2.08
+Performing Analysis at 1.50 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 1.50.
+Tried using . as path.
+
+
+Generating data at 1.50 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (96x96)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=1.50 GHz:  Q = 14.470,14.467,14.577
+L  = 0.221 nH	R  = 0.142
+Cs1=  99.6 fF	Rs1=   757
+Cs2=   103 fF	Rs2=   674	f_res = 33.92GHz
+ASITIC>  
+
+lambda = 50000.00, delta =  2.60
+
+maxL = 2500.00, maxT =  2.08, maxW =  2.08
+Performing Analysis at 1.50 GHz
+Generating capacitance matrix (50x50)..
+At 1.500 GHz:
+Total Capacitance = 202.578 (fF)
+Total Resistance = 357.008.
+Capacitance matrix:
+Z(0,0) = -1.234e+04 + j 1.393e+04 (-7.6196 fF)
+Z(0,1) =   2.329 + j  -262.1 (404.8385 fF)
+Z(1,1) =   347.4 + j  -505.2 (210.0240 fF)
+ASITIC>  
+
+lambda = 50000.00, delta =  2.60
+
+maxL = 2500.00, maxT =  2.08, maxW =  2.08
+Generating inductance matrix (96x96)..
+Inverting matrix......
+L =  2.207e-10		R =     0.1426
+ASITIC>  
+C4: at 2.000000 GHz R = 1.797501.
+ASITIC>  
+LF Extrapolated Q of C4 = 25.896236.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 37500.00, delta =  2.25
+
+maxL = 1875.00, maxT =  1.80, maxW =  1.80
+Performing Analysis at 2.00 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 2.00.
+Tried using . as path.
+
+
+Generating data at 2.00 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (112x112)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=2.00 GHz:  Q = 18.300,18.278,18.592
+L  = 0.221 nH	R  = 0.147
+Cs1=  94.8 fF	Rs1=   742
+Cs2=  98.8 fF	Rs2=   679	f_res = 34.80GHz
+ASITIC>  
+
+lambda = 37500.00, delta =  2.25
+
+maxL = 1875.00, maxT =  1.80, maxW =  1.80
+Performing Analysis at 2.00 GHz
+Generating capacitance matrix (50x50)..
+At 2.000 GHz:
+Total Capacitance = 193.564 (fF)
+Total Resistance = 354.677.
+Capacitance matrix:
+Z(0,0) = -1.225e+04 + j 1.011e+04 (-7.8704 fF)
+Z(0,1) =   1.744 + j  -197.1 (403.7231 fF)
+Z(1,1) =   345.3 + j  -395.8 (201.0571 fF)
+ASITIC>  
+
+lambda = 37500.00, delta =  2.25
+
+maxL = 1875.00, maxT =  1.80, maxW =  1.80
+Generating inductance matrix (112x112)..
+Inverting matrix......
+L =    2.2e-10		R =     0.1485
+ASITIC>  
+C4: at 2.500000 GHz R = 1.797577.
+ASITIC>  
+LF Extrapolated Q of C4 = 32.370295.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 30000.00, delta =  2.01
+
+maxL = 1500.00, maxT =  1.61, maxW =  1.61
+Performing Analysis at 2.50 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 2.50.
+Tried using . as path.
+
+
+Generating data at 2.50 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (124x124)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=2.50 GHz:  Q = 21.808,21.746,22.415
+L  = 0.221 nH	R  =  0.15
+Cs1=  89.4 fF	Rs1=   731
+Cs2=  93.8 fF	Rs2=   678	f_res = 35.84GHz
+ASITIC>  
+
+lambda = 30000.00, delta =  2.01
+
+maxL = 1500.00, maxT =  1.61, maxW =  1.61
+Performing Analysis at 2.50 GHz
+Generating capacitance matrix (50x50)..
+At 2.500 GHz:
+Total Capacitance = 183.250 (fF)
+Total Resistance = 351.730.
+Capacitance matrix:
+Z(0,0) = -1.213e+04 + j    7752 (-8.2120 fF)
+Z(0,1) =   1.301 + j    -158 (402.8855 fF)
+Z(1,1) =   342.6 + j  -333.7 (190.7535 fF)
+ASITIC>  
+
+lambda = 30000.00, delta =  2.01
+
+maxL = 1500.00, maxT =  1.61, maxW =  1.61
+Generating inductance matrix (124x124)..
+Inverting matrix......
+L =  2.196e-10		R =     0.1536
+ASITIC>  
+C4: at 3.000000 GHz R = 1.798234.
+ASITIC>  
+LF Extrapolated Q of C4 = 38.844354.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 25000.00, delta =  1.84
+
+maxL = 1250.00, maxT =  1.47, maxW =  1.47
+Performing Analysis at 3.00 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 3.00.
+Tried using . as path.
+
+
+Generating data at 3.00 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (136x136)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=3.00 GHz:  Q = 25.003,24.879,26.073
+L  = 0.221 nH	R  = 0.152
+Cs1=  83.8 fF	Rs1=   721
+Cs2=  88.5 fF	Rs2=   674	f_res = 37.02GHz
+ASITIC>  
+
+lambda = 25000.00, delta =  1.84
+
+maxL = 1250.00, maxT =  1.47, maxW =  1.47
+Performing Analysis at 3.00 GHz
+Generating capacitance matrix (50x50)..
+At 3.000 GHz:
+Total Capacitance = 172.256 (fF)
+Total Resistance = 348.203.
+Capacitance matrix:
+Z(0,0) = -1.199e+04 + j    6125 (-8.6614 fF)
+Z(0,1) =  0.9769 + j  -131.9 (402.2768 fF)
+Z(1,1) =   339.4 + j  -295.2 (179.7192 fF)
+ASITIC>  
+
+lambda = 25000.00, delta =  1.84
+
+maxL = 1250.00, maxT =  1.47, maxW =  1.47
+Generating inductance matrix (136x136)..
+Inverting matrix......
+L =  2.192e-10		R =     0.1580
+ASITIC>  
+C4: at 3.500000 GHz R = 1.799174.
+ASITIC>  
+LF Extrapolated Q of C4 = 45.318412.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 21428.57, delta =  1.70
+
+maxL = 1071.43, maxT =  1.36, maxW =  1.36
+Performing Analysis at 3.50 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 3.50.
+Tried using . as path.
+
+
+Generating data at 3.50 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (146x146)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=3.50 GHz:  Q = 27.914,27.704,29.604
+L  = 0.221 nH	R  = 0.154
+Cs1=  78.1 fF	Rs1=   710
+Cs2=  83.1 fF	Rs2=   668	f_res = 38.32GHz
+ASITIC>  
+
+lambda = 21428.57, delta =  1.70
+
+maxL = 1071.43, maxT =  1.36, maxW =  1.36
+Performing Analysis at 3.50 GHz
+Generating capacitance matrix (50x50)..
+At 3.500 GHz:
+Total Capacitance = 161.104 (fF)
+Total Resistance = 344.136.
+Capacitance matrix:
+Z(0,0) = -1.183e+04 + j    4919 (-9.2440 fF)
+Z(0,1) =  0.7403 + j  -113.2 (401.8356 fF)
+Z(1,1) =   335.7 + j  -269.9 (168.4710 fF)
+ASITIC>  
+
+lambda = 21428.57, delta =  1.70
+
+maxL = 1071.43, maxT =  1.36, maxW =  1.36
+Generating inductance matrix (146x146)..
+Inverting matrix......
+L =   2.19e-10		R =     0.1620
+ASITIC>  
+C4: at 4.000000 GHz R = 1.800259.
+ASITIC>  
+LF Extrapolated Q of C4 = 51.792471.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 18750.00, delta =  1.59
+
+maxL = 937.50, maxT =  1.27, maxW =  1.27
+Performing Analysis at 4.00 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 4.00.
+Tried using . as path.
+
+
+Generating data at 4.00 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (237x237)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=4.00 GHz:  Q = 30.601,30.270,33.078
+L  = 0.222 nH	R  = 0.154
+Cs1=  72.5 fF	Rs1=   700
+Cs2=  77.8 fF	Rs2=   659	f_res = 39.71GHz
+ASITIC>  
+
+lambda = 18750.00, delta =  1.59
+
+maxL = 937.50, maxT =  1.27, maxW =  1.27
+Performing Analysis at 4.00 GHz
+Generating capacitance matrix (50x50)..
+At 4.000 GHz:
+Total Capacitance = 150.189 (fF)
+Total Resistance = 339.576.
+Capacitance matrix:
+Z(0,0) = -1.165e+04 + j    3980 (-9.9971 fF)
+Z(0,1) =  0.5655 + j   -99.1 (401.5128 fF)
+Z(1,1) =   331.5 + j  -252.8 (157.4082 fF)
+ASITIC>  
+
+lambda = 18750.00, delta =  1.59
+
+maxL = 937.50, maxT =  1.27, maxW =  1.27
+Generating inductance matrix (237x237)..
+Inverting matrix......
+L =   2.19e-10		R =     0.1656
+ASITIC>  
+C4: at 4.500000 GHz R = 1.801418.
+ASITIC>  
+LF Extrapolated Q of C4 = 58.266527.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 16666.67, delta =  1.50
+
+maxL = 833.33, maxT =  1.20, maxW =  1.20
+Performing Analysis at 4.50 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 4.50.
+Tried using . as path.
+
+
+Generating data at 4.50 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (249x249)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=4.50 GHz:  Q = 32.957,32.489,36.375
+L  = 0.222 nH	R  = 0.154
+Cs1=  67.2 fF	Rs1=   689
+Cs2=  72.6 fF	Rs2=   651	f_res = 41.17GHz
+ASITIC>  
+
+lambda = 16666.67, delta =  1.50
+
+maxL = 833.33, maxT =  1.20, maxW =  1.20
+Performing Analysis at 4.50 GHz
+Generating capacitance matrix (50x50)..
+At 4.500 GHz:
+Total Capacitance = 139.783 (fF)
+Total Resistance = 334.570.
+Capacitance matrix:
+Z(0,0) = -1.145e+04 + j    3222 (-10.9771 fF)
+Z(0,1) =  0.4342 + j  -88.14 (401.2733 fF)
+Z(1,1) =   326.9 + j  -240.9 (146.8108 fF)
+ASITIC>  
+
+lambda = 16666.67, delta =  1.50
+
+maxL = 833.33, maxT =  1.20, maxW =  1.20
+Generating inductance matrix (249x249)..
+Inverting matrix......
+L =  2.189e-10		R =     0.1691
+ASITIC>  
+C4: at 5.000000 GHz R = 1.802611.
+ASITIC>  
+LF Extrapolated Q of C4 = 64.740589.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 15000.00, delta =  1.42
+
+maxL = 750.00, maxT =  1.14, maxW =  1.14
+Performing Analysis at 5.00 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 5.00.
+Tried using . as path.
+
+
+Generating data at 5.00 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (264x264)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=5.00 GHz:  Q = 35.040,34.413,39.552
+L  = 0.223 nH	R  = 0.153
+Cs1=  62.4 fF	Rs1=   676
+Cs2=  67.7 fF	Rs2=   641	f_res = 42.68GHz
+ASITIC>  
+
+lambda = 15000.00, delta =  1.42
+
+maxL = 750.00, maxT =  1.14, maxW =  1.14
+Performing Analysis at 5.00 GHz
+Generating capacitance matrix (50x50)..
+At 5.000 GHz:
+Total Capacitance = 130.050 (fF)
+Total Resistance = 329.171.
+Capacitance matrix:
+Z(0,0) = -1.124e+04 + j    2594 (-12.2728 fF)
+Z(0,1) =  0.3339 + j  -79.36 (401.0933 fF)
+Z(1,1) =     322 + j  -232.6 (136.8543 fF)
+ASITIC>  
+
+lambda = 15000.00, delta =  1.42
+
+maxL = 750.00, maxT =  1.14, maxW =  1.14
+Generating inductance matrix (264x264)..
+Inverting matrix......
+L =  2.187e-10		R =     0.1725
+ASITIC>  
+C4: at 5.500000 GHz R = 1.803815.
+ASITIC>  
+LF Extrapolated Q of C4 = 71.214651.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 13636.36, delta =  1.36
+
+maxL = 681.82, maxT =  1.09, maxW =  1.09
+Performing Analysis at 5.50 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 5.50.
+Tried using . as path.
+
+
+Generating data at 5.50 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (276x276)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=5.50 GHz:  Q = 36.895,36.086,42.656
+L  = 0.224 nH	R  = 0.151
+Cs1=  57.9 fF	Rs1=   664
+Cs2=  63.2 fF	Rs2=   631	f_res = 44.21GHz
+ASITIC>  
+
+lambda = 13636.36, delta =  1.36
+
+maxL = 681.82, maxT =  1.09, maxW =  1.09
+Performing Analysis at 5.50 GHz
+Generating capacitance matrix (50x50)..
+At 5.500 GHz:
+Total Capacitance = 121.072 (fF)
+Total Resistance = 323.429.
+Capacitance matrix:
+Z(0,0) = -1.101e+04 + j    2062 (-14.0306 fF)
+Z(0,1) =   0.256 + j  -72.17 (400.9563 fF)
+Z(1,1) =   316.7 + j  -226.7 (127.6317 fF)
+ASITIC>  
+
+lambda = 13636.36, delta =  1.36
+
+maxL = 681.82, maxT =  1.09, maxW =  1.09
+Generating inductance matrix (276x276)..
+Inverting matrix......
+L =  2.186e-10		R =     0.1756
+ASITIC>  
+C4: at 6.000000 GHz R = 1.805019.
+ASITIC>  
+LF Extrapolated Q of C4 = 77.688707.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 12500.00, delta =  1.30
+
+maxL = 625.00, maxT =  1.04, maxW =  1.04
+Performing Analysis at 6.00 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 6.00.
+Tried using . as path.
+
+
+Generating data at 6.00 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (288x288)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=6.00 GHz:  Q = 38.522,37.510,45.679
+L  = 0.225 nH	R  = 0.148
+Cs1=  53.8 fF	Rs1=   650
+Cs2=  59.1 fF	Rs2=   620	f_res = 45.75GHz
+ASITIC>  
+
+lambda = 12500.00, delta =  1.30
+
+maxL = 625.00, maxT =  1.04, maxW =  1.04
+Performing Analysis at 6.00 GHz
+Generating capacitance matrix (50x50)..
+At 6.000 GHz:
+Total Capacitance = 112.873 (fF)
+Total Resistance = 317.396.
+Capacitance matrix:
+Z(0,0) = -1.077e+04 + j    1607 (-16.5100 fF)
+Z(0,1) =  0.1945 + j  -66.17 (400.8511 fF)
+Z(1,1) =   311.2 + j  -222.6 (119.1754 fF)
+ASITIC>  
+
+lambda = 12500.00, delta =  1.30
+
+maxL = 625.00, maxT =  1.04, maxW =  1.04
+Generating inductance matrix (288x288)..
+Inverting matrix......
+L =  2.185e-10		R =     0.1786
+ASITIC>  
+C4: at 6.500000 GHz R = 1.806213.
+ASITIC>  
+LF Extrapolated Q of C4 = 84.162763.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 11538.46, delta =  1.25
+
+maxL = 576.92, maxT =  1.00, maxW =  1.00
+Performing Analysis at 6.50 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 6.50.
+Tried using . as path.
+
+
+Generating data at 6.50 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (300x300)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=6.50 GHz:  Q = 39.934,38.700,48.630
+L  = 0.226 nH	R  = 0.145
+Cs1=  50.2 fF	Rs1=   636
+Cs2=  55.3 fF	Rs2=   609	f_res = 47.28GHz
+ASITIC>  
+
+lambda = 11538.46, delta =  1.25
+
+maxL = 576.92, maxT =  1.00, maxW =  1.00
+Performing Analysis at 6.50 GHz
+Generating capacitance matrix (50x50)..
+At 6.500 GHz:
+Total Capacitance = 105.435 (fF)
+Total Resistance = 311.123.
+Capacitance matrix:
+Z(0,0) = -1.052e+04 + j    1211 (-20.2165 fF)
+Z(0,1) =  0.1451 + j   -61.1 (400.7699 fF)
+Z(1,1) =   305.5 + j  -219.6 (111.4769 fF)
+ASITIC>  
+
+lambda = 11538.46, delta =  1.25
+
+maxL = 576.92, maxT =  1.00, maxW =  1.00
+Generating inductance matrix (300x300)..
+Inverting matrix......
+L =  2.184e-10		R =     0.1815
+ASITIC>  
+C4: at 7.000000 GHz R = 1.807394.
+ASITIC>  
+LF Extrapolated Q of C4 = 90.636825.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 10714.29, delta =  1.20
+
+maxL = 535.71, maxT =  0.96, maxW =  0.96
+Performing Analysis at 7.00 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 7.00.
+Tried using . as path.
+
+
+Generating data at 7.00 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (312x312)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=7.00 GHz:  Q = 41.143,39.670,51.511
+L  = 0.227 nH	R  = 0.141
+Cs1=  46.9 fF	Rs1=   622
+Cs2=  51.9 fF	Rs2=   597	f_res = 48.78GHz
+ASITIC>  
+
+lambda = 10714.29, delta =  1.20
+
+maxL = 535.71, maxT =  0.96, maxW =  0.96
+Performing Analysis at 7.00 GHz
+Generating capacitance matrix (50x50)..
+At 7.000 GHz:
+Total Capacitance = 98.719 (fF)
+Total Resistance = 304.659.
+Capacitance matrix:
+Z(0,0) = -1.027e+04 + j   865.1 (-26.2828 fF)
+Z(0,1) =  0.1051 + j  -56.74 (400.7071 fF)
+Z(1,1) =   299.6 + j  -217.6 (104.5018 fF)
+ASITIC>  
+
+lambda = 10714.29, delta =  1.20
+
+maxL = 535.71, maxT =  0.96, maxW =  0.96
+Generating inductance matrix (312x312)..
+Inverting matrix......
+L =  2.183e-10		R =     0.1843
+ASITIC>  
+C4: at 7.500000 GHz R = 1.808558.
+ASITIC>  
+LF Extrapolated Q of C4 = 97.110887.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 10000.00, delta =  1.16
+
+maxL = 500.00, maxT =  0.93, maxW =  0.93
+Performing Analysis at 7.50 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 7.50.
+Tried using . as path.
+
+
+Generating data at 7.50 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (324x324)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=7.50 GHz:  Q = 42.168,40.439,54.339
+L  = 0.228 nH	R  = 0.136
+Cs1=  43.9 fF	Rs1=   607
+Cs2=  48.8 fF	Rs2=   585	f_res = 50.24GHz
+ASITIC>  
+
+lambda = 10000.00, delta =  1.16
+
+maxL = 500.00, maxT =  0.93, maxW =  0.93
+Performing Analysis at 7.50 GHz
+Generating capacitance matrix (50x50)..
+At 7.500 GHz:
+Total Capacitance = 92.670 (fF)
+Total Resistance = 298.049.
+Capacitance matrix:
+Z(0,0) = -1.001e+04 + j   560.3 (-37.8735 fF)
+Z(0,1) = 0.07221 + j  -52.96 (400.6585 fF)
+Z(1,1) =   293.5 + j  -216.1 (98.2013 fF)
+ASITIC>  
+
+lambda = 10000.00, delta =  1.16
+
+maxL = 500.00, maxT =  0.93, maxW =  0.93
+Generating inductance matrix (324x324)..
+Inverting matrix......
+L =  2.182e-10		R =     0.1870
+ASITIC>  
+C4: at 8.000000 GHz R = 1.809704.
+ASITIC>  
+LF Extrapolated Q of C4 = 103.584943.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 9375.00, delta =  1.13
+
+maxL = 468.75, maxT =  0.90, maxW =  0.90
+Performing Analysis at 8.00 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 8.00.
+Tried using . as path.
+
+
+Generating data at 8.00 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (333x333)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=8.00 GHz:  Q = 43.033,41.033,57.139
+L  =  0.23 nH	R  =  0.13
+Cs1=  41.3 fF	Rs1=   593
+Cs2=    46 fF	Rs2=   573	f_res = 51.66GHz
+ASITIC>  
+
+lambda = 9375.00, delta =  1.13
+
+maxL = 468.75, maxT =  0.90, maxW =  0.90
+Performing Analysis at 8.00 GHz
+Generating capacitance matrix (50x50)..
+At 8.000 GHz:
+Total Capacitance = 87.231 (fF)
+Total Resistance = 291.337.
+Capacitance matrix:
+Z(0,0) =   -9745 + j   290.7 (-68.4394 fF)
+Z(0,1) = 0.04489 + j  -49.66 (400.6214 fF)
+Z(1,1) =   287.4 + j    -215 (92.5193 fF)
+ASITIC>  
+
+lambda = 9375.00, delta =  1.13
+
+maxL = 468.75, maxT =  0.90, maxW =  0.90
+Generating inductance matrix (333x333)..
+Inverting matrix......
+L =  2.182e-10		R =     0.1895
+ASITIC>  
+C4: at 8.500000 GHz R = 1.810831.
+ASITIC>  
+LF Extrapolated Q of C4 = 110.058998.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 8823.53, delta =  1.09
+
+maxL = 441.18, maxT =  0.87, maxW =  0.87
+Performing Analysis at 8.50 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 8.50.
+Tried using . as path.
+
+
+Generating data at 8.50 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (342x342)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=8.50 GHz:  Q = 43.737,41.453,59.900
+L  = 0.231 nH	R  = 0.123
+Cs1=  38.9 fF	Rs1=   578
+Cs2=  43.5 fF	Rs2=   560	f_res = 53.03GHz
+ASITIC>  
+
+lambda = 8823.53, delta =  1.09
+
+maxL = 441.18, maxT =  0.87, maxW =  0.87
+Performing Analysis at 8.50 GHz
+Generating capacitance matrix (50x50)..
+At 8.500 GHz:
+Total Capacitance = 82.341 (fF)
+Total Resistance = 284.563.
+Capacitance matrix:
+Z(0,0) =   -9479 + j   51.37 (-364.5063 fF)
+Z(0,1) = 0.02198 + j  -46.74 (400.5934 fF)
+Z(1,1) =   281.2 + j  -214.2 (87.3982 fF)
+ASITIC>  
+
+lambda = 8823.53, delta =  1.09
+
+maxL = 441.18, maxT =  0.87, maxW =  0.87
+Generating inductance matrix (342x342)..
+Inverting matrix......
+L =  2.181e-10		R =     0.1920
+ASITIC>  
+C4: at 8.999999 GHz R = 1.811940.
+ASITIC>  
+LF Extrapolated Q of C4 = 116.533054.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 8333.33, delta =  1.06
+
+maxL = 416.67, maxT =  0.85, maxW =  0.85
+Performing Analysis at 9.00 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 9.00.
+Tried using . as path.
+
+
+Generating data at 9.00 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (354x354)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=9.00 GHz:  Q = 44.279,41.701,62.599
+L  = 0.233 nH	R  = 0.116
+Cs1=  36.8 fF	Rs1=   563
+Cs2=  41.3 fF	Rs2=   548	f_res = 54.34GHz
+ASITIC>  
+
+lambda = 8333.33, delta =  1.06
+
+maxL = 416.67, maxT =  0.85, maxW =  0.85
+Performing Analysis at 9.00 GHz
+Generating capacitance matrix (50x50)..
+At 9.000 GHz:
+Total Capacitance = 77.943 (fF)
+Total Resistance = 277.762.
+Capacitance matrix:
+Z(0,0) =   -9213 + j  -161.5 (109.4723 fF)
+Z(0,1) = 0.002603 + j  -44.15 (400.5730 fF)
+Z(1,1) =     275 + j  -213.6 (82.7817 fF)
+ASITIC>  
+
+lambda = 8333.33, delta =  1.06
+
+maxL = 416.67, maxT =  0.85, maxW =  0.85
+Generating inductance matrix (354x354)..
+Inverting matrix......
+L =   2.18e-10		R =     0.1945
+ASITIC>  
+C4: at 9.500000 GHz R = 1.813029.
+ASITIC>  
+LF Extrapolated Q of C4 = 123.007123.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 7894.74, delta =  1.03
+
+maxL = 394.74, maxT =  0.83, maxW =  0.83
+Performing Analysis at 9.50 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 9.50.
+Tried using . as path.
+
+
+Generating data at 9.50 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (363x363)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=9.50 GHz:  Q = 44.701,41.818,65.307
+L  = 0.235 nH	R  = 0.107
+Cs1=  34.9 fF	Rs1=   548
+Cs2=  39.2 fF	Rs2=   535	f_res = 55.58GHz
+ASITIC>  
+
+lambda = 7894.74, delta =  1.03
+
+maxL = 394.74, maxT =  0.83, maxW =  0.83
+Performing Analysis at 9.50 GHz
+Generating capacitance matrix (50x50)..
+At 9.500 GHz:
+Total Capacitance = 73.985 (fF)
+Total Resistance = 270.968.
+Capacitance matrix:
+Z(0,0) =   -8947 + j  -351.2 (47.7000 fF)
+Z(0,1) = -0.01392 + j  -41.82 (400.5589 fF)
+Z(1,1) =   268.7 + j  -213.1 (78.6169 fF)
+ASITIC>  
+
+lambda = 7894.74, delta =  1.03
+
+maxL = 394.74, maxT =  0.83, maxW =  0.83
+Generating inductance matrix (363x363)..
+Inverting matrix......
+L =   2.18e-10		R =     0.1969
+ASITIC>  
+C4: at 10.000000 GHz R = 1.814100.
+ASITIC>  
+LF Extrapolated Q of C4 = 129.481178.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 7500.00, delta =  1.01
+
+maxL = 375.00, maxT =  0.81, maxW =  0.81
+Performing Analysis at 10.00 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 10.00.
+Tried using . as path.
+
+
+Generating data at 10.00 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (372x372)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=10.00 GHz:  Q = 44.998,41.802,68.004
+L  = 0.237 nH	R  =0.0964
+Cs1=  33.2 fF	Rs1=   533
+Cs2=  37.4 fF	Rs2=   523	f_res = 56.76GHz
+ASITIC>  
+
+lambda = 7500.00, delta =  1.01
+
+maxL = 375.00, maxT =  0.81, maxW =  0.81
+Performing Analysis at 10.00 GHz
+Generating capacitance matrix (50x50)..
+At 10.000 GHz:
+Total Capacitance = 70.416 (fF)
+Total Resistance = 264.208.
+Capacitance matrix:
+Z(0,0) =   -8683 + j  -520.3 (30.5869 fF)
+Z(0,1) = -0.02811 + j  -39.73 (400.5501 fF)
+Z(1,1) =   262.6 + j  -212.6 (74.8550 fF)
+ASITIC>  
+
+lambda = 7500.00, delta =  1.01
+
+maxL = 375.00, maxT =  0.81, maxW =  0.81
+Generating inductance matrix (372x372)..
+Inverting matrix......
+L =  2.179e-10		R =     0.1992
+ASITIC>  
+C4: at 10.500000 GHz R = 1.815153.
+ASITIC>  
+LF Extrapolated Q of C4 = 135.955234.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 7142.86, delta =  0.98
+
+maxL = 357.14, maxT =  0.79, maxW =  0.79
+Performing Analysis at 10.50 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 10.50.
+Tried using . as path.
+
+
+Generating data at 10.50 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (508x508)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=10.50 GHz:  Q = 44.874,41.394,69.949
+L  = 0.239 nH	R  =0.0873
+Cs1=  31.6 fF	Rs1=   519
+Cs2=  35.7 fF	Rs2=   510	f_res = 57.86GHz
+ASITIC>  
+
+lambda = 7142.86, delta =  0.98
+
+maxL = 357.14, maxT =  0.79, maxW =  0.79
+Performing Analysis at 10.50 GHz
+Generating capacitance matrix (50x50)..
+At 10.500 GHz:
+Total Capacitance = 67.194 (fF)
+Total Resistance = 257.510.
+Capacitance matrix:
+Z(0,0) =   -8423 + j  -671.1 (22.5847 fF)
+Z(0,1) = -0.04038 + j  -37.84 (400.5457 fF)
+Z(1,1) =   256.4 + j  -212.1 (71.4516 fF)
+ASITIC>  
+
+lambda = 7142.86, delta =  0.98
+
+maxL = 357.14, maxT =  0.79, maxW =  0.79
+Generating inductance matrix (508x508)..
+Inverting matrix......
+L =  2.179e-10		R =     0.2040
+ASITIC>  
+C4: at 11.000001 GHz R = 1.816189.
+ASITIC>  
+LF Extrapolated Q of C4 = 142.429303.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 6818.18, delta =  0.96
+
+maxL = 340.91, maxT =  0.77, maxW =  0.77
+Performing Analysis at 11.00 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 11.00.
+Tried using . as path.
+
+
+Generating data at 11.00 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (520x520)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=11.00 GHz:  Q = 44.945,41.144,72.576
+L  = 0.241 nH	R  =0.0745
+Cs1=  30.3 fF	Rs1=   504
+Cs2=  34.2 fF	Rs2=   498	f_res = 58.90GHz
+ASITIC>  
+
+lambda = 6818.18, delta =  0.96
+
+maxL = 340.91, maxT =  0.77, maxW =  0.77
+Performing Analysis at 11.00 GHz
+Generating capacitance matrix (50x50)..
+At 11.000 GHz:
+Total Capacitance = 64.280 (fF)
+Total Resistance = 250.894.
+Capacitance matrix:
+Z(0,0) =   -8166 + j  -805.6 (17.9604 fF)
+Z(0,1) = -0.05105 + j  -36.12 (400.5454 fF)
+Z(1,1) =   250.4 + j  -211.6 (68.3670 fF)
+ASITIC>  
+
+lambda = 6818.18, delta =  0.96
+
+maxL = 340.91, maxT =  0.77, maxW =  0.77
+Generating inductance matrix (520x520)..
+Inverting matrix......
+L =  2.179e-10		R =     0.2065
+ASITIC>  
+C4: at 11.500000 GHz R = 1.817207.
+ASITIC>  
+LF Extrapolated Q of C4 = 148.903359.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 6521.74, delta =  0.94
+
+maxL = 326.09, maxT =  0.75, maxW =  0.75
+Performing Analysis at 11.50 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 11.50.
+Tried using . as path.
+
+
+Generating data at 11.50 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (532x532)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=11.50 GHz:  Q = 44.926,40.798,75.227
+L  = 0.244 nH	R  =0.0601
+Cs1=    29 fF	Rs1=   490
+Cs2=  32.8 fF	Rs2=   486	f_res = 59.87GHz
+ASITIC>  
+
+lambda = 6521.74, delta =  0.94
+
+maxL = 326.09, maxT =  0.75, maxW =  0.75
+Performing Analysis at 11.50 GHz
+Generating capacitance matrix (50x50)..
+At 11.500 GHz:
+Total Capacitance = 61.638 (fF)
+Total Resistance = 244.378.
+Capacitance matrix:
+Z(0,0) =   -7913 + j  -925.3 (14.9561 fF)
+Z(0,1) = -0.06037 + j  -34.55 (400.5484 fF)
+Z(1,1) =   244.4 + j  -211.1 (65.5658 fF)
+ASITIC>  
+
+lambda = 6521.74, delta =  0.94
+
+maxL = 326.09, maxT =  0.75, maxW =  0.75
+Generating inductance matrix (532x532)..
+Inverting matrix......
+L =  2.178e-10		R =     0.2089
+ASITIC>  
+C4: at 12.000000 GHz R = 1.818209.
+ASITIC>  
+LF Extrapolated Q of C4 = 155.377414.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 6250.00, delta =  0.92
+
+maxL = 312.50, maxT =  0.74, maxW =  0.74
+Performing Analysis at 12.00 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 12.00.
+Tried using . as path.
+
+
+Generating data at 12.00 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (544x544)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=12.00 GHz:  Q = 44.823,40.367,77.916
+L  = 0.246 nH	R  = 0.044
+Cs1=  27.9 fF	Rs1=   476
+Cs2=  31.5 fF	Rs2=   474	f_res = 60.76GHz
+ASITIC>  
+
+lambda = 6250.00, delta =  0.92
+
+maxL = 312.50, maxT =  0.74, maxW =  0.74
+Performing Analysis at 12.00 GHz
+Generating capacitance matrix (50x50)..
+At 12.000 GHz:
+Total Capacitance = 59.238 (fF)
+Total Resistance = 237.979.
+Capacitance matrix:
+Z(0,0) =   -7666 + j   -1032 (12.8529 fF)
+Z(0,1) = -0.06856 + j  -33.11 (400.5545 fF)
+Z(1,1) =   238.5 + j  -210.5 (63.0168 fF)
+ASITIC>  
+
+lambda = 6250.00, delta =  0.92
+
+maxL = 312.50, maxT =  0.74, maxW =  0.74
+Generating inductance matrix (544x544)..
+Inverting matrix......
+L =  2.178e-10		R =     0.2113
+ASITIC>  
+C4: at 12.500000 GHz R = 1.819195.
+ASITIC>  
+LF Extrapolated Q of C4 = 161.851470.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 6000.00, delta =  0.90
+
+maxL = 300.00, maxT =  0.72, maxW =  0.72
+Performing Analysis at 12.50 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 12.50.
+Tried using . as path.
+
+
+Generating data at 12.50 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (556x556)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=12.50 GHz:  Q = 44.645,39.858,80.662
+L  = 0.249 nH	R  = 0.026
+Cs1=  26.8 fF	Rs1=   462
+Cs2=  30.4 fF	Rs2=   463	f_res = 61.58GHz
+ASITIC>  
+
+lambda = 6000.00, delta =  0.90
+
+maxL = 300.00, maxT =  0.72, maxW =  0.72
+Performing Analysis at 12.50 GHz
+Generating capacitance matrix (50x50)..
+At 12.500 GHz:
+Total Capacitance = 57.053 (fF)
+Total Resistance = 231.710.
+Capacitance matrix:
+Z(0,0) =   -7424 + j   -1127 (11.3020 fF)
+Z(0,1) = -0.07578 + j  -31.79 (400.5633 fF)
+Z(1,1) =   232.8 + j  -209.8 (60.6921 fF)
+ASITIC>  
+
+lambda = 6000.00, delta =  0.90
+
+maxL = 300.00, maxT =  0.72, maxW =  0.72
+Generating inductance matrix (556x556)..
+Inverting matrix......
+L =  2.177e-10		R =     0.2136
+ASITIC>  
+C4: at 12.999999 GHz R = 1.820165.
+ASITIC>  
+LF Extrapolated Q of C4 = 168.325525.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 5769.23, delta =  0.88
+
+maxL = 288.46, maxT =  0.71, maxW =  0.71
+Performing Analysis at 13.00 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 13.00.
+Tried using . as path.
+
+
+Generating data at 13.00 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (568x568)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=13.00 GHz:  Q = 44.399,39.281,83.482
+L  = 0.252 nH	R  =0.00577
+Cs1=  25.9 fF	Rs1=   449
+Cs2=  29.3 fF	Rs2=   451	f_res = 62.32GHz
+ASITIC>  
+
+lambda = 5769.23, delta =  0.88
+
+maxL = 288.46, maxT =  0.71, maxW =  0.71
+Performing Analysis at 13.00 GHz
+Generating capacitance matrix (50x50)..
+At 13.000 GHz:
+Total Capacitance = 55.059 (fF)
+Total Resistance = 225.580.
+Capacitance matrix:
+Z(0,0) =   -7189 + j   -1210 (10.1139 fF)
+Z(0,1) = -0.08218 + j  -30.56 (400.5745 fF)
+Z(1,1) =   227.2 + j    -209 (58.5674 fF)
+ASITIC>  
+
+lambda = 5769.23, delta =  0.88
+
+maxL = 288.46, maxT =  0.71, maxW =  0.71
+Generating inductance matrix (568x568)..
+Inverting matrix......
+L =  2.177e-10		R =     0.2160
+ASITIC>  
+C4: at 13.500000 GHz R = 1.821121.
+ASITIC>  
+LF Extrapolated Q of C4 = 174.799594.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 5555.56, delta =  0.87
+
+maxL = 277.78, maxT =  0.69, maxW =  0.69
+Performing Analysis at 13.50 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 13.50.
+Tried using . as path.
+
+
+Generating data at 13.50 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (576x576)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=13.50 GHz:  Q = 44.103,38.651,86.446
+L  = 0.255 nH	R  =-0.0169
+Cs1=    25 fF	Rs1=   436
+Cs2=  28.4 fF	Rs2=   440	f_res = 62.99GHz
+ASITIC>  
+
+lambda = 5555.56, delta =  0.87
+
+maxL = 277.78, maxT =  0.69, maxW =  0.69
+Performing Analysis at 13.50 GHz
+Generating capacitance matrix (50x50)..
+At 13.500 GHz:
+Total Capacitance = 53.236 (fF)
+Total Resistance = 219.597.
+Capacitance matrix:
+Z(0,0) =   -6959 + j   -1285 ( 9.1765 fF)
+Z(0,1) = -0.08786 + j  -29.43 (400.5880 fF)
+Z(1,1) =   221.7 + j  -208.2 (56.6210 fF)
+ASITIC>  
+
+lambda = 5555.56, delta =  0.87
+
+maxL = 277.78, maxT =  0.69, maxW =  0.69
+Generating inductance matrix (576x576)..
+Inverting matrix......
+L =  2.177e-10		R =     0.2182
+ASITIC>  
+C4: at 14.000000 GHz R = 1.822063.
+ASITIC>  
+LF Extrapolated Q of C4 = 181.273650.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 5357.14, delta =  0.85
+
+maxL = 267.86, maxT =  0.68, maxW =  0.68
+Performing Analysis at 14.00 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 14.00.
+Tried using . as path.
+
+
+Generating data at 14.00 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (588x588)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=14.00 GHz:  Q = 43.738,37.958,89.490
+L  = 0.259 nH	R  =-0.0422
+Cs1=  24.2 fF	Rs1=   423
+Cs2=  27.5 fF	Rs2=   430	f_res = 63.59GHz
+ASITIC>  
+
+lambda = 5357.14, delta =  0.85
+
+maxL = 267.86, maxT =  0.68, maxW =  0.68
+Performing Analysis at 14.00 GHz
+Generating capacitance matrix (50x50)..
+At 14.000 GHz:
+Total Capacitance = 51.564 (fF)
+Total Resistance = 213.768.
+Capacitance matrix:
+Z(0,0) =   -6737 + j   -1350 ( 8.4196 fF)
+Z(0,1) = -0.09293 + j  -28.38 (400.6036 fF)
+Z(1,1) =   216.3 + j  -207.3 (54.8342 fF)
+ASITIC>  
+
+lambda = 5357.14, delta =  0.85
+
+maxL = 267.86, maxT =  0.68, maxW =  0.68
+Generating inductance matrix (588x588)..
+Inverting matrix......
+L =  2.176e-10		R =     0.2205
+ASITIC>  
+C4: at 14.500000 GHz R = 1.822991.
+ASITIC>  
+LF Extrapolated Q of C4 = 187.747706.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 5172.41, delta =  0.84
+
+maxL = 258.62, maxT =  0.67, maxW =  0.67
+Performing Analysis at 14.50 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 14.50.
+Tried using . as path.
+
+
+Generating data at 14.50 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (600x600)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=14.50 GHz:  Q = 43.322,37.215,92.688
+L  = 0.262 nH	R  =-0.0704
+Cs1=  23.5 fF	Rs1=   411
+Cs2=  26.7 fF	Rs2=   419	f_res = 64.12GHz
+ASITIC>  
+
+lambda = 5172.41, delta =  0.84
+
+maxL = 258.62, maxT =  0.67, maxW =  0.67
+Performing Analysis at 14.50 GHz
+Generating capacitance matrix (50x50)..
+At 14.500 GHz:
+Total Capacitance = 50.029 (fF)
+Total Resistance = 208.096.
+Capacitance matrix:
+Z(0,0) =   -6521 + j   -1408 ( 7.7968 fF)
+Z(0,1) = -0.09747 + j   -27.4 (400.6211 fF)
+Z(1,1) =   211.1 + j  -206.4 (53.1900 fF)
+ASITIC>  
+
+lambda = 5172.41, delta =  0.84
+
+maxL = 258.62, maxT =  0.67, maxW =  0.67
+Generating inductance matrix (600x600)..
+Inverting matrix......
+L =  2.176e-10		R =     0.2227
+ASITIC>  
+C4: at 15.000001 GHz R = 1.823905.
+ASITIC>  
+LF Extrapolated Q of C4 = 194.221774.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 5000.00, delta =  0.82
+
+maxL = 250.00, maxT =  0.66, maxW =  0.66
+Performing Analysis at 15.00 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 15.00.
+Tried using . as path.
+
+
+Generating data at 15.00 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (608x608)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=15.00 GHz:  Q = 42.870,36.437,96.128
+L  = 0.266 nH	R  =-0.102
+Cs1=  22.8 fF	Rs1=   399
+Cs2=    26 fF	Rs2=   409	f_res = 64.57GHz
+ASITIC>  
+
+lambda = 5000.00, delta =  0.82
+
+maxL = 250.00, maxT =  0.66, maxW =  0.66
+Performing Analysis at 15.00 GHz
+Generating capacitance matrix (50x50)..
+At 15.000 GHz:
+Total Capacitance = 48.616 (fF)
+Total Resistance = 202.585.
+Capacitance matrix:
+Z(0,0) =   -6311 + j   -1458 ( 7.2764 fF)
+Z(0,1) = -0.1015 + j  -26.48 (400.6403 fF)
+Z(1,1) =   206.1 + j  -205.3 (51.6740 fF)
+ASITIC>  
+
+lambda = 5000.00, delta =  0.82
+
+maxL = 250.00, maxT =  0.66, maxW =  0.66
+Generating inductance matrix (608x608)..
+Inverting matrix......
+L =  2.176e-10		R =     0.2249
+ASITIC>  
+C4: at 15.500000 GHz R = 1.824807.
+ASITIC>  
+LF Extrapolated Q of C4 = 200.695830.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 4838.71, delta =  0.81
+
+maxL = 241.94, maxT =  0.65, maxW =  0.65
+Performing Analysis at 15.50 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 15.50.
+Tried using . as path.
+
+
+Generating data at 15.50 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (620x620)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=15.50 GHz:  Q = 42.364,35.613,99.752
+L  =  0.27 nH	R  =-0.137
+Cs1=  22.2 fF	Rs1=   388
+Cs2=  25.3 fF	Rs2=   399	f_res = 64.96GHz
+ASITIC>  
+
+lambda = 4838.71, delta =  0.81
+
+maxL = 241.94, maxT =  0.65, maxW =  0.65
+Performing Analysis at 15.50 GHz
+Generating capacitance matrix (50x50)..
+At 15.500 GHz:
+Total Capacitance = 47.312 (fF)
+Total Resistance = 197.235.
+Capacitance matrix:
+Z(0,0) =   -6109 + j   -1502 ( 6.8357 fF)
+Z(0,1) = -0.1052 + j  -25.63 (400.6612 fF)
+Z(1,1) =   201.1 + j  -204.2 (50.2729 fF)
+ASITIC>  
+
+lambda = 4838.71, delta =  0.81
+
+maxL = 241.94, maxT =  0.65, maxW =  0.65
+Generating inductance matrix (620x620)..
+Inverting matrix......
+L =  2.175e-10		R =     0.2271
+ASITIC>  
+C4: at 16.000000 GHz R = 1.825697.
+ASITIC>  
+LF Extrapolated Q of C4 = 207.169886.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 4687.50, delta =  0.80
+
+maxL = 234.38, maxT =  0.64, maxW =  0.64
+Performing Analysis at 16.00 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 16.00.
+Tried using . as path.
+
+
+Generating data at 16.00 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (628x628)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=16.00 GHz:  Q = 41.827,34.762,103.720
+L  = 0.275 nH	R  =-0.177
+Cs1=  21.7 fF	Rs1=   376
+Cs2=  24.6 fF	Rs2=   389	f_res = 65.28GHz
+ASITIC>  
+
+lambda = 4687.50, delta =  0.80
+
+maxL = 234.38, maxT =  0.64, maxW =  0.64
+Performing Analysis at 16.00 GHz
+Generating capacitance matrix (50x50)..
+At 16.000 GHz:
+Total Capacitance = 46.107 (fF)
+Total Resistance = 192.046.
+Capacitance matrix:
+Z(0,0) =   -5913 + j   -1540 ( 6.4583 fF)
+Z(0,1) = -0.1085 + j  -24.83 (400.6837 fF)
+Z(1,1) =   196.4 + j  -203.1 (48.9755 fF)
+ASITIC>  
+
+lambda = 4687.50, delta =  0.80
+
+maxL = 234.38, maxT =  0.64, maxW =  0.64
+Generating inductance matrix (628x628)..
+Inverting matrix......
+L =  2.175e-10		R =     0.2292
+ASITIC>  
+C4: at 16.500000 GHz R = 1.826575.
+ASITIC>  
+LF Extrapolated Q of C4 = 213.643941.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 4545.45, delta =  0.78
+
+maxL = 227.27, maxT =  0.63, maxW =  0.63
+Performing Analysis at 16.50 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 16.50.
+Tried using . as path.
+
+
+Generating data at 16.50 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (640x640)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=16.50 GHz:  Q = 41.244,33.874,107.979
+L  = 0.279 nH	R  =-0.221
+Cs1=  21.1 fF	Rs1=   365
+Cs2=    24 fF	Rs2=   380	f_res = 65.52GHz
+ASITIC>  
+
+lambda = 4545.45, delta =  0.78
+
+maxL = 227.27, maxT =  0.63, maxW =  0.63
+Performing Analysis at 16.50 GHz
+Generating capacitance matrix (50x50)..
+At 16.500 GHz:
+Total Capacitance = 44.991 (fF)
+Total Resistance = 187.018.
+Capacitance matrix:
+Z(0,0) =   -5724 + j   -1573 ( 6.1320 fF)
+Z(0,1) = -0.1114 + j  -24.07 (400.7076 fF)
+Z(1,1) =   191.7 + j  -201.9 (47.7715 fF)
+ASITIC>  
+
+lambda = 4545.45, delta =  0.78
+
+maxL = 227.27, maxT =  0.63, maxW =  0.63
+Generating inductance matrix (640x640)..
+Inverting matrix......
+L =  2.175e-10		R =     0.2313
+ASITIC>  
+C4: at 16.999999 GHz R = 1.827442.
+ASITIC>  
+LF Extrapolated Q of C4 = 220.117997.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 4411.76, delta =  0.77
+
+maxL = 220.59, maxT =  0.62, maxW =  0.62
+Performing Analysis at 17.00 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 17.00.
+Tried using . as path.
+
+
+Generating data at 17.00 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (648x648)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=17.00 GHz:  Q = 40.635,32.966,112.737
+L  = 0.284 nH	R  = -0.27
+Cs1=  20.6 fF	Rs1=   355
+Cs2=  23.5 fF	Rs2=   371	f_res = 65.70GHz
+ASITIC>  
+
+lambda = 4411.76, delta =  0.77
+
+maxL = 220.59, maxT =  0.62, maxW =  0.62
+Performing Analysis at 17.00 GHz
+Generating capacitance matrix (50x50)..
+At 17.000 GHz:
+Total Capacitance = 43.954 (fF)
+Total Resistance = 182.150.
+Capacitance matrix:
+Z(0,0) =   -5541 + j   -1601 ( 5.8475 fF)
+Z(0,1) = -0.1141 + j  -23.36 (400.7330 fF)
+Z(1,1) =   187.3 + j  -200.7 (46.6519 fF)
+ASITIC>  
+
+lambda = 4411.76, delta =  0.77
+
+maxL = 220.59, maxT =  0.62, maxW =  0.62
+Generating inductance matrix (648x648)..
+Inverting matrix......
+L =  2.175e-10		R =     0.2334
+ASITIC>  
+C4: at 17.500000 GHz R = 1.828297.
+ASITIC>  
+LF Extrapolated Q of C4 = 226.592066.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 4285.71, delta =  0.76
+
+maxL = 214.29, maxT =  0.61, maxW =  0.61
+Performing Analysis at 17.50 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 17.50.
+Tried using . as path.
+
+
+Generating data at 17.50 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (656x656)..
+Inverting matrix.....
+Solving node equations...(2x2)
+Pi Model at f=17.50 GHz:  Q = 39.993,32.034,118.038
+L  =  0.29 nH	R  =-0.326
+Cs1=  20.2 fF	Rs1=   345
+Cs2=    23 fF	Rs2=   362	f_res = 65.82GHz
+ASITIC>  
+
+lambda = 4285.71, delta =  0.76
+
+maxL = 214.29, maxT =  0.61, maxW =  0.61
+Performing Analysis at 17.50 GHz
+Generating capacitance matrix (50x50)..
+At 17.500 GHz:
+Total Capacitance = 42.991 (fF)
+Total Resistance = 177.438.
+Capacitance matrix:
+Z(0,0) =   -5365 + j   -1625 ( 5.5975 fF)
+Z(0,1) = -0.1165 + j  -22.69 (400.7597 fF)
+Z(1,1) =   182.9 + j  -199.4 (45.6089 fF)
+ASITIC>  
+
+lambda = 4285.71, delta =  0.76
+
+maxL = 214.29, maxT =  0.61, maxW =  0.61
+Generating inductance matrix (656x656)..
+Inverting matrix......
+L =  2.174e-10		R =     0.2354
+ASITIC>  
+C4: at 17.999999 GHz R = 1.829142.
+ASITIC>  
+LF Extrapolated Q of C4 = 233.066108.
+Use "Pi" or "Pi2" for HF Q.
+ASITIC>  
+
+lambda = 4166.67, delta =  0.75
+
+maxL = 208.33, maxT =  0.60, maxW =  0.60
+Performing Analysis at 18.00 GHz
+Generating capacitance matrix (50x50).
+Warning:  Could not open data file at frequency = 18.00.
+Tried using . as path.
+
+
+Generating data at 18.00 GHz...
+Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            Calculating Green Function...Computing FFTs...            
+Writing data.....
+Generating inductance matrix (668x668)..
+Inverting matrix...

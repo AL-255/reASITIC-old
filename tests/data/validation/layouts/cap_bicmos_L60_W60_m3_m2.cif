@@ -1,0 +1,10 @@
+(CIF file written on Sun May 10 20:17:32 2026 by ASITIC);
+DS 1 1 1;
+9 C1;
+LM3;
+P0       0       6000    0       6000    6000    0       6000    ;
+LM2;
+P0       0       6000    0       6000    6000    0       6000    ;
+DF;
+C 1;
+E

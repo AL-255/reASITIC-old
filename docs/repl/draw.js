@@ -21,20 +21,72 @@
 (function (global) {
   const SVG_NS = "http://www.w3.org/2000/svg";
 
-  // Mapping of ASITIC tech-file color names → CSS colors.
+  // Mapping of ASITIC tech-file colour names → CSS colours. ASITIC's
+  // tech files (run/tek/*.tek + repl shipping copies) use Tk / X11
+  // colour names directly, sometimes with spaces, capitals, or trailing
+  // digits — we lowercase + trim before lookup. Keys without spaces also
+  // need a "no-space" variant since lookups normalise punctuation.
   const PALETTE = {
+    // Short names from BiCMOS.tek.
     red: "#ef4444", green: "#22c55e", blue: "#60a5fa",
     yellow: "#facc15", white: "#e5e7eb", black: "#1f2937",
     purple: "#a78bfa", orange: "#fb923c", greenish: "#34d399",
     cyan: "#22d3ee", magenta: "#e879f9", grey: "#9ca3af", gray: "#9ca3af",
+    // X11 / Tk colour names that show up in CMOS.tek.
+    "light green": "#86efac", "lightgreen": "#86efac",
+    "light blue": "#bfdbfe", "lightblue": "#bfdbfe",
+    "light grey": "#cbd5e1", "lightgray": "#cbd5e1", "lightgrey": "#cbd5e1",
+    "medium purple": "#c4b5fd", "mediumpurple": "#c4b5fd",
+    "dark green": "#16a34a", "darkgreen": "#16a34a",
+    "dark blue": "#1d4ed8", "darkblue": "#1d4ed8",
+    "lightskyblue": "#7dd3fc", "lightskyblue1": "#7dd3fc",
+    "lightskyblue2": "#7dd3fc", "lightskyblue3": "#7dd3fc",
+    pink: "#fb7185", brown: "#a16207", tan: "#d2b48c",
+    navy: "#1e3a8a", violet: "#e879f9", beige: "#fef3c7",
   };
   const FALLBACK_COLORS = ["#5aa9ff", "#22c55e", "#facc15", "#a78bfa", "#fb923c", "#34d399"];
 
-  function colorFor(metalColor, fallbackIdx) {
-    if (!metalColor) return FALLBACK_COLORS[fallbackIdx % FALLBACK_COLORS.length];
-    const lower = String(metalColor).trim().toLowerCase();
-    if (lower.startsWith("#")) return metalColor;
-    return PALETTE[lower] || FALLBACK_COLORS[fallbackIdx % FALLBACK_COLORS.length];
+  function resolvePaletteColor(metalColor) {
+    if (!metalColor) return null;
+    const raw = String(metalColor).trim();
+    if (raw.startsWith("#")) return raw;
+    return PALETTE[raw.toLowerCase()] || null;
+  }
+
+  // Build a stable {metal_name → CSS colour} map for the whole payload.
+  // Critical invariant: every polygon on a given layer renders with the
+  // SAME colour. If we hit an unknown tech-file colour we assign the
+  // next fallback once and stick with it for the rest of the layer's
+  // polygons — otherwise per-polygon ``idx`` fallbacks paint each side
+  // of a spiral a different rainbow colour (the CMOS.tek symptom).
+  function buildLayerColors(polygons) {
+    const colors = new Map();
+    let fb = 0;
+    polygons.forEach((p) => {
+      const key = p.metal_name || ("m" + p.metal);
+      if (colors.has(key)) return;
+      let c = resolvePaletteColor(p.color);
+      if (!c) {
+        c = FALLBACK_COLORS[fb % FALLBACK_COLORS.length];
+        fb++;
+      }
+      colors.set(key, c);
+    });
+    return colors;
+  }
+
+  // Back-compat: a few legacy callsites still pass (color, idx). When
+  // ``key`` is a string (= metal_name) we look up the layer map; when
+  // it's a number (= polygon idx) we keep the old behaviour.
+  function colorFor(metalColor, fallbackKey, layerColors) {
+    if (layerColors && typeof fallbackKey === "string") {
+      const c = layerColors.get(fallbackKey);
+      if (c) return c;
+    }
+    const resolved = resolvePaletteColor(metalColor);
+    if (resolved) return resolved;
+    const i = (typeof fallbackKey === "number") ? fallbackKey : 0;
+    return FALLBACK_COLORS[i % FALLBACK_COLORS.length];
   }
 
   // Lighten/darken a hex color for stroke and fill differentiation.
@@ -116,7 +168,7 @@
     svg.appendChild(g);
   }
 
-  function drawPolygons(svg, payload) {
+  function drawPolygons(svg, payload, layerColors) {
     const { polygons } = payload;
 
     // Group polygons by metal so we can layer them in tech-stack order
@@ -127,7 +179,8 @@
       .sort((a, b) => (a.p.metal | 0) - (b.p.metal | 0));
 
     layered.forEach(({ p, idx }) => {
-      const fill = colorFor(p.color, idx);
+      const key = p.metal_name || ("m" + p.metal);
+      const fill = colorFor(p.color, key, layerColors);
       const segPolys = Array.isArray(p.segment_polys) ? p.segment_polys : [];
       if (segPolys.length === 0) return;
 
@@ -182,32 +235,71 @@
       svg.appendChild(group);
     });
 
-    // Terminal markers: small filled circles at the entry / exit ports of
-    // the spiral so users can see where the actual port leads attach.
+    // Terminal markers: filled circles + labels at the spiral's
+    // electrical ports. The bridge populates ``payload.ports`` for
+    // shapes whose centerline is preserved on the Shape object; complex
+    // multi-coil shapes (transformer, balun, symsq, sympoly) currently
+    // return an empty list — see TODO.md §9.
     if (Array.isArray(payload.ports) && payload.ports.length) {
-      const span = payload.bbox[2] - payload.bbox[0];
-      const r = Math.max(span * 0.012, 1.0);
-      payload.ports.forEach((p) => {
+      const span = Math.max(
+        payload.bbox[2] - payload.bbox[0],
+        payload.bbox[3] - payload.bbox[1],
+        1,
+      );
+      const r = Math.max(span * 0.018, 1.8);
+      const fontSize = Math.max(span * 0.04, 4);
+      payload.ports.forEach((p, idx) => {
+        // Each port is tagged with the metal name + tech-file colour by
+        // bridge.py; we re-use the same per-layer colour map the
+        // metal-fill code uses so the marker visually matches its layer
+        // even when the tech-file colour fell back to the palette.
+        const fill = colorFor(p.color, p.metal_name || idx, layerColors);
         const c = document.createElementNS(SVG_NS, "circle");
         c.setAttribute("cx", p.x);
         c.setAttribute("cy", -p.y);
         c.setAttribute("r", r);
         c.setAttribute("class", "shape-port");
+        c.setAttribute("fill", fill);
+        if (p.metal_name) c.setAttribute("data-port-layer", p.metal_name);
         svg.appendChild(c);
+        if (p.label) {
+          const t = document.createElementNS(SVG_NS, "text");
+          t.setAttribute("x", p.x + r * 1.4);
+          t.setAttribute("y", -p.y + r * 0.55);
+          t.setAttribute("class", "shape-port-label");
+          t.setAttribute("font-size", fontSize);
+          t.setAttribute("fill", fill);
+          t.textContent = p.label;
+          svg.appendChild(t);
+        }
       });
     }
   }
 
-  function renderLegend(legendEl, payload) {
+  function renderLegend(legendEl, payload, svg, layerColors) {
     legendEl.innerHTML = "";
     const seen = new Set();
     payload.polygons.forEach((p, i) => {
       const key = p.metal_name || ("m" + p.metal);
       if (seen.has(key)) return;
       seen.add(key);
-      const span = document.createElement("span");
-      span.innerHTML = `<span class="swatch" style="background:${colorFor(p.color, i)}"></span>${key}`;
-      legendEl.appendChild(span);
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "legend-chip";
+      btn.dataset.layer = key;
+      btn.title = `Click to toggle the ${key} layer`;
+      const fill = colorFor(p.color, key, layerColors);
+      btn.innerHTML = `<span class="swatch" style="background:${fill}"></span>${key}`;
+      btn.addEventListener("click", () => {
+        const hidden = btn.classList.toggle("layer-hidden");
+        // Match every <g> on this metal — there's one per polygon group
+        // in drawPolygons, all tagged with ``data-metal-name``.
+        const sel = `g[data-metal-name="${key.replace(/"/g, '\\"')}"]`;
+        svg.querySelectorAll(sel).forEach((g) => {
+          g.style.display = hidden ? "none" : "";
+        });
+      });
+      legendEl.appendChild(btn);
     });
   }
 
@@ -215,8 +307,13 @@
     clear(svg);
     setViewBox(svg, payload.bbox);
     drawAxes(svg, payload.bbox);
-    drawPolygons(svg, payload);
-    if (legendEl) renderLegend(legendEl, payload);
+    // Resolve every layer's CSS colour once so the legend swatch, the
+    // metal polygons, and the port markers all agree — even when the
+    // tech-file colour ("LightSkyBlue1", "medium purple") isn't in our
+    // palette and we fall back to the rainbow set.
+    const layerColors = buildLayerColors(payload.polygons);
+    drawPolygons(svg, payload, layerColors);
+    if (legendEl) renderLegend(legendEl, payload, svg, layerColors);
     if (dimsEl) {
       const [x0, y0, x1, y1] = payload.bbox;
       const segs = payload.polygons.reduce(

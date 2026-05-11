@@ -226,6 +226,17 @@ function setEnabled(enabled) {
 
 function downloadText(filename, text, mime = "text/plain") {
   const blob = new Blob([text], { type: mime });
+  triggerDownload(filename, blob);
+}
+
+function downloadBytes(filename, u8, mime = "application/octet-stream") {
+  // ``u8`` should be a Uint8Array (Pyodide's auto-conversion of Python
+  // bytes). Blob([Uint8Array]) wraps without copying.
+  const blob = new Blob([u8], { type: mime });
+  triggerDownload(filename, blob);
+}
+
+function triggerDownload(filename, blob) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -623,16 +634,26 @@ function formatCreateCommand(spec) {
 }
 
 function fmtLrq(d) {
-  return [
+  const lines = [
     `Frequency        : ${fmtFloat(d.freq_ghz, 3)} GHz`,
     `Self inductance L: ${fmtFloat(d.L_nH, 4)} nH`,
     `R (DC)           : ${fmtFloat(d.R_dc_ohm, 4)} Ω`,
     `R (AC, ${fmtFloat(d.freq_ghz, 2)} GHz): ${fmtFloat(d.R_ac_ohm, 4)} Ω`,
     `Quality factor Q : ${fmtFloat(d.Q, 2)}`,
-    "",
-    `Segments         : ${d.n_segments}`,
-    `Total run length : ${fmtFloat(d.total_length_um, 1)} μm`,
-  ].join("\n");
+  ];
+  if (d.self_resonance_ghz) {
+    const above = d.freq_ghz >= d.self_resonance_ghz;
+    lines.push(
+      `Self-resonance   : ${fmtFloat(d.self_resonance_ghz, 3)} GHz${
+        above ? "  ⚠ analysis frequency is ABOVE SRF — values unreliable" : ""
+      }`,
+    );
+  } else {
+    lines.push("Self-resonance   : not found in search bracket");
+  }
+  lines.push("", `Segments         : ${d.n_segments}`,
+    `Total run length : ${fmtFloat(d.total_length_um, 1)} μm`);
+  return lines.join("\n");
 }
 
 function fmtPi(d) {
@@ -648,14 +669,112 @@ function fmtPi(d) {
   ].join("\n");
 }
 
+function fmtPi2(d) {
+  return [
+    `Pi2 (EM-based, no user ground) at ${fmtFloat(d.freq_ghz, 3)} GHz`,
+    "",
+    `L_series       : ${fmtFloat(d.L_series_nH, 4)} nH`,
+    `R_series       : ${fmtFloat(d.R_series_ohm, 4)} Ω`,
+    `C_p1_to_gnd    : ${fmtFloat(d.C_p1_to_gnd_fF, 3)} fF`,
+    `C_p2_to_gnd    : ${fmtFloat(d.C_p2_to_gnd_fF, 3)} fF`,
+    `R_sub_p1       : ${fmtFloat(d.R_sub_p1_ohm, 4)} Ω`,
+    `R_sub_p2       : ${fmtFloat(d.R_sub_p2_ohm, 4)} Ω`,
+  ].join("\n");
+}
+
+function fmtPiX(d) {
+  return [
+    `PiX (extended, substrate broken out) at ${fmtFloat(d.freq_ghz, 3)} GHz`,
+    "",
+    `L             : ${fmtFloat(d.L_nH, 4)} nH`,
+    `R_series      : ${fmtFloat(d.R_series_ohm, 4)} Ω`,
+    `C_sub1        : ${fmtFloat(d.C_sub1_fF, 3)} fF`,
+    `C_sub2        : ${fmtFloat(d.C_sub2_fF, 3)} fF`,
+    `R_sub1        : ${fmtFloat(d.R_sub1_ohm, 4)} Ω`,
+    `R_sub2        : ${fmtFloat(d.R_sub2_ohm, 4)} Ω`,
+  ].join("\n");
+}
+
+function fmtCapacitance(d) {
+  return [
+    `Capacitance at ${fmtFloat(d.freq_ghz, 3)} GHz`,
+    "",
+    `Port-to-ground (Pi):`,
+    `  C_p1        : ${fmtFloat(d.C_p1_fF, 3)} fF`,
+    `  C_p2        : ${fmtFloat(d.C_p2_fF, 3)} fF`,
+    `  G_p1        : ${fmtFloat(d.g_p1, 4)} S`,
+    `  G_p2        : ${fmtFloat(d.g_p2, 4)} S`,
+    "",
+    `Substrate side (PiX):`,
+    `  C_sub1      : ${fmtFloat(d.C_sub1_fF, 3)} fF`,
+    `  C_sub2      : ${fmtFloat(d.C_sub2_fF, 3)} fF`,
+    `  R_sub1      : ${fmtFloat(d.R_sub1_ohm, 4)} Ω`,
+    `  R_sub2      : ${fmtFloat(d.R_sub2_ohm, 4)} Ω`,
+  ].join("\n");
+}
+
+function fmtResisHF(d) {
+  return [
+    `Series resistance at ${fmtFloat(d.freq_ghz, 3)} GHz`,
+    "",
+    `R (DC)        : ${fmtFloat(d.R_dc_ohm, 4)} Ω`,
+    `R (AC, skin)  : ${fmtFloat(d.R_ac_ohm, 4)} Ω`,
+    `Δ (R_ac−R_dc) : ${fmtFloat(d.delta_R_ohm, 4)} Ω`,
+    `R_ac / R_dc   : ${fmtFloat(d.ratio, 3)}`,
+  ].join("\n");
+}
+
+function fmtShuntR(d) {
+  return [
+    `Shunt input resistance at ${fmtFloat(d.freq_ghz, 3)} GHz`,
+    "",
+    `Single-ended:`,
+    `  R_p         : ${fmtFloat(d.single_ended.R_p_ohm, 3)} Ω`,
+    `  Q           : ${fmtFloat(d.single_ended.Q, 2)}`,
+    `  L           : ${fmtFloat(d.single_ended.L_nH, 4)} nH`,
+    `  R_series    : ${fmtFloat(d.single_ended.R_series_ohm, 4)} Ω`,
+    "",
+    `Differential:`,
+    `  R_p         : ${fmtFloat(d.differential.R_p_ohm, 3)} Ω`,
+    `  Q           : ${fmtFloat(d.differential.Q, 2)}`,
+    `  L           : ${fmtFloat(d.differential.L_nH, 4)} nH`,
+    `  R_series    : ${fmtFloat(d.differential.R_series_ohm, 4)} Ω`,
+  ].join("\n");
+}
+
+function fmtZin(d) {
+  function row(z) {
+    const mag = Math.hypot(z.real, z.imag);
+    const phase = Math.atan2(z.imag, z.real) * 180 / Math.PI;
+    return `${fmtFloat(z.real, 3).padStart(9)} + j ${fmtFloat(z.imag, 3).padStart(9)} ` +
+           `Ω    (|Z|=${fmtFloat(mag, 3)} Ω, ∠=${fmtFloat(phase, 1)}°)`;
+  }
+  return [
+    `Input impedance at ${fmtFloat(d.freq_ghz, 3)} GHz`,
+    "",
+    `Z11 (port 2 grounded)   : ${row(d.z_p1_grounded)}`,
+    `Z22 (port 1 grounded)   : ${row(d.z_p2_grounded)}`,
+    `Z_diff (differential)   : ${row(d.z_differential)}`,
+    `Z_in @ 50 Ω term        : ${row(d.z_50ohm_terminated)}`,
+  ].join("\n");
+}
+
 // L · R · Q sweep — same two-pane layout as the S-param sweep but the
 // plot is a small-multiples (3 stacked panels: L, R_ac, Q) since the
 // three quantities have unrelated y-axis scales. The table is wider too
 // since it carries L, R_dc, R_ac, Q simultaneously.
 function renderLrqSweepTable(tableBody, d) {
   tableBody.innerHTML = "";
+  const srf = (typeof d.self_resonance_ghz === "number" && d.self_resonance_ghz > 0)
+    ? d.self_resonance_ghz : Infinity;
   for (let i = 0; i < d.freqs_ghz.length; i++) {
     const tr = document.createElement("tr");
+    if (d.freqs_ghz[i] >= srf) {
+      // Flag the row: at and above SRF the geometry-only L · R_ac · Q
+      // model no longer describes the inductor (capacitive regime).
+      tr.classList.add("above-srf");
+      tr.title = `Above SRF (${srf.toFixed(3)} GHz) — values unreliable`;
+    }
     [
       d.freqs_ghz[i].toFixed(3),
       d.L_nH[i].toFixed(4),
@@ -777,6 +896,51 @@ function renderLrqSweepPlot(svg, d) {
       data: p.data, color: p.color, label: p.label,
     });
   });
+
+  // Shade everything at or above the SRF with a translucent red wash
+  // and draw a dashed line at the SRF itself. The traces underneath
+  // remain visible — the shading is just a "these values are wrong"
+  // marker, matching the ".above-srf" rows in the table.
+  if (typeof d.self_resonance_ghz === "number" && d.self_resonance_ghz > 0
+      && d.self_resonance_ghz <= fmax) {
+    const srf = d.self_resonance_ghz;
+    const COLOR_BAD = "#f87171";
+    const xr = Math.max(M.left, M.left + ((srf - fmin) / fspan) * innerW);
+    for (let i = 0; i < panels.length; i++) {
+      const py = M.top + i * (panelH + gap);
+      const rect = document.createElementNS(NS, "rect");
+      rect.setAttribute("x", xr);
+      rect.setAttribute("y", py);
+      rect.setAttribute("width", Math.max(0, M.left + innerW - xr));
+      rect.setAttribute("height", panelH);
+      rect.setAttribute("fill", COLOR_BAD);
+      rect.setAttribute("opacity", "0.16");
+      svg.appendChild(rect);
+    }
+    if (srf >= fmin) {
+      const ln = document.createElementNS(NS, "line");
+      ln.setAttribute("x1", xr); ln.setAttribute("x2", xr);
+      ln.setAttribute("y1", M.top);
+      ln.setAttribute("y2", M.top + 3 * panelH + 2 * gap);
+      ln.setAttribute("stroke", COLOR_BAD);
+      ln.setAttribute("stroke-dasharray", "3 3");
+      svg.appendChild(ln);
+      const lbl = document.createElementNS(NS, "text");
+      lbl.setAttribute("x", xr + 4);
+      lbl.setAttribute("y", M.top + 9);
+      lbl.setAttribute("fill", COLOR_BAD);
+      lbl.textContent = `SRF ≈ ${srf.toFixed(2)} GHz`;
+      svg.appendChild(lbl);
+    } else {
+      // SRF is below the swept band — every row/panel is invalid.
+      const lbl = document.createElementNS(NS, "text");
+      lbl.setAttribute("x", M.left + 4);
+      lbl.setAttribute("y", M.top + 9);
+      lbl.setAttribute("fill", COLOR_BAD);
+      lbl.textContent = `SRF ≈ ${srf.toFixed(2)} GHz — entire sweep is above SRF`;
+      svg.appendChild(lbl);
+    }
+  }
 
   // Shared x-axis tick labels at the bottom of the last panel.
   const lastY = M.top + 2 * (panelH + gap) + panelH;
@@ -970,15 +1134,22 @@ function captureAnalysisParams(action) {
 
 // Build the human-readable label shown on the tab chip.
 function labelForAction(action, params) {
+  const f = (params && params.freq !== undefined) ? fmtFloat(params.freq, 3) : "";
   switch (action) {
-    case "lrq":       return `L·R·Q · ${fmtFloat(params.freq, 3)} GHz`;
-    case "pi":        return `Pi · ${fmtFloat(params.freq, 3)} GHz`;
-    case "sweep":     return `S-sweep · ${params.f1}–${params.f2}/${params.step} GHz`;
-    case "lrq_sweep": return `L·R·Q sweep · ${params.f1}–${params.f2}/${params.step} GHz`;
-    case "s2p":       return `.s2p · ${params.f1}–${params.f2}/${params.step} GHz`;
-    case "spice":     return `SPICE · ${fmtFloat(params.freq, 3)} GHz`;
-    case "info":      return `Geom info`;
-    default:          return action;
+    case "lrq":         return `L·R·Q · ${f} GHz`;
+    case "pi":          return `Pi · ${f} GHz`;
+    case "pi2":         return `Pi2 · ${f} GHz`;
+    case "pix":         return `PiX · ${f} GHz`;
+    case "capacitance": return `Capacitance · ${f} GHz`;
+    case "resis_hf":    return `ResisHF · ${f} GHz`;
+    case "shunt_r":     return `ShuntR · ${f} GHz`;
+    case "zin":         return `Zin · ${f} GHz`;
+    case "sweep":       return `S-sweep · ${params.f1}–${params.f2}/${params.step} GHz`;
+    case "lrq_sweep":   return `L·R·Q sweep · ${params.f1}–${params.f2}/${params.step} GHz`;
+    case "s2p":         return `.s2p · ${params.f1}–${params.f2}/${params.step} GHz`;
+    case "spice":       return `SPICE · ${f} GHz`;
+    case "info":        return `Geom info`;
+    default:            return action;
   }
 }
 
@@ -997,6 +1168,24 @@ async function runAnalysisIntoTab(reg) {
     } else if (action === "pi") {
       const r = await py.analyze_pi(params.freq);
       out.textContent = fmtPi(r);
+    } else if (action === "pi2") {
+      const r = await py.analyze_pi2(params.freq);
+      out.textContent = fmtPi2(r);
+    } else if (action === "pix") {
+      const r = await py.analyze_pix(params.freq);
+      out.textContent = fmtPiX(r);
+    } else if (action === "capacitance") {
+      const r = await py.analyze_capacitance(params.freq);
+      out.textContent = fmtCapacitance(r);
+    } else if (action === "resis_hf") {
+      const r = await py.analyze_resis_hf(params.freq);
+      out.textContent = fmtResisHF(r);
+    } else if (action === "shunt_r") {
+      const r = await py.analyze_shunt_resistance(params.freq);
+      out.textContent = fmtShuntR(r);
+    } else if (action === "zin") {
+      const r = await py.analyze_zin(params.freq);
+      out.textContent = fmtZin(r);
     } else if (action === "sweep") {
       const r = await py.analyze_sweep(params.f1, params.f2, params.step);
       renderSweepTable(paneEl.querySelector(".sweep-table tbody"), r);
@@ -1199,11 +1388,39 @@ async function refreshAnalysisTabs() {
 // Compat wrapper for the analysis buttons in the params panel.
 async function runAction(name) {
   if (!bridgeReady) return;
+  if (name === "gds") return runGdsExport();
   try {
     await spawnAnalysisTab(name);
   } catch (err) {
     setStatus("Action failed.", "error");
     showResult(`${name} failed:\n${err.message || err}`, "error");
+  }
+}
+
+// GDS export — pure side-effect, no tab. The bridge returns a Python
+// ``bytes`` which Pyodide auto-converts to a ``Uint8Array``; we wrap it
+// in a Blob and trigger the browser download.
+async function runGdsExport() {
+  setStatus("Building GDS-II…", "busy");
+  try {
+    const baseName = (ui.name && ui.name.value) || "L1";
+    const u8 = await py.export_gds_bytes();
+    downloadBytes(`${baseName}.gds`, u8);
+    setStatus(`Exported ${baseName}.gds (${u8.length.toLocaleString()} bytes).`, "ready");
+  } catch (err) {
+    const msg = String(err && err.message || err);
+    setStatus("GDS export failed.", "error");
+    if (msg.includes("gdstk")) {
+      showResult(
+        `GDS export needs the ``gdstk`` package, which the in-browser ` +
+        `Pyodide build didn't manage to load. Run reASITIC locally and ` +
+        `use the regular CLI exporter for a guaranteed-correct file.\n\n` +
+        msg,
+        "error",
+      );
+    } else {
+      showResult(`GDS export failed:\n${msg}`, "error");
+    }
   }
 }
 

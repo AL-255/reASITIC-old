@@ -40,6 +40,16 @@ async function boot() {
     indexURL: "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/",
   });
   await pyodide.loadPackage(["numpy", "scipy", "micropip"]);
+  // gdstk ships as a Pyodide built-in package; load it best-effort so
+  // the GDS export button works. If the package isn't available the
+  // bridge surfaces a friendly error at click time rather than failing
+  // the whole boot.
+  try {
+    await pyodide.loadPackage(["gdstk"]);
+  } catch (err) {
+    // Boot continues; export_gds_bytes will raise ImportError downstream.
+    self.postMessage({ id: 0, ok: true, info: "gdstk not available; GDS export will be unavailable." });
+  }
   const micropip = pyodide.pyimport("micropip");
   const wheelUrl = new URL(
     "wheels/reasitic-0.0.1-py3-none-any.whl",

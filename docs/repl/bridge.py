@@ -20,10 +20,16 @@ import reasitic
 from reasitic.exports.spice import write_spice_subckt
 from reasitic.network import (
     linear_freqs,
+    pi3_model,
     pi_model_at_freq,
+    pix_model,
     self_resonance,
+    shunt_resistance,
+    spiral_y_at_freq,
     two_port_sweep,
     write_touchstone,
+    z_2port_from_y,
+    zin_terminated,
 )
 
 
@@ -131,13 +137,72 @@ def _layout_polys_to_payload(shape, name: str) -> dict:
         "name": name,
         "bbox": bbox,
         "polygons": poly_payload,
-        "ports": [],
+        "ports": _compute_ports(shape),
         "metal_index": shape.metal,
         "turns": shape.turns,
         "width": shape.width,
         "spacing": shape.spacing,
         "sides": shape.sides,
     }
+
+
+def _compute_ports(shape) -> list[dict]:
+    """Best-effort port markers for the layout view.
+
+    For shapes whose ``.polygons`` is a single centerline polyline (wire,
+    ring, square_spiral, polygon_spiral, multi_metal_square) we use the
+    first / last polyline vertex as port 1 / port 2. ``via`` gets a single
+    marker at the cluster centre, and ``capacitor`` gets one at the
+    plate centre.
+
+    Each port carries its ``metal_name`` and tech-file ``color`` so the
+    canvas can render the marker in the same colour as the layer it sits
+    on.
+
+    For shapes whose ``.polygons`` is already the canonical CIF
+    quad-per-side emission (``transformer_*``, ``balun_*``, ``symsq``,
+    ``sympoly``), we don't have a per-kind port-resolution pass yet —
+    those return ``[]`` and the layout shows no port markers (see §9 in
+    TODO.md).
+    """
+    tech = STATE["tech"]
+    polys = shape.polygons
+
+    def metal_info(metal_idx: int) -> tuple[str, str]:
+        for m in tech.metals:
+            if m.index == metal_idx:
+                return (m.name or f"m{metal_idx}", m.color or "white")
+        return (f"m{metal_idx}", "white")
+
+    if shape.kind == "via":
+        name, color = metal_info(shape.metal)
+        return [{
+            "x": shape.x_origin, "y": shape.y_origin, "label": "V",
+            "metal_name": name, "color": color,
+        }]
+    if shape.kind == "capacitor":
+        cx = shape.x_origin + shape.length * 0.5
+        cy = shape.y_origin + shape.width * 0.5
+        name, color = metal_info(shape.metal)
+        return [{
+            "x": cx, "y": cy, "label": "C",
+            "metal_name": name, "color": color,
+        }]
+    if len(polys) == 1 and len(polys[0].vertices) >= 2:
+        first = polys[0].vertices[0]
+        last = polys[0].vertices[-1]
+        name, color = metal_info(polys[0].metal)
+        ports = [{
+            "x": first.x, "y": first.y, "label": "P1",
+            "metal_name": name, "color": color,
+        }]
+        if abs(first.x - last.x) > 1e-9 or abs(first.y - last.y) > 1e-9:
+            ports.append({
+                "x": last.x, "y": last.y, "label": "P2",
+                "metal_name": name, "color": color,
+            })
+        return ports
+    return []
 
 
 def build_shape(spec: dict) -> dict:
@@ -405,6 +470,11 @@ def analyze_lrq(freq_ghz: float) -> dict:
     Q = reasitic.metal_only_q(sh, tech, freq_ghz)
     n_segs = len(sh.segments())
     total_len = sum(s.length for s in sh.segments())
+    # Search the SRF over a generous bracket around the requested freq so
+    # we surface it even when the user is well below / above resonance.
+    sr_freq = _find_srf(sh, tech,
+                        f_start=max(0.01, freq_ghz * 0.05),
+                        f_stop=max(freq_ghz * 10.0, 50.0))
     return {
         "freq_ghz": freq_ghz,
         "L_nH": L,
@@ -413,7 +483,28 @@ def analyze_lrq(freq_ghz: float) -> dict:
         "Q": Q,
         "n_segments": n_segs,
         "total_length_um": total_len,
+        "self_resonance_ghz": sr_freq,
     }
+
+
+def _find_srf(sh, tech, *, f_start: float, f_stop: float) -> float | None:
+    """Best-effort SRF lookup. Returns ``None`` if the search doesn't
+    converge (the bracket may not contain a resonance, or the model may
+    be unstable for this geometry).
+
+    Calls ``reasitic.network.self_resonance``, which returns a
+    ``SelfResonance`` dataclass with ``.freq_ghz`` and ``.converged``.
+    """
+    try:
+        sr = self_resonance(sh, tech, f_low_ghz=f_start, f_high_ghz=f_stop)
+        if not sr or not getattr(sr, "converged", False):
+            return None
+        f = getattr(sr, "freq_ghz", None)
+        if f is None or not math.isfinite(f):
+            return None
+        return float(f)
+    except Exception:
+        return None
 
 
 def analyze_pi(freq_ghz: float) -> dict:
@@ -427,6 +518,131 @@ def analyze_pi(freq_ghz: float) -> dict:
         "C_p2_fF": pi.C_p2_fF,
         "g_p1": pi.g_p1,
         "g_p2": pi.g_p2,
+    }
+
+
+def analyze_pi2(freq_ghz: float) -> dict:
+    """ASITIC ``Pi2`` — Pi-equivalent via EM analysis (no user ground).
+
+    Implemented as :func:`reasitic.network.pi3_model` with
+    ``ground_shape=None`` (Pi3's default — back-plane is grounded, no
+    additional user-supplied ground spiral).
+    """
+    sh, tech = _require()
+    r = pi3_model(sh, tech, freq_ghz, ground_shape=None)
+    return {
+        "freq_ghz": freq_ghz,
+        "L_series_nH": r.L_series_nH,
+        "R_series_ohm": r.R_series_ohm,
+        "C_p1_to_gnd_fF": r.C_p1_to_gnd_fF,
+        "C_p2_to_gnd_fF": r.C_p2_to_gnd_fF,
+        "R_sub_p1_ohm": r.R_sub_p1_ohm,
+        "R_sub_p2_ohm": r.R_sub_p2_ohm,
+    }
+
+
+def analyze_pix(freq_ghz: float) -> dict:
+    """ASITIC ``PiX`` — extended Pi with substrate-loss conductance broken out."""
+    sh, tech = _require()
+    r = pix_model(sh, tech, freq_ghz)
+    return {
+        "freq_ghz": freq_ghz,
+        "L_nH": r.L_nH,
+        "R_series_ohm": r.R_series_ohm,
+        "C_sub1_fF": r.C_sub1_fF,
+        "C_sub2_fF": r.C_sub2_fF,
+        "R_sub1_ohm": r.R_sub1_ohm,
+        "R_sub2_ohm": r.R_sub2_ohm,
+    }
+
+
+def analyze_capacitance(freq_ghz: float) -> dict:
+    """ASITIC ``Capacitance`` — port + substrate capacitance breakdown.
+
+    The Pi-equivalent gives ``C_p1`` / ``C_p2`` (port-to-port and
+    port-to-ground caps), and ``PiX`` adds the substrate-side
+    ``C_sub1`` / ``C_sub2`` + the substrate loss resistors.
+    """
+    sh, tech = _require()
+    pi = pi_model_at_freq(sh, tech, freq_ghz)
+    px = pix_model(sh, tech, freq_ghz)
+    return {
+        "freq_ghz": freq_ghz,
+        "C_p1_fF": pi.C_p1_fF,
+        "C_p2_fF": pi.C_p2_fF,
+        "g_p1": pi.g_p1,
+        "g_p2": pi.g_p2,
+        "C_sub1_fF": px.C_sub1_fF,
+        "C_sub2_fF": px.C_sub2_fF,
+        "R_sub1_ohm": px.R_sub1_ohm,
+        "R_sub2_ohm": px.R_sub2_ohm,
+    }
+
+
+def analyze_resis_hf(freq_ghz: float) -> dict:
+    """ASITIC ``ResisHF`` — high-frequency series resistance breakdown.
+
+    Computes the DC resistance (sheet-resistance integral) and the AC
+    resistance (skin-effect-aware) at ``freq_ghz``. The ratio + delta
+    quantify how much the conductor's loss has grown vs. DC.
+    """
+    sh, tech = _require()
+    R_dc = reasitic.compute_dc_resistance(sh, tech)
+    R_ac = reasitic.compute_ac_resistance(sh, tech, freq_ghz)
+    ratio = (R_ac / R_dc) if R_dc > 0 else float("nan")
+    return {
+        "freq_ghz": freq_ghz,
+        "R_dc_ohm": R_dc,
+        "R_ac_ohm": R_ac,
+        "delta_R_ohm": R_ac - R_dc,
+        "ratio": ratio,
+    }
+
+
+def analyze_shunt_resistance(freq_ghz: float) -> dict:
+    """ASITIC ``ShuntR`` — equivalent shunt input resistance.
+
+    Returns single-ended and differential ``R_p`` together with Q and the
+    series L/R the parallel equivalent was derived from.
+    """
+    sh, tech = _require()
+    se = shunt_resistance(sh, tech, freq_ghz, differential=False)
+    diff = shunt_resistance(sh, tech, freq_ghz, differential=True)
+    return {
+        "freq_ghz": freq_ghz,
+        "single_ended": {
+            "R_p_ohm": se.R_p_ohm, "Q": se.Q,
+            "L_nH": se.L_nH, "R_series_ohm": se.R_series_ohm,
+        },
+        "differential": {
+            "R_p_ohm": diff.R_p_ohm, "Q": diff.Q,
+            "L_nH": diff.L_nH, "R_series_ohm": diff.R_series_ohm,
+        },
+    }
+
+
+def analyze_zin(freq_ghz: float) -> dict:
+    """ASITIC ``Zin`` — complex input impedance, three configurations.
+
+    * port-2 grounded (``Z11`` from the 2-port Z)
+    * port-1 grounded (``Z22`` analogue — Z looking into port 2)
+    * differential (one port driven against the other)
+
+    Also reports the impedance with port-2 terminated in 50 Ω since the
+    REPL's S-parameter sweep already assumes a 50 Ω reference.
+    """
+    sh, tech = _require()
+    Y = spiral_y_at_freq(sh, tech, freq_ghz)
+    z_p1 = z_2port_from_y(Y, port=1)
+    z_p2 = z_2port_from_y(Y, port=2)
+    z_diff = z_2port_from_y(Y, differential=True)
+    z_50 = zin_terminated(sh, tech, freq_ghz)
+    return {
+        "freq_ghz": freq_ghz,
+        "z_p1_grounded": {"real": z_p1.real, "imag": z_p1.imag},
+        "z_p2_grounded": {"real": z_p2.real, "imag": z_p2.imag},
+        "z_differential": {"real": z_diff.real, "imag": z_diff.imag},
+        "z_50ohm_terminated": {"real": z_50.real, "imag": z_50.imag},
     }
 
 
@@ -447,14 +663,8 @@ def analyze_sweep(f1: float, f2: float, step: float) -> dict:
         s12.append(abs(S[0, 1]))
         s21.append(abs(S[1, 0]))
         s22.append(abs(S[1, 1]))
-    # Self-resonance on best-effort basis
-    sr_freq = None
-    try:
-        sr = self_resonance(sh, tech, f_start=f1, f_stop=f2)
-        if sr and getattr(sr, "f_self_res", None):
-            sr_freq = sr.f_self_res
-    except Exception:
-        sr_freq = None
+    # Self-resonance — best-effort lookup inside the swept band first.
+    sr_freq = _find_srf(sh, tech, f_start=f1, f_stop=f2)
     return {
         "freqs_ghz": list(fs),
         "abs_S11": s11,
@@ -486,12 +696,19 @@ def analyze_lrq_sweep(f1: float, f2: float, step: float) -> dict:
     R_dc_arr = [R_dc for _ in fs]
     R_ac_arr = [reasitic.compute_ac_resistance(sh, tech, f) for f in fs]
     Q_arr = [reasitic.metal_only_q(sh, tech, f) for f in fs]
+    # Search the SRF inside the swept band first; if not found, widen the
+    # search so we can warn users whose sweep sits entirely below / above.
+    sr_freq = _find_srf(sh, tech, f_start=f1, f_stop=f2)
+    if sr_freq is None:
+        sr_freq = _find_srf(sh, tech, f_start=max(0.01, f1 * 0.05),
+                            f_stop=max(f2 * 10.0, 50.0))
     return {
         "freqs_ghz": fs,
         "L_nH": L_arr,
         "R_dc_ohm": R_dc_arr,
         "R_ac_ohm": R_ac_arr,
         "Q": Q_arr,
+        "self_resonance_ghz": sr_freq,
     }
 
 
@@ -506,6 +723,21 @@ def export_s2p(f1: float, f2: float, step: float) -> str:
 def export_spice(freq_ghz: float) -> str:
     sh, tech = _require()
     return write_spice_subckt(sh, tech, freq_ghz)
+
+
+def export_gds_bytes() -> bytes:
+    """Render the current shape as a GDS-II byte stream.
+
+    The C-faithful canonical CIF polygons (computed by
+    ``reasitic.geometry.layout_polygons``) are emitted via gdstk so the
+    GDS file matches the canvas's metal/via layout exactly. Requires
+    ``gdstk``; in the in-browser REPL this is loaded by ``worker.js`` at
+    boot via Pyodide's package index — when the package isn't available
+    the click handler reports a clear ImportError.
+    """
+    sh, tech = _require()
+    from reasitic.exports.gds import write_gds
+    return write_gds([sh], tech=tech, library_name="REASITIC")
 
 
 def geom_info() -> dict:

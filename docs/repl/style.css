@@ -271,9 +271,10 @@ button.primary:hover:not(:disabled) {
 
 .legend {
   display: flex;
-  gap: 0.6rem;
+  gap: 0.35rem;
   font-size: 0.75rem;
   color: var(--muted);
+  flex-wrap: wrap;
 }
 .legend .swatch {
   display: inline-block;
@@ -283,6 +284,35 @@ button.primary:hover:not(:disabled) {
   margin-right: 0.25rem;
   vertical-align: middle;
 }
+/* Each layer in the legend is a click target — click to hide the layer
+   on the canvas and click again to show it. Visual feedback: faded chip
+   with a strike-through when hidden. */
+.legend-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.12rem 0.4rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, opacity 0.12s, border-color 0.12s;
+  user-select: none;
+}
+.legend-chip .swatch { margin: 0; }
+.legend-chip:hover {
+  background: var(--bg-3);
+  border-color: var(--border);
+  color: var(--fg);
+}
+.legend-chip.layer-hidden {
+  opacity: 0.4;
+  text-decoration: line-through;
+}
+.legend-chip.layer-hidden .swatch { opacity: 0.4; }
 
 .output-head {
   display: flex;
@@ -410,6 +440,16 @@ button.primary:hover:not(:disabled) {
   font-variant-numeric: tabular-nums;
 }
 .sweep-table tbody tr:last-child td { border-bottom: none; }
+/* Rows where the swept frequency sits above the self-resonance
+   frequency — the geometry-only model no longer describes the
+   inductor, so we flag the numbers as unreliable. */
+.sweep-table tbody tr.above-srf td {
+  background: rgba(248, 113, 113, 0.18);
+  color: #fecaca;
+}
+.sweep-table tbody tr.above-srf:hover td {
+  background: rgba(248, 113, 113, 0.28);
+}
 .sweep-table thead th {
   color: var(--muted);
   background: var(--bg-2);
@@ -514,7 +554,19 @@ footer {
   font-family: var(--mono);
 }
 
-.shape-port { fill: var(--warn); stroke: #000; stroke-width: 0.5; }
+/* ``fill`` is set inline per-port in draw.js so the marker matches the
+   tech-file colour of the layer it sits on. The dark stroke + paint-
+   order outline below keep the marker visible on top of any metal. */
+.shape-port { stroke: #000; stroke-width: 0.6; }
+.shape-port-label {
+  font-family: var(--mono);
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: #0e1116;
+  stroke-width: 0.6;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
 .shape-bbox { stroke: var(--muted); stroke-dasharray: 3 3; fill: none; opacity: 0.4; }
 .axis      { stroke: var(--border); stroke-width: 0.5; }
 .axis-label { fill: var(--muted); font-size: 8px; font-family: var(--mono); }

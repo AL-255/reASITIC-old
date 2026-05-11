@@ -9,6 +9,19 @@ A clean-room Python re-implementation of the 1999 UC Berkeley **ASITIC**
 RF-spiral inductor analysis tool, faithful to the original but powered
 by NumPy / SciPy and a strict, fully type-annotated codebase.
 
+```{raw} html
+<p style="font-size: 1.05rem; margin: 1.2rem 0 1.4rem;">
+  <a href="repl/index.html" target="_blank" rel="noopener"
+     style="display:inline-block;padding:0.65rem 1.1rem;border-radius:6px;
+            background:#0a7;color:#fff;text-decoration:none;font-weight:600;">
+    🚀 Try reASITIC in your browser — no install
+  </a>
+  &nbsp;<span style="color: #888; font-size: 0.9rem;">
+    full Python + NumPy + SciPy + the <code>reasitic</code> wheel via Pyodide
+  </span>
+</p>
+```
+
 ```{toctree}
 :caption: User guide
 :maxdepth: 2

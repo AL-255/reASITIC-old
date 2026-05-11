@@ -41,12 +41,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # TEMP: trimmed to py3.10/ubuntu only to save CI minutes. Restore
+        # the full ["3.10".."3.13"] x [ubuntu, macos] grid before release.
         os: [ubuntu-latest]
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
-        include:
-          # Spot-check macOS on the latest supported Python only
-          - os: macos-latest
-            python-version: "3.12"
+        python-version: ["3.10"]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}

@@ -2494,15 +2494,20 @@ def balun(
     Use ``which="primary"`` (default) or ``which="secondary"`` to
     select the coil to materialise.
     """
-    primary_idx = _resolve_metal(
-        tech, primary_metal if primary_metal is not None else metal,
-    ).index if (metal is not None or primary_metal is not None) else 0
+    primary_arg: int | str | None = (
+        primary_metal if primary_metal is not None else metal
+    )
+    primary_idx: int = (
+        _resolve_metal(tech, primary_arg).index
+        if primary_arg is not None else 0
+    )
     # In the 2D CIF, both BALUN coils land on the SAME metal layer
     # (METAL=m3 in the canonical case). The METAL2 / secondary_metal
     # parameter affects 3D inductance modelling but not the layout.
     # The exit_metal parameter (if provided) is used for the centre-
     # tap via cluster on the primary coil — defaults to METAL2 for
     # backward compat.
+    exit_idx: int | None
     if exit_metal is not None:
         exit_idx = _resolve_metal(tech, exit_metal).index
     else:
@@ -2768,8 +2773,8 @@ def _sympoly_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
                 # Find FIRST containing polygon among the spiral / slant
                 # / stub polys we've already built.
                 container_bbox: tuple[float, float, float, float] | None = None
-                for p in polys:
-                    bx0, by0, bx1, by1 = _bbox(p)
+                for container_poly in polys:
+                    bx0, by0, bx1, by1 = _bbox(container_poly)
                     if (bx0 <= cb_xmin and bx1 >= cb_xmax and
                             by0 <= cb_ymin and by1 >= cb_ymax):
                         container_bbox = (bx0, by0, bx1, by1)

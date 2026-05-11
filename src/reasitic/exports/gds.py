@@ -128,10 +128,9 @@ def _build_gds_library(
     lib = gdstk.Library(name=library_name, unit=unit, precision=precision)
     for shape in shapes:
         cell = gdstk.Cell(shape.name or "UNNAMED")
-        use_layout = tech is not None
-        polys = layout_polygons(shape, tech) if use_layout else shape.polygons
-        x0 = 0.0 if use_layout else shape.x_origin
-        y0 = 0.0 if use_layout else shape.y_origin
+        polys = layout_polygons(shape, tech) if tech is not None else shape.polygons
+        x0 = 0.0 if tech is not None else shape.x_origin
+        y0 = 0.0 if tech is not None else shape.y_origin
         for poly in polys:
             if len(poly.vertices) < 2:
                 continue

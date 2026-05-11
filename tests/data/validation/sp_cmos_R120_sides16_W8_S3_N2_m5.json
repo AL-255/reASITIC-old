@@ -1,0 +1,137 @@
+{
+  "name": "sp_cmos_R120_sides16_W8_S3_N2_m5",
+  "build_command": "SP NAME=SP6:RADIUS=120:SIDES=16:W=8:S=3:N=2:METAL=m5:XORG=200:YORG=200",
+  "shape_name": "SP6",
+  "tech": "CMOS",
+  "tech_file": "CMOS.tek",
+  "geom": {
+    "name": "SP6",
+    "kind": "Polygon spiral",
+    "length_um": null,
+    "width_um": 8.0,
+    "metal": null,
+    "total_length_um": 1307.52,
+    "total_area_um2": 10460.19,
+    "location": [
+      200.0,
+      200.0
+    ],
+    "n_segments": 32,
+    "spiral_l1_um": null,
+    "spiral_l2_um": null,
+    "spiral_spacing_um": 3.0,
+    "spiral_turns": 2.0,
+    "radius_um": 120.0,
+    "n_sides": 16,
+    "primary_width_um": null,
+    "secondary_width_um": null,
+    "primary_turns": null,
+    "secondary_turns": null
+  },
+  "layout": {
+    "cif": "layouts/sp_cmos_R120_sides16_W8_S3_N2_m5.cif",
+    "gds": "layouts/sp_cmos_R120_sides16_W8_S3_N2_m5.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 10460.188865,
+    "ind_dc_nh": 1.6746,
+    "res_dc_ohm": 4.903214,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      4.935991,
+      5.277676
+    ],
+    "q": [
+      2.145899,
+      10.729496
+    ],
+    "lrmat_l_h": [
+      1.658e-09,
+      1.643e-09
+    ],
+    "lrmat_r_ohm": [
+      4.9385,
+      5.5031
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          2.101,
+          2.101,
+          2.106
+        ],
+        "L_nh": 1.66,
+        "R_ohm": 4.93,
+        "Cs1_ff": 62.9,
+        "Rs1_ohm": -2.97,
+        "Cs2_ff": 58.8,
+        "Rs2_ohm": 5.29,
+        "f_res_ghz": 15.59
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          8.605,
+          8.643,
+          9.102
+        ],
+        "L_nh": 1.61,
+        "R_ohm": 5.28,
+        "Cs1_ff": 63.4,
+        "Rs1_ohm": 0.113,
+        "Cs2_ff": 59.1,
+        "Rs2_ohm": 2.01,
+        "f_res_ghz": 15.75
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 121.601,
+        "cap_r_ohm": 0.037
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 121.601,
+        "cap_r_ohm": 0.037
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 16.77,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 83.98,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "SP NAME=SP6:RADIUS=120:SIDES=16:W=8:S=3:N=2:METAL=m5:XORG=200:YORG=200",
+      "MetArea SP6",
+      "Ind SP6",
+      "Res SP6",
+      "ResHF SP6 1.0",
+      "Q SP6 1.0",
+      "Pi2 SP6 1.0",
+      "Cap SP6 1.0",
+      "LRMAT SP6 1.0",
+      "ResHF SP6 5.0",
+      "Q SP6 5.0",
+      "Pi2 SP6 5.0",
+      "Cap SP6 5.0",
+      "LRMAT SP6 5.0",
+      "2Port SP6 1.0 10.0 1.0 S polar slow sp_cmos_R120_sides16_W8_S3_N2_m5.s2p"
+    ],
+    "errors": [
+      "Pi2 SP6 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 SP6 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/sp_cmos_R120_sides16_W8_S3_N2_m5.stable.log",
+    "sweep_log": "analysis/sp_cmos_R120_sides16_W8_S3_N2_m5.sweep.log",
+    "s2p": "analysis/sp_cmos_R120_sides16_W8_S3_N2_m5.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 5
+}

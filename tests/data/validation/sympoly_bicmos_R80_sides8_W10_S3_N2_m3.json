@@ -1,0 +1,137 @@
+{
+  "name": "sympoly_bicmos_R80_sides8_W10_S3_N2_m3",
+  "build_command": "SYMPOLY NAME=YP_80_2:RAD=80:W=10:S=3:N=2:ILEN=20:SIDES=8:METAL=m3:METAL2=m2:XORG=200:YORG=200",
+  "shape_name": "YP_80_2",
+  "tech": "BiCMOS",
+  "tech_file": "BiCMOS.tek",
+  "geom": {
+    "name": "YP_80_2",
+    "kind": "Symmetric polygon spiral",
+    "length_um": null,
+    "width_um": 10.0,
+    "metal": null,
+    "total_length_um": 910.49,
+    "total_area_um2": 9066.09,
+    "location": [
+      200.0,
+      200.0
+    ],
+    "n_segments": 21,
+    "spiral_l1_um": null,
+    "spiral_l2_um": 20.0,
+    "spiral_spacing_um": 3.0,
+    "spiral_turns": 2.0,
+    "radius_um": 80.0,
+    "n_sides": 8,
+    "primary_width_um": null,
+    "secondary_width_um": null,
+    "primary_turns": null,
+    "secondary_turns": null
+  },
+  "layout": {
+    "cif": "layouts/sympoly_bicmos_R80_sides8_W10_S3_N2_m3.cif",
+    "gds": "layouts/sympoly_bicmos_R80_sides8_W10_S3_N2_m3.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 9066.086838,
+    "ind_dc_nh": 0.904621,
+    "res_dc_ohm": 2.111492,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      2.141995,
+      2.272959
+    ],
+    "q": [
+      2.691889,
+      13.459447
+    ],
+    "lrmat_l_h": [
+      8.894e-10,
+      8.795e-10
+    ],
+    "lrmat_r_ohm": [
+      2.1646,
+      2.6147
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          2.575,
+          2.577,
+          2.58
+        ],
+        "L_nh": 0.889,
+        "R_ohm": 2.16,
+        "Cs1_ff": 54.2,
+        "Rs1_ohm": 714.0,
+        "Cs2_ff": 47.8,
+        "Rs2_ohm": 655.0,
+        "f_res_ghz": 22.93
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          9.377,
+          9.558,
+          10.422
+        ],
+        "L_nh": 0.883,
+        "R_ohm": 2.4,
+        "Cs1_ff": 41.5,
+        "Rs1_ohm": 603.0,
+        "Cs2_ff": 37.5,
+        "Rs2_ohm": 663.0,
+        "f_res_ghz": 26.29
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 101.924,
+        "cap_r_ohm": 345.11
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 78.794,
+        "cap_r_ohm": 315.687
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 16.25,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 82.79,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "SYMPOLY NAME=YP_80_2:RAD=80:W=10:S=3:N=2:ILEN=20:SIDES=8:METAL=m3:METAL2=m2:XORG=200:YORG=200",
+      "MetArea YP_80_2",
+      "Ind YP_80_2",
+      "Res YP_80_2",
+      "ResHF YP_80_2 1.0",
+      "Q YP_80_2 1.0",
+      "Pi2 YP_80_2 1.0",
+      "Cap YP_80_2 1.0",
+      "LRMAT YP_80_2 1.0",
+      "ResHF YP_80_2 5.0",
+      "Q YP_80_2 5.0",
+      "Pi2 YP_80_2 5.0",
+      "Cap YP_80_2 5.0",
+      "LRMAT YP_80_2 5.0",
+      "2Port YP_80_2 1.0 10.0 1.0 S polar slow sympoly_bicmos_R80_sides8_W10_S3_N2_m3.s2p"
+    ],
+    "errors": [
+      "Pi2 YP_80_2 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 YP_80_2 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/sympoly_bicmos_R80_sides8_W10_S3_N2_m3.stable.log",
+    "sweep_log": "analysis/sympoly_bicmos_R80_sides8_W10_S3_N2_m3.sweep.log",
+    "s2p": "analysis/sympoly_bicmos_R80_sides8_W10_S3_N2_m3.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 5
+}

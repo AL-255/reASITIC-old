@@ -1,0 +1,137 @@
+{
+  "name": "cap_bicmos_L60_W60_m3_m2",
+  "build_command": "CAPACITOR NAME=C1:LEN=60:WID=60:METAL1=m3:METAL2=m2:XORG=0:YORG=0",
+  "shape_name": "C1",
+  "tech": "BiCMOS",
+  "tech_file": "BiCMOS.tek",
+  "geom": {
+    "name": "C1",
+    "kind": "User defined",
+    "length_um": null,
+    "width_um": null,
+    "metal": null,
+    "total_length_um": 120.0,
+    "total_area_um2": 7200.0,
+    "location": [
+      0.0,
+      0.0
+    ],
+    "n_segments": 2,
+    "spiral_l1_um": null,
+    "spiral_l2_um": null,
+    "spiral_spacing_um": null,
+    "spiral_turns": null,
+    "radius_um": null,
+    "n_sides": null,
+    "primary_width_um": null,
+    "secondary_width_um": null,
+    "primary_turns": null,
+    "secondary_turns": null
+  },
+  "layout": {
+    "cif": "layouts/cap_bicmos_L60_W60_m3_m2.cif",
+    "gds": "layouts/cap_bicmos_L60_W60_m3_m2.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 7200.0,
+    "ind_dc_nh": 0.0680938,
+    "res_dc_ohm": 0.07,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      0.093674,
+      0.466088
+    ],
+    "q": [
+      6.112087,
+      30.560433
+    ],
+    "lrmat_l_h": [
+      6.491e-11,
+      6.349e-11
+    ],
+    "lrmat_r_ohm": [
+      0.0781,
+      0.0962
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          5.22,
+          5.22,
+          5.22
+        ],
+        "L_nh": 0.0649,
+        "R_ohm": 0.0781,
+        "Cs1_ff": 21.8,
+        "Rs1_ohm": 2080.0,
+        "Cs2_ff": 27.0,
+        "Rs2_ohm": 724.0,
+        "f_res_ghz": 133.78
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          20.625,
+          20.549,
+          20.73
+        ],
+        "L_nh": 0.0636,
+        "R_ohm": 0.0957,
+        "Cs1_ff": 17.6,
+        "Rs1_ohm": 1390.0,
+        "Cs2_ff": 23.1,
+        "Rs2_ohm": 1050.0,
+        "f_res_ghz": 150.61
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 48.533,
+        "cap_r_ohm": 632.348
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 40.689,
+        "cap_r_ohm": 598.166
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 6.48,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 31.81,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "CAPACITOR NAME=C1:LEN=60:WID=60:METAL1=m3:METAL2=m2:XORG=0:YORG=0",
+      "MetArea C1",
+      "Ind C1",
+      "Res C1",
+      "ResHF C1 1.0",
+      "Q C1 1.0",
+      "Pi2 C1 1.0",
+      "Cap C1 1.0",
+      "LRMAT C1 1.0",
+      "ResHF C1 5.0",
+      "Q C1 5.0",
+      "Pi2 C1 5.0",
+      "Cap C1 5.0",
+      "LRMAT C1 5.0",
+      "2Port C1 1.0 10.0 1.0 S polar slow cap_bicmos_L60_W60_m3_m2.s2p"
+    ],
+    "errors": [
+      "Pi2 C1 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 C1 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/cap_bicmos_L60_W60_m3_m2.stable.log",
+    "sweep_log": "analysis/cap_bicmos_L60_W60_m3_m2.sweep.log",
+    "s2p": "analysis/cap_bicmos_L60_W60_m3_m2.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 5
+}

@@ -1,0 +1,137 @@
+{
+  "name": "sp_bicmos_R100_sides16_W8_S3_N2_m3",
+  "build_command": "SP NAME=SP4:RADIUS=100:SIDES=16:W=8:S=3:N=2:METAL=m3:XORG=200:YORG=200",
+  "shape_name": "SP4",
+  "tech": "BiCMOS",
+  "tech_file": "BiCMOS.tek",
+  "geom": {
+    "name": "SP4",
+    "kind": "Polygon spiral",
+    "length_um": null,
+    "width_um": 8.0,
+    "metal": null,
+    "total_length_um": 1057.85,
+    "total_area_um2": 8462.82,
+    "location": [
+      200.0,
+      200.0
+    ],
+    "n_segments": 32,
+    "spiral_l1_um": null,
+    "spiral_l2_um": null,
+    "spiral_spacing_um": 3.0,
+    "spiral_turns": 2.0,
+    "radius_um": 100.0,
+    "n_sides": 16,
+    "primary_width_um": null,
+    "secondary_width_um": null,
+    "primary_turns": null,
+    "secondary_turns": null
+  },
+  "layout": {
+    "cif": "layouts/sp_bicmos_R100_sides16_W8_S3_N2_m3.cif",
+    "gds": "layouts/sp_bicmos_R100_sides16_W8_S3_N2_m3.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 8462.818622,
+    "ind_dc_nh": 1.24817,
+    "res_dc_ohm": 2.644631,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      2.677153,
+      3.023295
+    ],
+    "q": [
+      2.965441,
+      14.827204
+    ],
+    "lrmat_l_h": [
+      1.23e-09,
+      1.227e-09
+    ],
+    "lrmat_r_ohm": [
+      2.6828,
+      3.1595
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          2.871,
+          2.873,
+          2.879
+        ],
+        "L_nh": 1.23,
+        "R_ohm": 2.68,
+        "Cs1_ff": 58.7,
+        "Rs1_ohm": 649.0,
+        "Cs2_ff": 52.9,
+        "Rs2_ohm": 695.0,
+        "f_res_ghz": 18.74
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          10.051,
+          10.363,
+          11.944
+        ],
+        "L_nh": 1.23,
+        "R_ohm": 2.71,
+        "Cs1_ff": 44.2,
+        "Rs1_ohm": 559.0,
+        "Cs2_ff": 39.9,
+        "Rs2_ohm": 614.0,
+        "f_res_ghz": 21.57
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 4168.604,
+        "cap_r_ohm": 236.219
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 2797.228,
+        "cap_r_ohm": -81.634
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 32.29,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 179.71,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "SP NAME=SP4:RADIUS=100:SIDES=16:W=8:S=3:N=2:METAL=m3:XORG=200:YORG=200",
+      "MetArea SP4",
+      "Ind SP4",
+      "Res SP4",
+      "ResHF SP4 1.0",
+      "Q SP4 1.0",
+      "Pi2 SP4 1.0",
+      "Cap SP4 1.0",
+      "LRMAT SP4 1.0",
+      "ResHF SP4 5.0",
+      "Q SP4 5.0",
+      "Pi2 SP4 5.0",
+      "Cap SP4 5.0",
+      "LRMAT SP4 5.0",
+      "2Port SP4 1.0 10.0 1.0 S polar slow sp_bicmos_R100_sides16_W8_S3_N2_m3.s2p"
+    ],
+    "errors": [
+      "Pi2 SP4 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 SP4 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/sp_bicmos_R100_sides16_W8_S3_N2_m3.stable.log",
+    "sweep_log": "analysis/sp_bicmos_R100_sides16_W8_S3_N2_m3.sweep.log",
+    "s2p": "analysis/sp_bicmos_R100_sides16_W8_S3_N2_m3.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 5
+}

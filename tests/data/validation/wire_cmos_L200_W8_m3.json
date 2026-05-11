@@ -1,0 +1,137 @@
+{
+  "name": "wire_cmos_L200_W8_m3",
+  "build_command": "W NAME=W5:LEN=200:WID=8:METAL=m3:XORG=150:YORG=150",
+  "shape_name": "W5",
+  "tech": "CMOS",
+  "tech_file": "CMOS.tek",
+  "geom": {
+    "name": "W5",
+    "kind": "Wire",
+    "length_um": 200.0,
+    "width_um": 8.0,
+    "metal": "M3",
+    "total_length_um": 200.0,
+    "total_area_um2": 1600.0,
+    "location": [
+      150.0,
+      150.0
+    ],
+    "n_segments": 1,
+    "spiral_l1_um": null,
+    "spiral_l2_um": null,
+    "spiral_spacing_um": null,
+    "spiral_turns": null,
+    "radius_um": null,
+    "n_sides": null,
+    "primary_width_um": null,
+    "secondary_width_um": null,
+    "primary_turns": null,
+    "secondary_turns": null
+  },
+  "layout": {
+    "cif": "layouts/wire_cmos_L200_W8_m3.cif",
+    "gds": "layouts/wire_cmos_L200_W8_m3.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 1600.0,
+    "ind_dc_nh": 0.174642,
+    "res_dc_ohm": 1.375,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      1.378701,
+      1.416683
+    ],
+    "q": [
+      0.798043,
+      3.990216
+    ],
+    "lrmat_l_h": [
+      1.745e-10,
+      1.742e-10
+    ],
+    "lrmat_r_ohm": [
+      1.376,
+      1.4058
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          0.796,
+          0.797,
+          0.797
+        ],
+        "L_nh": 0.174,
+        "R_ohm": 1.38,
+        "Cs1_ff": 30.8,
+        "Rs1_ohm": 0.0652,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 68.69
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          3.871,
+          3.893,
+          3.893
+        ],
+        "L_nh": 0.174,
+        "R_ohm": 1.41,
+        "Cs1_ff": 30.8,
+        "Rs1_ohm": 0.065,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 68.75
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 30.756,
+        "cap_r_ohm": 0.065
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 30.756,
+        "cap_r_ohm": 0.065
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 9.89,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 49.67,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "W NAME=W5:LEN=200:WID=8:METAL=m3:XORG=150:YORG=150",
+      "MetArea W5",
+      "Ind W5",
+      "Res W5",
+      "ResHF W5 1.0",
+      "Q W5 1.0",
+      "Pi2 W5 1.0",
+      "Cap W5 1.0",
+      "LRMAT W5 1.0",
+      "ResHF W5 5.0",
+      "Q W5 5.0",
+      "Pi2 W5 5.0",
+      "Cap W5 5.0",
+      "LRMAT W5 5.0",
+      "2Port W5 1.0 10.0 1.0 S polar slow wire_cmos_L200_W8_m3.s2p"
+    ],
+    "errors": [
+      "Pi2 W5 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 W5 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/wire_cmos_L200_W8_m3.stable.log",
+    "sweep_log": "analysis/wire_cmos_L200_W8_m3.sweep.log",
+    "s2p": "analysis/wire_cmos_L200_W8_m3.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 5
+}

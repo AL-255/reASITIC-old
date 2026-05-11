@@ -1,0 +1,137 @@
+{
+  "name": "mmsq_bicmos_L240_W10_S3_N3_m3_to_m2",
+  "build_command": "MMSQ NAME=MM_240:LEN=240:W=10:S=3:N=3:METAL=m3:EXIT=m2:XORG=100:YORG=100",
+  "shape_name": "MM_240",
+  "tech": "BiCMOS",
+  "tech_file": "BiCMOS.tek",
+  "geom": {
+    "name": "MM_240",
+    "kind": "User defined",
+    "length_um": null,
+    "width_um": null,
+    "metal": null,
+    "total_length_um": 4890.0,
+    "total_area_um2": 48900.0,
+    "location": [
+      100.0,
+      100.0
+    ],
+    "n_segments": 24,
+    "spiral_l1_um": null,
+    "spiral_l2_um": null,
+    "spiral_spacing_um": null,
+    "spiral_turns": null,
+    "radius_um": null,
+    "n_sides": null,
+    "primary_width_um": null,
+    "secondary_width_um": null,
+    "primary_turns": null,
+    "secondary_turns": null
+  },
+  "layout": {
+    "cif": "layouts/mmsq_bicmos_L240_W10_S3_N3_m3_to_m2.cif",
+    "gds": "layouts/mmsq_bicmos_L240_W10_S3_N3_m3_to_m2.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 48900.0,
+    "ind_dc_nh": 12.0705,
+    "res_dc_ohm": 17.115,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      17.25222,
+      18.152908
+    ],
+    "q": [
+      4.431267,
+      22.156334
+    ],
+    "lrmat_l_h": [
+      1.312e-08,
+      1.296e-08
+    ],
+    "lrmat_r_ohm": [
+      17.951,
+      25.8736
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          3.705,
+          2.994,
+          3.927
+        ],
+        "L_nh": 14.9,
+        "R_ohm": 20.9,
+        "Cs1_ff": 119.0,
+        "Rs1_ohm": 1180.0,
+        "Cs2_ff": 260.0,
+        "Rs2_ohm": 442.0,
+        "f_res_ghz": 3.78
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          -9.474,
+          -3.687,
+          -10.634
+        ],
+        "L_nh": -4.11,
+        "R_ohm": 5.64,
+        "Cs1_ff": 34.5,
+        "Rs1_ohm": 1240.0,
+        "Cs2_ff": 159.0,
+        "Rs2_ohm": 383.0,
+        "f_res_ghz": null
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 376.553,
+        "cap_r_ohm": 320.616
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 183.453,
+        "cap_r_ohm": 291.484
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 11.95,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 60.58,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "MMSQ NAME=MM_240:LEN=240:W=10:S=3:N=3:METAL=m3:EXIT=m2:XORG=100:YORG=100",
+      "MetArea MM_240",
+      "Ind MM_240",
+      "Res MM_240",
+      "ResHF MM_240 1.0",
+      "Q MM_240 1.0",
+      "Pi2 MM_240 1.0",
+      "Cap MM_240 1.0",
+      "LRMAT MM_240 1.0",
+      "ResHF MM_240 5.0",
+      "Q MM_240 5.0",
+      "Pi2 MM_240 5.0",
+      "Cap MM_240 5.0",
+      "LRMAT MM_240 5.0",
+      "2Port MM_240 1.0 10.0 1.0 S polar slow mmsq_bicmos_L240_W10_S3_N3_m3_to_m2.s2p"
+    ],
+    "errors": [
+      "Pi2 MM_240 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 MM_240 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/mmsq_bicmos_L240_W10_S3_N3_m3_to_m2.stable.log",
+    "sweep_log": "analysis/mmsq_bicmos_L240_W10_S3_N3_m3_to_m2.sweep.log",
+    "s2p": "analysis/mmsq_bicmos_L240_W10_S3_N3_m3_to_m2.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 5
+}

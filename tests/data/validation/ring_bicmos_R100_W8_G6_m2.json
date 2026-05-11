@@ -1,0 +1,137 @@
+{
+  "name": "ring_bicmos_R100_W8_G6_m2",
+  "build_command": "RING NAME=RG3:RAD=100:W=8:GAP=6:METAL=m2:XORG=200:YORG=200",
+  "shape_name": "RG3",
+  "tech": "BiCMOS",
+  "tech_file": "BiCMOS.tek",
+  "geom": {
+    "name": "RG3",
+    "kind": "Ring",
+    "length_um": null,
+    "width_um": null,
+    "metal": null,
+    "total_length_um": 588.47,
+    "total_area_um2": 4707.74,
+    "location": [
+      200.0,
+      200.0
+    ],
+    "n_segments": 15,
+    "spiral_l1_um": null,
+    "spiral_l2_um": null,
+    "spiral_spacing_um": null,
+    "spiral_turns": null,
+    "radius_um": null,
+    "n_sides": null,
+    "primary_width_um": null,
+    "secondary_width_um": null,
+    "primary_turns": null,
+    "secondary_turns": null
+  },
+  "layout": {
+    "cif": "layouts/ring_bicmos_R100_W8_G6_m2.cif",
+    "gds": "layouts/ring_bicmos_R100_W8_G6_m2.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 4707.74297,
+    "ind_dc_nh": 0.465945,
+    "res_dc_ohm": 3.677924,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      3.689345,
+      3.806751
+    ],
+    "q": [
+      0.795998,
+      3.979989
+    ],
+    "lrmat_l_h": [
+      4.582e-10,
+      4.565e-10
+    ],
+    "lrmat_r_ohm": [
+      3.6784,
+      3.778
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          0.781,
+          0.781,
+          0.782
+        ],
+        "L_nh": 0.458,
+        "R_ohm": 3.68,
+        "Cs1_ff": 54.3,
+        "Rs1_ohm": 629.0,
+        "Cs2_ff": 48.2,
+        "Rs2_ohm": 704.0,
+        "f_res_ghz": 31.9
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          3.677,
+          3.698,
+          3.776
+        ],
+        "L_nh": 0.457,
+        "R_ohm": 3.71,
+        "Cs1_ff": 42.3,
+        "Rs1_ohm": 575.0,
+        "Cs2_ff": 37.4,
+        "Rs2_ohm": 641.0,
+        "f_res_ghz": 36.22
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 102.472,
+        "cap_r_ohm": 331.996
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 79.46,
+        "cap_r_ohm": 302.819
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 5.43,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 27.08,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "RING NAME=RG3:RAD=100:W=8:GAP=6:METAL=m2:XORG=200:YORG=200",
+      "MetArea RG3",
+      "Ind RG3",
+      "Res RG3",
+      "ResHF RG3 1.0",
+      "Q RG3 1.0",
+      "Pi2 RG3 1.0",
+      "Cap RG3 1.0",
+      "LRMAT RG3 1.0",
+      "ResHF RG3 5.0",
+      "Q RG3 5.0",
+      "Pi2 RG3 5.0",
+      "Cap RG3 5.0",
+      "LRMAT RG3 5.0",
+      "2Port RG3 1.0 10.0 1.0 S polar slow ring_bicmos_R100_W8_G6_m2.s2p"
+    ],
+    "errors": [
+      "Pi2 RG3 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 RG3 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/ring_bicmos_R100_W8_G6_m2.stable.log",
+    "sweep_log": "analysis/ring_bicmos_R100_W8_G6_m2.sweep.log",
+    "s2p": "analysis/ring_bicmos_R100_W8_G6_m2.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 5
+}

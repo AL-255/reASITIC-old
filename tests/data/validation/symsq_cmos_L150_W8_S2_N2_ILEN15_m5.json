@@ -1,0 +1,137 @@
+{
+  "name": "symsq_cmos_L150_W8_S2_N2_ILEN15_m5",
+  "build_command": "SYMSQ NAME=Y_150_2:LEN=150:W=8:S=2:N=2:ILEN=15:METAL=m5:METAL2=m4:XORG=100:YORG=100",
+  "shape_name": "Y_150_2",
+  "tech": "CMOS",
+  "tech_file": "CMOS.tek",
+  "geom": {
+    "name": "Y_150_2",
+    "kind": "Symmetric square spiral",
+    "length_um": null,
+    "width_um": 8.0,
+    "metal": null,
+    "total_length_um": 1060.98,
+    "total_area_um2": 8471.15,
+    "location": [
+      100.0,
+      100.0
+    ],
+    "n_segments": 18,
+    "spiral_l1_um": 150.0,
+    "spiral_l2_um": 15.0,
+    "spiral_spacing_um": 2.0,
+    "spiral_turns": 2.0,
+    "radius_um": null,
+    "n_sides": null,
+    "primary_width_um": null,
+    "secondary_width_um": null,
+    "primary_turns": null,
+    "secondary_turns": null
+  },
+  "layout": {
+    "cif": "layouts/symsq_cmos_L150_W8_S2_N2_ILEN15_m5.cif",
+    "gds": "layouts/symsq_cmos_L150_W8_S2_N2_ILEN15_m5.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 8471.147378,
+    "ind_dc_nh": 1.05671,
+    "res_dc_ohm": 4.302795,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      4.328924,
+      4.601256
+    ],
+    "q": [
+      1.543061,
+      7.715306
+    ],
+    "lrmat_l_h": [
+      1.086e-09,
+      1.079e-09
+    ],
+    "lrmat_r_ohm": [
+      4.3354,
+      4.8741
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          1.57,
+          1.57,
+          1.572
+        ],
+        "L_nh": 1.09,
+        "R_ohm": 4.33,
+        "Cs1_ff": 49.2,
+        "Rs1_ohm": -61.9,
+        "Cs2_ff": 41.1,
+        "Rs2_ohm": 90.1,
+        "f_res_ghz": 23.95
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          6.65,
+          6.693,
+          6.844
+        ],
+        "L_nh": 1.07,
+        "R_ohm": 4.79,
+        "Cs1_ff": 49.8,
+        "Rs1_ohm": -2.63,
+        "Cs2_ff": 40.7,
+        "Rs2_ohm": 6.14,
+        "f_res_ghz": 21.79
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 90.246,
+        "cap_r_ohm": 0.043
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 90.246,
+        "cap_r_ohm": 0.043
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 10.97,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 52.92,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "SYMSQ NAME=Y_150_2:LEN=150:W=8:S=2:N=2:ILEN=15:METAL=m5:METAL2=m4:XORG=100:YORG=100",
+      "MetArea Y_150_2",
+      "Ind Y_150_2",
+      "Res Y_150_2",
+      "ResHF Y_150_2 1.0",
+      "Q Y_150_2 1.0",
+      "Pi2 Y_150_2 1.0",
+      "Cap Y_150_2 1.0",
+      "LRMAT Y_150_2 1.0",
+      "ResHF Y_150_2 5.0",
+      "Q Y_150_2 5.0",
+      "Pi2 Y_150_2 5.0",
+      "Cap Y_150_2 5.0",
+      "LRMAT Y_150_2 5.0",
+      "2Port Y_150_2 1.0 10.0 1.0 S polar slow symsq_cmos_L150_W8_S2_N2_ILEN15_m5.s2p"
+    ],
+    "errors": [
+      "Pi2 Y_150_2 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 Y_150_2 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/symsq_cmos_L150_W8_S2_N2_ILEN15_m5.stable.log",
+    "sweep_log": "analysis/symsq_cmos_L150_W8_S2_N2_ILEN15_m5.sweep.log",
+    "s2p": "analysis/symsq_cmos_L150_W8_S2_N2_ILEN15_m5.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 5
+}

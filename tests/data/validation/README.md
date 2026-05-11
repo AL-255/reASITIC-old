@@ -14,33 +14,33 @@ artifacts:
 | `analysis/<stem>.stable.log`| stdout of MetArea / Ind / Res / per-freq Pi2 etc. | Raw transcript of the multi-frequency stable analysis session |
 | `analysis/<stem>.sweep.log` | stdout of the 2Port sweep session          | Raw transcript of the sweep session |
 
-Artifacts are **regenerated in the parent ``asitic-re`` repo** by
-running the binary under user-mode QEMU (``qemu-i386-static``)
-with ``xvfb-run`` providing a virtual X11 display, then piping the
-emitted CIF through ``klayout`` in batch mode. See
-``../../../BINARY_VALIDATION.md`` for the QEMU rationale and
-``../../../TESTSET.md`` for the case index and regeneration
-workflow; the regeneration script lives at
-``../../scripts/regen_validation_artifacts.py``.
+The case set spans two technology files (BiCMOS and CMOS) — the
+binary is launched with a different `-t <tech.tek>` per case. The
+generator picks per-tech metal-layer names so the same parameter
+sweep covers both stacks; stems are prefixed with `bicmos_` /
+`cmos_` to disambiguate. See `../../../../TESTSET.md` for the
+roster and regeneration workflow; the regen script itself lives
+at `../../../../scripts/regen_validation_artifacts.py`.
 
 reASITIC tests load the JSON directly. The CIF / GDS / S2P / log
 artifacts are intentionally **not tracked in git** (see
-``../../.gitignore``) — they're large derivative outputs of the
+`../../.gitignore`) — they're large derivative outputs of the
 UC-Berkeley-licensed binary and any user can re-derive them by
 running the regen script. Tests that consume them should treat
 their absence as a skip condition.
 
-## JSON schema (v4)
+## JSON schema (v5)
 
 ```json
 {
-  "name": "sq_200x10x2x3_m3",
-  "build_command": "SQ NAME=B:LEN=200:W=10:S=2:N=3:METAL=m3:XORG=200:YORG=200",
-  "shape_name": "B",
+  "name": "sq_bicmos_L200_W10_S2_N3_m3",
+  "build_command": "SQ NAME=SQ_200:LEN=200:W=10:S=2:N=3:METAL=m3:XORG=200:YORG=200",
+  "shape_name": "SQ_200",
   "tech": "BiCMOS",
+  "tech_file": "BiCMOS.tek",
 
   "geom": {
-    "name": "B", "kind": "Square spiral",
+    "name": "SQ_200", "kind": "Square spiral",
     "spiral_l1_um": 200.0, "spiral_l2_um": 200.0,
     "spiral_spacing_um": 2.0, "spiral_turns": 3.0, "width_um": 10.0,
     "total_length_um": ..., "total_area_um2": ...,
@@ -49,19 +49,19 @@ their absence as a skip condition.
   },
 
   "layout": {
-    "cif": "layouts/sq_200x10x2x3_m3.cif",
-    "gds": "layouts/sq_200x10x2x3_m3.gds"
+    "cif": "layouts/sq_bicmos_L200_W10_S2_N3_m3.cif",
+    "gds": "layouts/sq_bicmos_L200_W10_S2_N3_m3.gds"
   },
 
   "analysis": {
     "metal_area_um2": ...,
     "ind_dc_nh": ...,
     "res_dc_ohm": ...,
-    "freq_points_ghz": [1.0, 5.0],
-    "res_hf_ohm":   [..., ...],
-    "q":            [..., ...],
-    "lrmat_l_h":    [..., ...],
-    "lrmat_r_ohm":  [..., ...],
+    "freq_points_ghz": [1.0, 1.5, ..., 18.0],
+    "res_hf_ohm":   [..., ..., ...],
+    "q":            [..., ..., ...],
+    "lrmat_l_h":    [..., ..., ...],
+    "lrmat_r_ohm":  [..., ..., ...],
     "pi2_points": [
       {"freq_ghz": 1.0, "q_three": [..., ..., ...],
        "L_nh": ..., "R_ohm": ...,
@@ -72,23 +72,29 @@ their absence as a skip condition.
     "cap_points": [
       {"freq_ghz": 1.0, "cap_ff": ..., "cap_r_ohm": ...}
     ],
-    "stable_session_rc": -3, "stable_session_seconds": 7.4,
-    "sweep_session_rc": -3, "sweep_session_seconds": 37.3,
-    "s2p_freq_count": 10,
-    "commands_run": ["SQ NAME=...", "MetArea B", ...],
+    "srf_ghz": ...,
+    "stable_session_rc": -3, "stable_session_seconds": ...,
+    "sweep_session_rc": -3, "sweep_session_seconds": ...,
+    "s2p_freq_count": 35,
+    "commands_run": ["SQ NAME=...", "MetArea SQ_200", ...],
     "errors": []
   },
 
   "artifacts": {
-    "stable_log": "analysis/sq_200x10x2x3_m3.stable.log",
-    "sweep_log":  "analysis/sq_200x10x2x3_m3.sweep.log",
-    "s2p":        "analysis/sq_200x10x2x3_m3.s2p"
+    "stable_log": "analysis/sq_bicmos_L200_W10_S2_N3_m3.stable.log",
+    "sweep_log":  "analysis/sq_bicmos_L200_W10_S2_N3_m3.sweep.log",
+    "s2p":        "analysis/sq_bicmos_L200_W10_S2_N3_m3.s2p"
   },
 
   "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
-  "schema_version": 4
+  "schema_version": 5
 }
 ```
+
+`tech` is the symbolic name of the technology profile used to
+launch the binary; `tech_file` is the actual .tek filename
+(`BiCMOS.tek` or `CMOS.tek`). The metal-layer names appearing in
+`build_command` and `geom.metal` will differ between tech files.
 
 ### `geom` block
 
@@ -122,8 +128,17 @@ The analysis runs in two QEMU sessions per case:
   `fast` mode segfaults under QEMU on the very first frequency
   point.
 
-With the default `(1.0, 10.0, 1.0)` GHz sweep, every case
-produces 10 S2P data points.
+With the default `(1.0, 18.0, 0.5)` GHz sweep, every case
+produces 35 S2P data points. The stable session uses the same
+35-point grid for `ResHF` / `Q` / `Pi2` / `Cap` / `LRMAT`, so
+`freq_points_ghz`, `res_hf_ohm`, `q`, `lrmat_l_h`, `lrmat_r_ohm`,
+`pi2_points` and `cap_points` are all aligned to that grid and
+to the S2P data points.
+
+The top-level `srf_ghz` is the median of the non-null `f_res_ghz`
+estimates emitted by the per-frequency Pi2 fits — a single device
+self-resonance figure for plotting / regression. The full
+per-frequency series stays under `pi2_points[*].f_res_ghz`.
 
 ### `pi2_points[]` reference
 

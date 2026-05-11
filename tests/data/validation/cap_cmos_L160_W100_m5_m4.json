@@ -1,0 +1,137 @@
+{
+  "name": "cap_cmos_L160_W100_m5_m4",
+  "build_command": "CAPACITOR NAME=C4:LEN=160:WID=100:METAL1=m5:METAL2=m4:XORG=100:YORG=200",
+  "shape_name": "C4",
+  "tech": "CMOS",
+  "tech_file": "CMOS.tek",
+  "geom": {
+    "name": "C4",
+    "kind": "User defined",
+    "length_um": null,
+    "width_um": null,
+    "metal": null,
+    "total_length_um": 320.0,
+    "total_area_um2": 32000.0,
+    "location": [
+      100.0,
+      200.0
+    ],
+    "n_segments": 2,
+    "spiral_l1_um": null,
+    "spiral_l2_um": null,
+    "spiral_spacing_um": null,
+    "spiral_turns": null,
+    "radius_um": null,
+    "n_sides": null,
+    "primary_width_um": null,
+    "secondary_width_um": null,
+    "primary_turns": null,
+    "secondary_turns": null
+  },
+  "layout": {
+    "cif": "layouts/cap_cmos_L160_W100_m5_m4.cif",
+    "gds": "layouts/cap_cmos_L160_W100_m5_m4.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 32000.0,
+    "ind_dc_nh": 0.231942,
+    "res_dc_ohm": 0.136,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      0.768374,
+      4.914143
+    ],
+    "q": [
+      10.715709,
+      53.578543
+    ],
+    "lrmat_l_h": [
+      2.255e-10,
+      2.218e-10
+    ],
+    "lrmat_r_ohm": [
+      0.1609,
+      0.2018
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          8.797,
+          8.8,
+          8.801
+        ],
+        "L_nh": 0.226,
+        "R_ohm": 0.161,
+        "Cs1_ff": 76.2,
+        "Rs1_ohm": 53.7,
+        "Cs2_ff": 70.6,
+        "Rs2_ohm": -62.2,
+        "f_res_ghz": 244.93
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          33.553,
+          33.781,
+          33.954
+        ],
+        "L_nh": 0.226,
+        "R_ohm": 0.207,
+        "Cs1_ff": 75.9,
+        "Rs1_ohm": 2.19,
+        "Cs2_ff": 70.9,
+        "Rs2_ohm": -2.17,
+        "f_res_ghz": 38.46
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 146.761,
+        "cap_r_ohm": 0.048
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 146.761,
+        "cap_r_ohm": 0.048
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 12.98,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 59.5,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "CAPACITOR NAME=C4:LEN=160:WID=100:METAL1=m5:METAL2=m4:XORG=100:YORG=200",
+      "MetArea C4",
+      "Ind C4",
+      "Res C4",
+      "ResHF C4 1.0",
+      "Q C4 1.0",
+      "Pi2 C4 1.0",
+      "Cap C4 1.0",
+      "LRMAT C4 1.0",
+      "ResHF C4 5.0",
+      "Q C4 5.0",
+      "Pi2 C4 5.0",
+      "Cap C4 5.0",
+      "LRMAT C4 5.0",
+      "2Port C4 1.0 10.0 1.0 S polar slow cap_cmos_L160_W100_m5_m4.s2p"
+    ],
+    "errors": [
+      "Pi2 C4 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 C4 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/cap_cmos_L160_W100_m5_m4.stable.log",
+    "sweep_log": "analysis/cap_cmos_L160_W100_m5_m4.sweep.log",
+    "s2p": "analysis/cap_cmos_L160_W100_m5_m4.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 5
+}

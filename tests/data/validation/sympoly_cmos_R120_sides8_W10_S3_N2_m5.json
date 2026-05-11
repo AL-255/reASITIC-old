@@ -1,0 +1,137 @@
+{
+  "name": "sympoly_cmos_R120_sides8_W10_S3_N2_m5",
+  "build_command": "SYMPOLY NAME=YP_120_2:RAD=120:W=10:S=3:N=2:ILEN=20:SIDES=8:METAL=m5:METAL2=m4:XORG=200:YORG=200",
+  "shape_name": "YP_120_2",
+  "tech": "CMOS",
+  "tech_file": "CMOS.tek",
+  "geom": {
+    "name": "YP_120_2",
+    "kind": "Symmetric polygon spiral",
+    "length_um": null,
+    "width_um": 10.0,
+    "metal": null,
+    "total_length_um": 1401.86,
+    "total_area_um2": 13991.28,
+    "location": [
+      200.0,
+      200.0
+    ],
+    "n_segments": 21,
+    "spiral_l1_um": null,
+    "spiral_l2_um": 20.0,
+    "spiral_spacing_um": 3.0,
+    "spiral_turns": 2.0,
+    "radius_um": 120.0,
+    "n_sides": 8,
+    "primary_width_um": null,
+    "secondary_width_um": null,
+    "primary_turns": null,
+    "secondary_turns": null
+  },
+  "layout": {
+    "cif": "layouts/sympoly_cmos_R120_sides8_W10_S3_N2_m5.cif",
+    "gds": "layouts/sympoly_cmos_R120_sides8_W10_S3_N2_m5.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 13991.284046,
+    "ind_dc_nh": 1.65517,
+    "res_dc_ohm": 4.436236,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      4.474895,
+      4.881846
+    ],
+    "q": [
+      2.344271,
+      11.721354
+    ],
+    "lrmat_l_h": [
+      1.642e-09,
+      1.621e-09
+    ],
+    "lrmat_r_ohm": [
+      4.4916,
+      5.1537
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          2.287,
+          2.289,
+          2.294
+        ],
+        "L_nh": 1.64,
+        "R_ohm": 4.48,
+        "Cs1_ff": 74.4,
+        "Rs1_ohm": 20.6,
+        "Cs2_ff": 65.9,
+        "Rs2_ohm": -24.4,
+        "f_res_ghz": 14.54
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          8.906,
+          9.078,
+          9.571
+        ],
+        "L_nh": 1.58,
+        "R_ohm": 4.9,
+        "Cs1_ff": 74.6,
+        "Rs1_ohm": 1.8,
+        "Cs2_ff": 66.8,
+        "Rs2_ohm": -0.102,
+        "f_res_ghz": 14.63
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 140.213,
+        "cap_r_ohm": 0.036
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 140.213,
+        "cap_r_ohm": 0.036
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 12.72,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 64.07,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "SYMPOLY NAME=YP_120_2:RAD=120:W=10:S=3:N=2:ILEN=20:SIDES=8:METAL=m5:METAL2=m4:XORG=200:YORG=200",
+      "MetArea YP_120_2",
+      "Ind YP_120_2",
+      "Res YP_120_2",
+      "ResHF YP_120_2 1.0",
+      "Q YP_120_2 1.0",
+      "Pi2 YP_120_2 1.0",
+      "Cap YP_120_2 1.0",
+      "LRMAT YP_120_2 1.0",
+      "ResHF YP_120_2 5.0",
+      "Q YP_120_2 5.0",
+      "Pi2 YP_120_2 5.0",
+      "Cap YP_120_2 5.0",
+      "LRMAT YP_120_2 5.0",
+      "2Port YP_120_2 1.0 10.0 1.0 S polar slow sympoly_cmos_R120_sides8_W10_S3_N2_m5.s2p"
+    ],
+    "errors": [
+      "Pi2 YP_120_2 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 YP_120_2 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/sympoly_cmos_R120_sides8_W10_S3_N2_m5.stable.log",
+    "sweep_log": "analysis/sympoly_cmos_R120_sides8_W10_S3_N2_m5.sweep.log",
+    "s2p": "analysis/sympoly_cmos_R120_sides8_W10_S3_N2_m5.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 5
+}

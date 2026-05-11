@@ -1,0 +1,137 @@
+{
+  "name": "ring_cmos_R100_W8_G6_m3",
+  "build_command": "RING NAME=RG3:RAD=100:W=8:GAP=6:METAL=m3:XORG=200:YORG=200",
+  "shape_name": "RG3",
+  "tech": "CMOS",
+  "tech_file": "CMOS.tek",
+  "geom": {
+    "name": "RG3",
+    "kind": "Ring",
+    "length_um": null,
+    "width_um": null,
+    "metal": null,
+    "total_length_um": 588.47,
+    "total_area_um2": 4707.74,
+    "location": [
+      200.0,
+      200.0
+    ],
+    "n_segments": 15,
+    "spiral_l1_um": null,
+    "spiral_l2_um": null,
+    "spiral_spacing_um": null,
+    "spiral_turns": null,
+    "radius_um": null,
+    "n_sides": null,
+    "primary_width_um": null,
+    "secondary_width_um": null,
+    "primary_turns": null,
+    "secondary_turns": null
+  },
+  "layout": {
+    "cif": "layouts/ring_cmos_R100_W8_G6_m3.cif",
+    "gds": "layouts/ring_cmos_R100_W8_G6_m3.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 4707.74297,
+    "ind_dc_nh": 0.469727,
+    "res_dc_ohm": 4.045717,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      4.056606,
+      4.168363
+    ],
+    "q": [
+      0.729508,
+      3.647542
+    ],
+    "lrmat_l_h": [
+      4.619e-10,
+      4.605e-10
+    ],
+    "lrmat_r_ohm": [
+      4.0467,
+      4.1424
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          0.716,
+          0.716,
+          0.717
+        ],
+        "L_nh": 0.462,
+        "R_ohm": 4.04,
+        "Cs1_ff": 49.0,
+        "Rs1_ohm": 0.812,
+        "Cs2_ff": 43.4,
+        "Rs2_ohm": 0.659,
+        "f_res_ghz": 33.43
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          3.434,
+          3.444,
+          3.479
+        ],
+        "L_nh": 0.458,
+        "R_ohm": 4.09,
+        "Cs1_ff": 49.1,
+        "Rs1_ohm": 0.694,
+        "Cs2_ff": 43.6,
+        "Rs2_ohm": 0.846,
+        "f_res_ghz": 33.53
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 92.399,
+        "cap_r_ohm": 0.04
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 92.399,
+        "cap_r_ohm": 0.04
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 10.78,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 53.39,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "RING NAME=RG3:RAD=100:W=8:GAP=6:METAL=m3:XORG=200:YORG=200",
+      "MetArea RG3",
+      "Ind RG3",
+      "Res RG3",
+      "ResHF RG3 1.0",
+      "Q RG3 1.0",
+      "Pi2 RG3 1.0",
+      "Cap RG3 1.0",
+      "LRMAT RG3 1.0",
+      "ResHF RG3 5.0",
+      "Q RG3 5.0",
+      "Pi2 RG3 5.0",
+      "Cap RG3 5.0",
+      "LRMAT RG3 5.0",
+      "2Port RG3 1.0 10.0 1.0 S polar slow ring_cmos_R100_W8_G6_m3.s2p"
+    ],
+    "errors": [
+      "Pi2 RG3 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 RG3 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/ring_cmos_R100_W8_G6_m3.stable.log",
+    "sweep_log": "analysis/ring_cmos_R100_W8_G6_m3.sweep.log",
+    "s2p": "analysis/ring_cmos_R100_W8_G6_m3.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 5
+}

@@ -1,0 +1,137 @@
+{
+  "name": "symsq_bicmos_L150_W8_S2_N2_ILEN15_m3",
+  "build_command": "SYMSQ NAME=Y_150_2:LEN=150:W=8:S=2:N=2:ILEN=15:METAL=m3:METAL2=m2:XORG=100:YORG=100",
+  "shape_name": "Y_150_2",
+  "tech": "BiCMOS",
+  "tech_file": "BiCMOS.tek",
+  "geom": {
+    "name": "Y_150_2",
+    "kind": "Symmetric square spiral",
+    "length_um": null,
+    "width_um": 8.0,
+    "metal": null,
+    "total_length_um": 1058.29,
+    "total_area_um2": 8435.43,
+    "location": [
+      100.0,
+      100.0
+    ],
+    "n_segments": 18,
+    "spiral_l1_um": 150.0,
+    "spiral_l2_um": 15.0,
+    "spiral_spacing_um": 2.0,
+    "spiral_turns": 2.0,
+    "radius_um": null,
+    "n_sides": null,
+    "primary_width_um": null,
+    "secondary_width_um": null,
+    "primary_turns": null,
+    "secondary_turns": null
+  },
+  "layout": {
+    "cif": "layouts/symsq_bicmos_L150_W8_S2_N2_ILEN15_m3.cif",
+    "gds": "layouts/symsq_bicmos_L150_W8_S2_N2_ILEN15_m3.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 8435.43364,
+    "ind_dc_nh": 1.03493,
+    "res_dc_ohm": 3.129687,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      3.161674,
+      3.50198
+    ],
+    "q": [
+      2.077734,
+      10.388671
+    ],
+    "lrmat_l_h": [
+      1.06e-09,
+      1.068e-09
+    ],
+    "lrmat_r_ohm": [
+      3.173,
+      3.7067
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          2.092,
+          2.093,
+          2.096
+        ],
+        "L_nh": 1.06,
+        "R_ohm": 3.17,
+        "Cs1_ff": 56.1,
+        "Rs1_ohm": 549.0,
+        "Cs2_ff": 47.3,
+        "Rs2_ohm": 894.0,
+        "f_res_ghz": 20.64
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          7.857,
+          8.162,
+          8.882
+        ],
+        "L_nh": 1.07,
+        "R_ohm": 3.4,
+        "Cs1_ff": 43.8,
+        "Rs1_ohm": 566.0,
+        "Cs2_ff": 35.9,
+        "Rs2_ohm": 728.0,
+        "f_res_ghz": 23.21
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 103.237,
+        "cap_r_ohm": 347.873
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 79.414,
+        "cap_r_ohm": 318.258
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 8.06,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 40.6,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "SYMSQ NAME=Y_150_2:LEN=150:W=8:S=2:N=2:ILEN=15:METAL=m3:METAL2=m2:XORG=100:YORG=100",
+      "MetArea Y_150_2",
+      "Ind Y_150_2",
+      "Res Y_150_2",
+      "ResHF Y_150_2 1.0",
+      "Q Y_150_2 1.0",
+      "Pi2 Y_150_2 1.0",
+      "Cap Y_150_2 1.0",
+      "LRMAT Y_150_2 1.0",
+      "ResHF Y_150_2 5.0",
+      "Q Y_150_2 5.0",
+      "Pi2 Y_150_2 5.0",
+      "Cap Y_150_2 5.0",
+      "LRMAT Y_150_2 5.0",
+      "2Port Y_150_2 1.0 10.0 1.0 S polar slow symsq_bicmos_L150_W8_S2_N2_ILEN15_m3.s2p"
+    ],
+    "errors": [
+      "Pi2 Y_150_2 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 Y_150_2 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/symsq_bicmos_L150_W8_S2_N2_ILEN15_m3.stable.log",
+    "sweep_log": "analysis/symsq_bicmos_L150_W8_S2_N2_ILEN15_m3.sweep.log",
+    "s2p": "analysis/symsq_bicmos_L150_W8_S2_N2_ILEN15_m3.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 5
+}

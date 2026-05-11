@@ -1,0 +1,137 @@
+{
+  "name": "sq_bicmos_L300_W12_S3_N3_exitm2_m3",
+  "build_command": "SQ NAME=SQ_300:LEN=300:W=12:S=3:N=3.0:METAL=m3:EXIT=m2:XORG=50:YORG=50",
+  "shape_name": "SQ_300",
+  "tech": "BiCMOS",
+  "tech_file": "BiCMOS.tek",
+  "geom": {
+    "name": "SQ_300",
+    "kind": "Square spiral",
+    "length_um": null,
+    "width_um": 12.0,
+    "metal": null,
+    "total_length_um": 3159.95,
+    "total_area_um2": 37897.04,
+    "location": [
+      50.0,
+      50.0
+    ],
+    "n_segments": 14,
+    "spiral_l1_um": 300.0,
+    "spiral_l2_um": 300.0,
+    "spiral_spacing_um": 3.0,
+    "spiral_turns": 3.0,
+    "radius_um": null,
+    "n_sides": null,
+    "primary_width_um": null,
+    "secondary_width_um": null,
+    "primary_turns": null,
+    "secondary_turns": null
+  },
+  "layout": {
+    "cif": "layouts/sq_bicmos_L300_W12_S3_N3_exitm2_m3.cif",
+    "gds": "layouts/sq_bicmos_L300_W12_S3_N3_exitm2_m3.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 37897.041893,
+    "ind_dc_nh": 4.74219,
+    "res_dc_ohm": 5.5325,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      5.65034,
+      6.114145
+    ],
+    "q": [
+      5.385643,
+      26.928213
+    ],
+    "lrmat_l_h": [
+      4.739e-09,
+      4.692e-09
+    ],
+    "lrmat_r_ohm": [
+      5.8356,
+      7.4838
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          4.727,
+          4.834,
+          5.056
+        ],
+        "L_nh": 4.75,
+        "R_ohm": 5.57,
+        "Cs1_ff": 207.0,
+        "Rs1_ohm": 578.0,
+        "Cs2_ff": 168.0,
+        "Rs2_ohm": 709.0,
+        "f_res_ghz": 5.08
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          4.014,
+          5.304,
+          12.865
+        ],
+        "L_nh": 5.69,
+        "R_ohm": -7.44,
+        "Cs1_ff": 99.7,
+        "Rs1_ohm": 513.0,
+        "Cs2_ff": 88.0,
+        "Rs2_ohm": 661.0,
+        "f_res_ghz": 6.68
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 374.344,
+        "cap_r_ohm": 317.853
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 182.378,
+        "cap_r_ohm": 288.287
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 9.22,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 47.38,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "SQ NAME=SQ_300:LEN=300:W=12:S=3:N=3.0:METAL=m3:EXIT=m2:XORG=50:YORG=50",
+      "MetArea SQ_300",
+      "Ind SQ_300",
+      "Res SQ_300",
+      "ResHF SQ_300 1.0",
+      "Q SQ_300 1.0",
+      "Pi2 SQ_300 1.0",
+      "Cap SQ_300 1.0",
+      "LRMAT SQ_300 1.0",
+      "ResHF SQ_300 5.0",
+      "Q SQ_300 5.0",
+      "Pi2 SQ_300 5.0",
+      "Cap SQ_300 5.0",
+      "LRMAT SQ_300 5.0",
+      "2Port SQ_300 1.0 10.0 1.0 S polar slow sq_bicmos_L300_W12_S3_N3_exitm2_m3.s2p"
+    ],
+    "errors": [
+      "Pi2 SQ_300 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 SQ_300 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/sq_bicmos_L300_W12_S3_N3_exitm2_m3.stable.log",
+    "sweep_log": "analysis/sq_bicmos_L300_W12_S3_N3_exitm2_m3.sweep.log",
+    "s2p": "analysis/sq_bicmos_L300_W12_S3_N3_exitm2_m3.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 5
+}

@@ -1,0 +1,137 @@
+{
+  "name": "balun_cmos_L200_W8_S3_N3_m5_m4_primary",
+  "build_command": "BALUN NAME=BL_200:LEN=200:W1=8:S=3:N=3:METAL=m5:METAL2=m4:XORG=100:YORG=100",
+  "shape_name": "BL_200-P",
+  "tech": "CMOS",
+  "tech_file": "CMOS.tek",
+  "geom": {
+    "name": "BL_200-P:BL_200-S",
+    "kind": "Transformer",
+    "length_um": null,
+    "width_um": null,
+    "metal": null,
+    "total_length_um": 1370.15,
+    "total_area_um2": 10944.51,
+    "location": [
+      100.0,
+      100.0
+    ],
+    "n_segments": 18,
+    "spiral_l1_um": 200.0,
+    "spiral_l2_um": 22.0,
+    "spiral_spacing_um": 3.0,
+    "spiral_turns": null,
+    "radius_um": null,
+    "n_sides": null,
+    "primary_width_um": 8.0,
+    "secondary_width_um": 8.0,
+    "primary_turns": 2.0,
+    "secondary_turns": 1.0
+  },
+  "layout": {
+    "cif": "layouts/balun_cmos_L200_W8_S3_N3_m5_m4_primary.cif",
+    "gds": "layouts/balun_cmos_L200_W8_S3_N3_m5_m4_primary.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 10944.50645,
+    "ind_dc_nh": 1.28414,
+    "res_dc_ohm": 5.503072,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      5.536866,
+      5.889056
+    ],
+    "q": [
+      1.46618,
+      7.330902
+    ],
+    "lrmat_l_h": [
+      1.326e-09,
+      1.325e-09
+    ],
+    "lrmat_r_ohm": [
+      5.5201,
+      5.9478
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          1.503,
+          1.503,
+          1.507
+        ],
+        "L_nh": 1.32,
+        "R_ohm": 5.51,
+        "Cs1_ff": 74.2,
+        "Rs1_ohm": -34.6,
+        "Cs2_ff": 63.1,
+        "Rs2_ohm": 50.2,
+        "f_res_ghz": 16.6
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          6.481,
+          6.556,
+          6.847
+        ],
+        "L_nh": 1.29,
+        "R_ohm": 5.66,
+        "Cs1_ff": 75.5,
+        "Rs1_ohm": -1.1,
+        "Cs2_ff": 63.0,
+        "Rs2_ohm": 4.06,
+        "f_res_ghz": 16.08
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 137.213,
+        "cap_r_ohm": 0.036
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 137.213,
+        "cap_r_ohm": 0.036
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 10.84,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 52.41,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "BALUN NAME=BL_200:LEN=200:W1=8:S=3:N=3:METAL=m5:METAL2=m4:XORG=100:YORG=100",
+      "MetArea BL_200-P",
+      "Ind BL_200-P",
+      "Res BL_200-P",
+      "ResHF BL_200-P 1.0",
+      "Q BL_200-P 1.0",
+      "Pi2 BL_200-P 1.0",
+      "Cap BL_200-P 1.0",
+      "LRMAT BL_200-P 1.0",
+      "ResHF BL_200-P 5.0",
+      "Q BL_200-P 5.0",
+      "Pi2 BL_200-P 5.0",
+      "Cap BL_200-P 5.0",
+      "LRMAT BL_200-P 5.0",
+      "2Port BL_200-P 1.0 10.0 1.0 S polar slow balun_cmos_L200_W8_S3_N3_m5_m4_primary.s2p"
+    ],
+    "errors": [
+      "Pi2 BL_200-P 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 BL_200-P 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/balun_cmos_L200_W8_S3_N3_m5_m4_primary.stable.log",
+    "sweep_log": "analysis/balun_cmos_L200_W8_S3_N3_m5_m4_primary.sweep.log",
+    "s2p": "analysis/balun_cmos_L200_W8_S3_N3_m5_m4_primary.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 5
+}

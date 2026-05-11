@@ -1,0 +1,137 @@
+{
+  "name": "trans_cmos_L200_W8_S3_N3_m5_m4_primary",
+  "build_command": "TRANS PNAME=TP_200:SNAME=TS_200:LEN=200:W=8:S=3:N=3:METAL=m5:EXIT=m4:XORG=100:YORG=100",
+  "shape_name": "TP_200",
+  "tech": "CMOS",
+  "tech_file": "CMOS.tek",
+  "geom": {
+    "name": "TP_200:TS_200",
+    "kind": "Transformer",
+    "length_um": null,
+    "width_um": null,
+    "metal": null,
+    "total_length_um": 1853.96,
+    "total_area_um2": 14823.35,
+    "location": [
+      111.0,
+      119.0
+    ],
+    "n_segments": 14,
+    "spiral_l1_um": 200.0,
+    "spiral_l2_um": 200.0,
+    "spiral_spacing_um": 3.0,
+    "spiral_turns": null,
+    "radius_um": null,
+    "n_sides": null,
+    "primary_width_um": 8.0,
+    "secondary_width_um": 8.0,
+    "primary_turns": 3.0,
+    "secondary_turns": 3.0
+  },
+  "layout": {
+    "cif": "layouts/trans_cmos_L200_W8_S3_N3_m5_m4_primary.cif",
+    "gds": "layouts/trans_cmos_L200_W8_S3_N3_m5_m4_primary.gds"
+  },
+  "analysis": {
+    "metal_area_um2": 14823.351638,
+    "ind_dc_nh": 2.09578,
+    "res_dc_ohm": 7.3675,
+    "freq_points_ghz": [
+      1.0,
+      5.0
+    ],
+    "res_hf_ohm": [
+      7.41321,
+      7.889445
+    ],
+    "q": [
+      1.787336,
+      8.936682
+    ],
+    "lrmat_l_h": [
+      2.098e-09,
+      2.088e-09
+    ],
+    "lrmat_r_ohm": [
+      7.428,
+      8.0801
+    ],
+    "pi2_points": [
+      {
+        "freq_ghz": 1.0,
+        "q_three": [
+          1.76,
+          1.766,
+          1.772
+        ],
+        "L_nh": 2.1,
+        "R_ohm": 7.4,
+        "Cs1_ff": 99.0,
+        "Rs1_ohm": 37.4,
+        "Cs2_ff": 78.4,
+        "Rs2_ohm": -56.2,
+        "f_res_ghz": 11.42
+      },
+      {
+        "freq_ghz": 5.0,
+        "q_three": [
+          6.8,
+          7.239,
+          7.823
+        ],
+        "L_nh": 1.99,
+        "R_ohm": 7.26,
+        "Cs1_ff": 99.5,
+        "Rs1_ohm": 2.83,
+        "Cs2_ff": 80.8,
+        "Rs2_ohm": -0.73,
+        "f_res_ghz": 11.31
+      }
+    ],
+    "cap_points": [
+      {
+        "freq_ghz": 1.0,
+        "cap_ff": 177.119,
+        "cap_r_ohm": 0.036
+      },
+      {
+        "freq_ghz": 5.0,
+        "cap_ff": 177.119,
+        "cap_r_ohm": 0.036
+      }
+    ],
+    "stable_session_rc": 1,
+    "stable_session_seconds": 10.37,
+    "sweep_session_rc": 1,
+    "sweep_session_seconds": 50.95,
+    "s2p_freq_count": 10,
+    "commands_run": [
+      "TRANS PNAME=TP_200:SNAME=TS_200:LEN=200:W=8:S=3:N=3:METAL=m5:EXIT=m4:XORG=100:YORG=100",
+      "MetArea TP_200",
+      "Ind TP_200",
+      "Res TP_200",
+      "ResHF TP_200 1.0",
+      "Q TP_200 1.0",
+      "Pi2 TP_200 1.0",
+      "Cap TP_200 1.0",
+      "LRMAT TP_200 1.0",
+      "ResHF TP_200 5.0",
+      "Q TP_200 5.0",
+      "Pi2 TP_200 5.0",
+      "Cap TP_200 5.0",
+      "LRMAT TP_200 5.0",
+      "2Port TP_200 1.0 10.0 1.0 S polar slow trans_cmos_L200_W8_S3_N3_m5_m4_primary.s2p"
+    ],
+    "errors": [
+      "Pi2 TP_200 1.0: Warning:  Could not open data file at frequency = 1.00.",
+      "Pi2 TP_200 5.0: Warning:  Could not open data file at frequency = 5.00."
+    ]
+  },
+  "artifacts": {
+    "stable_log": "analysis/trans_cmos_L200_W8_S3_N3_m5_m4_primary.stable.log",
+    "sweep_log": "analysis/trans_cmos_L200_W8_S3_N3_m5_m4_primary.sweep.log",
+    "s2p": "analysis/trans_cmos_L200_W8_S3_N3_m5_m4_primary.s2p"
+  },
+  "captured_with": "qemu-i386-static + asitic.linux.2.2 + xvfb-run",
+  "schema_version": 5
+}

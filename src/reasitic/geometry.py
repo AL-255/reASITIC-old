@@ -582,8 +582,8 @@ def _square_layout_polygons(
     if length <= 0.0:
         return []
     pitch = W + S
-    n_int = int(math.floor(shape.turns))
-    frac_side = int(round((shape.turns - n_int) * 4.0))
+    n_int = math.floor(shape.turns)
+    frac_side = round((shape.turns - n_int) * 4.0)
     polys: list[Polygon] = []
     last_corners: list[tuple[float, float]] | None = None
     last_side = 0
@@ -606,7 +606,6 @@ def _square_layout_polygons(
         iy0 = y0 + W
         ix1 = x1 - W
         iy1 = y1 - W
-        join = W
         top_left_outer_x = shape.x_origin + max(0, turn - 1) * pitch
         top_left_inner_x = top_left_outer_x if turn == 0 else top_left_outer_x + W
 
@@ -735,7 +734,7 @@ def _square_access_polygons(
     # gives n = floor((W - 2·op + via_s) / (via_w + via_s))).
     # Verified against gold sq_170 (W=10 → n=4) and trans_200x8x3x3
     # (W=8 → n=3).
-    n = max(1, int(math.floor((W - 2.0 * overplot + via_rec.space) / pitch)))
+    n = max(1, math.floor((W - 2.0 * overplot + via_rec.space) / pitch))
     span = (n - 1) * via_rec.space + n * via_rec.width
     z = 0.0
     via_metal = len(tech.metals) + via_idx
@@ -920,14 +919,14 @@ def _polygon_spiral_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
     cos_half = math.cos(math.pi / sides)
     radial_w = W / cos_half
     radial_step = (W + S) / cos_half / sides
-    n_round = int(round(shape.turns))
-    loops = int(round(shape.turns + 1.0))
+    n_round = round(shape.turns)
+    loops = round(shape.turns + 1.0)
     r = R
     raw: list[list[tuple[float, float]]] = []
     for turn in range(1, loops + 1):
         n_side = sides
         if turn == loops:
-            n_side = int(round((shape.turns - n_round) * sides + 1.0 / (2.0 * sides)))
+            n_side = round((shape.turns - n_round) * sides + 1.0 / (2.0 * sides))
         for i in range(1, n_side + 1):
             a0 = shape.phase + 2.0 * math.pi * (i - 1) / sides
             a1 = shape.phase + 2.0 * math.pi * i / sides
@@ -1101,7 +1100,7 @@ def square_spiral(
 
     n_full = math.floor(turns)
     frac = turns - n_full
-    n_partial = int(round(4 * frac))
+    n_partial = round(4 * frac)
 
     cphase = math.cos(phase)
     sphase = math.sin(phase)
@@ -1275,7 +1274,7 @@ def polygon_spiral(
 
     n_full = math.floor(turns)
     frac = turns - n_full
-    n_partial_sides = int(round(sides * frac))
+    n_partial_sides = round(sides * frac)
     total_sides = n_full * sides + n_partial_sides
 
     cphase = math.cos(phase)
@@ -1710,9 +1709,9 @@ def transformer(
     if via_rec is not None:
         overplot = max(via_rec.overplot1, via_rec.overplot2)
         vp = via_rec.width + via_rec.space
-        n_vias = max(1, int(math.floor(
+        n_vias = max(1, math.floor(
             (W - 2.0 * overplot + via_rec.space) / vp,
-        )))
+        ))
         grid_span = n_vias * via_rec.width + (n_vias - 1) * via_rec.space
         adjusted: list[Polygon] = []
         for p in secondary_polys:
@@ -1933,7 +1932,7 @@ def _symsq_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
     exit_metal_rec = tech.metals[exit_idx]
 
     polys: list[Polygon] = []
-    n_int = int(round(shape.turns))
+    n_int = round(shape.turns)
 
     # 1) Top rings (k=0..N-1). k=0 is the centre-U (full-L wide
     #    + special chamfer-only-at-inner-corners pattern).
@@ -2035,7 +2034,7 @@ def _symsq_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
         if via_rec is not None:
             overplot = max(via_rec.overplot1, via_rec.overplot2)
             vp = via_rec.width + via_rec.space
-            n_vias = max(1, int(math.floor((W - 2.0 * overplot + via_rec.space) / vp)))
+            n_vias = max(1, math.floor((W - 2.0 * overplot + via_rec.space) / vp))
             cluster_span = n_vias * via_rec.width + (n_vias - 1) * via_rec.space
             pad_h = cluster_span + 2.0 * overplot
             u_arm_bot = Y + L * 0.5 + ILEN
@@ -2508,7 +2507,10 @@ def balun(
         exit_idx = _resolve_metal(tech, exit_metal).index
     else:
         exit_metal_arg = secondary_metal if secondary_metal is not None else metal2
-        exit_idx = _resolve_metal(tech, exit_metal_arg).index if exit_metal_arg is not None else None
+        exit_idx = (
+            _resolve_metal(tech, exit_metal_arg).index
+            if exit_metal_arg is not None else None
+        )
 
     return Shape(
         name=name,
@@ -2560,7 +2562,7 @@ def _sympoly_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
     W = shape.width
     S = shape.spacing
     ILEN = shape.ilen if shape.ilen > 0 else (W + S)
-    N = int(round(shape.turns))
+    N = round(shape.turns)
     sides = shape.sides
     if R <= 0 or W <= 0 or N < 1 or sides < 4 or sides % 2 != 0:
         return []
@@ -2613,7 +2615,7 @@ def _sympoly_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
 
     for half in range(1, 2 * N + 1):
         for _ in range(sides // 2):
-            o_prev, ch_prev, i_prev = o_curr, ch_curr, i_curr
+            o_prev, _ch_prev, i_prev = o_curr, ch_curr, i_curr
             angle += side_step
             o_curr, ch_curr, i_curr = end_corners(angle, R_curr, y_off)
             tagged.append((primary_idx, [o_prev, o_curr, i_curr, i_prev]))
@@ -2642,16 +2644,10 @@ def _sympoly_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
 
         if half < N:
             R_curr -= radial_pitch
-            if y_off >= 0:
-                case = 4
-            else:
-                case = 7
+            case = 4 if y_off >= 0 else 7
         else:
             R_curr += radial_pitch
-            if y_off < 0:
-                case = 6
-            else:
-                case = 5
+            case = 6 if y_off < 0 else 5
 
         # sympoly_emit_polygon_layers shifts curr corners. The four
         # cases encode (sign_x, sign_y) for the X+Y shift of (W+S)
@@ -2743,9 +2739,9 @@ def _sympoly_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
         if via_rec is not None:
             overplot = max(via_rec.overplot1, via_rec.overplot2)
             vp = via_rec.width + via_rec.space
-            n_vias = max(1, int(math.floor(
+            n_vias = max(1, math.floor(
                 (W - 2.0 * overplot + via_rec.space) / vp,
-            )))
+            ))
             grid_extent = n_vias * via_rec.width + (n_vias - 1) * via_rec.space
             half_grid = grid_extent * 0.5
             via_metal = len(tech.metals) + via_idx
@@ -2836,7 +2832,7 @@ def _balun_primary_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
     X = shape.x_origin
     Y = shape.y_origin
     metal_rec = tech.metals[shape.metal]
-    n_int = int(round(shape.turns))
+    n_int = round(shape.turns)
     even_ks = [k for k in range(n_int) if k % 2 == 0]
     polys: list[Polygon] = []
 
@@ -2905,7 +2901,7 @@ def _balun_primary_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
         if via_rec is not None:
             overplot = max(via_rec.overplot1, via_rec.overplot2)
             vp = via_rec.width + via_rec.space
-            n_vias = max(1, int(math.floor((W - 2.0 * overplot + via_rec.space) / vp)))
+            n_vias = max(1, math.floor((W - 2.0 * overplot + via_rec.space) / vp))
             cluster_span = n_vias * via_rec.width + (n_vias - 1) * via_rec.space
             pad_h = cluster_span + 2.0 * overplot
             u_arm_bot = Y + L * 0.5 + ILEN
@@ -2968,7 +2964,7 @@ def _balun_secondary_layout_polygons(shape: Shape, tech: Tech) -> list[Polygon]:
     X = shape.x_origin
     Y = shape.y_origin
     metal_rec = tech.metals[shape.metal]
-    n_int = int(round(shape.turns))
+    n_int = round(shape.turns)
     odd_ks = [k for k in range(n_int) if k % 2 == 1]
     polys: list[Polygon] = []
 

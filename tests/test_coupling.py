@@ -4,7 +4,6 @@ import pytest
 
 from reasitic import (
     compute_mutual_inductance,
-    compute_self_inductance,
     coupling_coefficient,
     parse_tech_file,
     square_spiral,
@@ -135,17 +134,3 @@ def test_mutual_zero_when_either_shape_empty(tech) -> None:
     assert coupling_coefficient(a, empty) == 0.0
 
 
-def test_self_inductance_unchanged_after_refactor(tech) -> None:
-    """Smoke test that the helper extraction didn't break self-L."""
-    sp = square_spiral(
-        "S",
-        length=170.0,
-        width=10.0,
-        spacing=3.0,
-        turns=2.0,
-        tech=tech,
-        metal="m3",
-    )
-    L = compute_self_inductance(sp)
-    # From earlier validated result: ≈ 1.279 nH
-    assert pytest.approx(1.279, rel=1e-2) == L

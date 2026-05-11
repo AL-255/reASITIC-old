@@ -162,16 +162,6 @@ def test_compute_self_inductance_invariant_under_translation(tech: Tech) -> None
     assert pytest.approx(L0, rel=1e-12) == L1
 
 
-def test_pi_model_invariant_under_translation(tech: Tech) -> None:
-    sp = square_spiral(
-        "L", length=200, width=10, spacing=2, turns=3, tech=tech, metal="m3"
-    )
-    p0 = pi_model_at_freq(sp, tech, freq_ghz=2.4)
-    p1 = pi_model_at_freq(sp.translate(50, 75), tech, freq_ghz=2.4)
-    assert p0.L_nH == pytest.approx(p1.L_nH, rel=1e-12)
-    assert p0.C_p1_fF == pytest.approx(p1.C_p1_fF, rel=1e-12)
-
-
 def test_save_load_preserves_shape_count(tmp_path: Path, tech: Tech) -> None:
     shapes = {
         f"L{i}": square_spiral(

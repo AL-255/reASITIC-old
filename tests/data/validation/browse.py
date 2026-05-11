@@ -14,6 +14,7 @@ Requirements: Python 3, tkinter (stdlib), matplotlib, numpy.
 """
 from __future__ import annotations
 
+import contextlib
 import json
 import tkinter as tk
 from pathlib import Path
@@ -80,7 +81,7 @@ class App:
         self.tech_var = tk.StringVar(value="(all)")
         tech_box = ttk.Combobox(
             filters, textvariable=self.tech_var, state="readonly",
-            values=["(all)"] + techs, width=10,
+            values=["(all)", *techs], width=10,
         )
         tech_box.grid(row=0, column=1, padx=(2, 8), sticky="ew")
         tech_box.bind("<<ComboboxSelected>>",
@@ -90,7 +91,7 @@ class App:
         self.cmd_var = tk.StringVar(value="(all)")
         cmd_box = ttk.Combobox(
             filters, textvariable=self.cmd_var, state="readonly",
-            values=["(all)"] + cmds, width=12,
+            values=["(all)", *cmds], width=12,
         )
         cmd_box.grid(row=0, column=3, padx=(2, 0), sticky="ew")
         cmd_box.bind("<<ComboboxSelected>>",
@@ -221,7 +222,7 @@ class App:
             """
             if srf_ghz is None or x_range is None:
                 return
-            if not (srf_ghz == srf_ghz):  # NaN guard
+            if srf_ghz != srf_ghz:  # NaN guard
                 return
             lo, hi = x_range
             if not (lo <= srf_ghz <= hi):
@@ -295,7 +296,7 @@ class App:
         if pi2:
             q_idx_labels = ["Q[0]", "Q[port1 gnd]", "Q[port2 gnd]"]
             markers = ["s", "^", "v"]
-            for k, (lab, mk) in enumerate(zip(q_idx_labels, markers)):
+            for k, (lab, mk) in enumerate(zip(q_idx_labels, markers, strict=False)):
                 ys = [(p.get("q_three") or [None]*3)[k] for p in pi2]
                 if any(y is not None for y in ys):
                     ax_q.plot(pi2_f, ys, mk + "--", alpha=0.7,
@@ -324,7 +325,8 @@ class App:
             ax_s.text(0.5, 0.5, f"no S2P at\n{s2p_path.name}",
                       transform=ax_s.transAxes,
                       ha="center", va="center", color="#888")
-            ax_s.set_xticks([]); ax_s.set_yticks([])
+            ax_s.set_xticks([])
+            ax_s.set_yticks([])
 
         geom = d.get("geom", {}) or {}
         title = (
@@ -338,10 +340,8 @@ class App:
 
 def main() -> None:
     root = tk.Tk()
-    try:
+    with contextlib.suppress(tk.TclError):
         ttk.Style().theme_use("clam")
-    except tk.TclError:
-        pass
     App(root)
     root.mainloop()
 

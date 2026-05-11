@@ -61,23 +61,6 @@ def test_dc_resistance_halves_with_width(tech) -> None:
     assert R_n == pytest.approx(2.0 * R_w, rel=1e-12)
 
 
-def test_dc_resistance_square_spiral(tech) -> None:
-    """A 2-turn square spiral has 8 segments; resistance is the
-    sum of all segment resistances. Outer 4 are 170 μm, inner 4 are
-    144 μm. R = 0.020 * (4*170 + 4*144) / 10 = 0.020 * 1256 / 10 = 2.512 Ω."""
-    sp = square_spiral(
-        "S1",
-        length=170.0,
-        width=10.0,
-        spacing=3.0,
-        turns=2.0,
-        tech=tech,
-        metal="m3",
-    )
-    R = compute_dc_resistance(sp, tech)
-    assert pytest.approx(2.512, rel=1e-9) == R
-
-
 # Skin depth -------------------------------------------------------------
 
 

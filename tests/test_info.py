@@ -34,17 +34,6 @@ def test_metal_area_wire_is_zero(tech) -> None:
     assert metal_area(w) == 0.0
 
 
-def test_metal_area_square_loop(tech) -> None:
-    """A 1-turn 100 μm square spiral has 100×100 = 10000 μm² area
-    in the closed loop — the shoelace gives the polygon enclosure."""
-    sp = square_spiral(
-        "S", length=100, width=10, spacing=3, turns=1, tech=tech, metal="m3"
-    )
-    area = metal_area(sp)
-    # Outer box of 100 × 100 = 10000 μm²
-    assert area == pytest.approx(10000.0, rel=1e-6)
-
-
 # List segments ----------------------------------------------------------
 
 

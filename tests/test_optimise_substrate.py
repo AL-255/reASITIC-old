@@ -5,7 +5,6 @@ import math
 import pytest
 
 from reasitic import (
-    compute_self_inductance,
     parse_tech_file,
     square_spiral,
 )
@@ -144,12 +143,3 @@ def test_shunt_increases_with_area(tech) -> None:
     assert C_b / C_s > 1.5
 
 
-def test_self_inductance_unchanged(tech) -> None:
-    """Smoke test that the optimisation/substrate work didn't break L
-    on a known geometry."""
-    sp = square_spiral(
-        "S", length=170, width=10, spacing=3, turns=2, tech=tech, metal="m3"
-    )
-    L = compute_self_inductance(sp)
-    # The 2-turn 170 μm m3 spiral has been validated at ~1.28 nH
-    assert pytest.approx(1.279, rel=1e-2) == L

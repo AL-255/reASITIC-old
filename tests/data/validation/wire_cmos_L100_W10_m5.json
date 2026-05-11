@@ -38,23 +38,188 @@
     "res_dc_ohm": 0.3,
     "freq_points_ghz": [
       1.0,
-      5.0
+      1.5,
+      2.0,
+      2.5,
+      3.0,
+      3.5,
+      4.0,
+      4.5,
+      5.0,
+      5.5,
+      6.0,
+      6.5,
+      7.0,
+      7.5,
+      8.0,
+      8.5,
+      9.0,
+      9.5,
+      10.0,
+      10.5,
+      11.0,
+      11.5,
+      12.0,
+      12.5,
+      13.0,
+      13.5,
+      14.0,
+      14.5,
+      15.0,
+      15.5,
+      16.0,
+      16.5,
+      17.0,
+      17.5,
+      18.0
     ],
     "res_hf_ohm": [
       0.302804,
-      0.332333
+      0.305163,
+      0.307972,
+      0.31118,
+      0.314753,
+      0.318669,
+      0.322911,
+      0.327469,
+      0.332333,
+      0.337496,
+      0.342955,
+      0.348704,
+      0.354743,
+      0.313565,
+      0.316116,
+      0.318928,
+      0.321944,
+      0.32512,
+      0.32842,
+      0.331818,
+      0.33529,
+      0.338819,
+      0.34239,
+      0.345992,
+      0.349615,
+      0.35325,
+      0.356893,
+      0.360536,
+      0.364177,
+      0.36781,
+      0.371434,
+      0.375046,
+      0.378643,
+      0.382225,
+      0.385789
     ],
     "q": [
       1.43993,
-      7.199648
+      2.159894,
+      2.879859,
+      3.599824,
+      4.319789,
+      5.039754,
+      5.759718,
+      6.479683,
+      7.199648,
+      7.919613,
+      8.639578,
+      9.359542,
+      10.079507,
+      10.799473,
+      11.519437,
+      12.239401,
+      12.959366,
+      13.679332,
+      14.399296,
+      15.119261,
+      15.839227,
+      16.559191,
+      17.279155,
+      17.99912,
+      18.719084,
+      19.43905,
+      20.159015,
+      20.878979,
+      21.598945,
+      22.31891,
+      23.038874,
+      23.758838,
+      24.478803,
+      25.198769,
+      25.918732
     ],
     "lrmat_l_h": [
       6.858e-11,
-      6.811e-11
+      6.857e-11,
+      6.852e-11,
+      6.845e-11,
+      6.839e-11,
+      6.832e-11,
+      6.825e-11,
+      6.818e-11,
+      6.811e-11,
+      6.804e-11,
+      6.798e-11,
+      6.791e-11,
+      6.785e-11,
+      6.779e-11,
+      6.774e-11,
+      6.769e-11,
+      6.764e-11,
+      6.759e-11,
+      6.755e-11,
+      6.751e-11,
+      6.755e-11,
+      6.752e-11,
+      6.747e-11,
+      6.744e-11,
+      6.741e-11,
+      6.737e-11,
+      6.734e-11,
+      6.732e-11,
+      6.728e-11,
+      6.726e-11,
+      6.723e-11,
+      6.721e-11,
+      6.718e-11,
+      6.716e-11,
+      6.714e-11
     ],
     "lrmat_r_ohm": [
       0.3012,
-      0.3257
+      0.3029,
+      0.305,
+      0.3078,
+      0.3111,
+      0.3143,
+      0.3181,
+      0.3221,
+      0.3257,
+      0.3296,
+      0.3332,
+      0.337,
+      0.3405,
+      0.3438,
+      0.3474,
+      0.3505,
+      0.3539,
+      0.3568,
+      0.3597,
+      0.3628,
+      0.3624,
+      0.3648,
+      0.3676,
+      0.3699,
+      0.3721,
+      0.3748,
+      0.3769,
+      0.379,
+      0.3815,
+      0.3835,
+      0.3854,
+      0.3873,
+      0.3897,
+      0.3915,
+      0.3933
     ],
     "pi2_points": [
       {
@@ -73,6 +238,111 @@
         "f_res_ghz": 206.18
       },
       {
+        "freq_ghz": 1.5,
+        "q_three": [
+          2.133,
+          2.134,
+          2.134
+        ],
+        "L_nh": 0.0686,
+        "R_ohm": 0.303,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.165,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 206.21
+      },
+      {
+        "freq_ghz": 2.0,
+        "q_three": [
+          2.823,
+          2.824,
+          2.824
+        ],
+        "L_nh": 0.0685,
+        "R_ohm": 0.305,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.165,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 206.28
+      },
+      {
+        "freq_ghz": 2.5,
+        "q_three": [
+          3.493,
+          3.493,
+          3.493
+        ],
+        "L_nh": 0.0685,
+        "R_ohm": 0.308,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 206.38
+      },
+      {
+        "freq_ghz": 3.0,
+        "q_three": [
+          4.143,
+          4.144,
+          4.144
+        ],
+        "L_nh": 0.0684,
+        "R_ohm": 0.311,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 206.47
+      },
+      {
+        "freq_ghz": 3.5,
+        "q_three": [
+          4.778,
+          4.78,
+          4.78
+        ],
+        "L_nh": 0.0683,
+        "R_ohm": 0.314,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 206.58
+      },
+      {
+        "freq_ghz": 4.0,
+        "q_three": [
+          5.39,
+          5.392,
+          5.392
+        ],
+        "L_nh": 0.0683,
+        "R_ohm": 0.318,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 206.68
+      },
+      {
+        "freq_ghz": 4.5,
+        "q_three": [
+          5.983,
+          5.986,
+          5.986
+        ],
+        "L_nh": 0.0682,
+        "R_ohm": 0.322,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 206.79
+      },
+      {
         "freq_ghz": 5.0,
         "q_three": [
           6.566,
@@ -86,6 +356,396 @@
         "Cs2_ff": 0.0,
         "Rs2_ohm": 1000000000000000.0,
         "f_res_ghz": 206.9
+      },
+      {
+        "freq_ghz": 5.5,
+        "q_three": [
+          7.128,
+          7.133,
+          7.133
+        ],
+        "L_nh": 0.068,
+        "R_ohm": 0.33,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 207.0
+      },
+      {
+        "freq_ghz": 6.0,
+        "q_three": [
+          7.684,
+          7.691,
+          7.691
+        ],
+        "L_nh": 0.068,
+        "R_ohm": 0.333,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 207.1
+      },
+      {
+        "freq_ghz": 6.5,
+        "q_three": [
+          8.221,
+          8.229,
+          8.229
+        ],
+        "L_nh": 0.0679,
+        "R_ohm": 0.337,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 207.2
+      },
+      {
+        "freq_ghz": 7.0,
+        "q_three": [
+          8.755,
+          8.765,
+          8.765
+        ],
+        "L_nh": 0.0679,
+        "R_ohm": 0.34,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 207.29
+      },
+      {
+        "freq_ghz": 7.5,
+        "q_three": [
+          9.281,
+          9.293,
+          9.293
+        ],
+        "L_nh": 0.0678,
+        "R_ohm": 0.344,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 207.38
+      },
+      {
+        "freq_ghz": 8.0,
+        "q_three": [
+          9.787,
+          9.802,
+          9.802
+        ],
+        "L_nh": 0.0677,
+        "R_ohm": 0.347,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 207.46
+      },
+      {
+        "freq_ghz": 8.5,
+        "q_three": [
+          10.296,
+          10.314,
+          10.314
+        ],
+        "L_nh": 0.0677,
+        "R_ohm": 0.351,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 207.54
+      },
+      {
+        "freq_ghz": 9.0,
+        "q_three": [
+          10.788,
+          10.809,
+          10.809
+        ],
+        "L_nh": 0.0676,
+        "R_ohm": 0.354,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 207.62
+      },
+      {
+        "freq_ghz": 9.5,
+        "q_three": [
+          11.283,
+          11.307,
+          11.307
+        ],
+        "L_nh": 0.0676,
+        "R_ohm": 0.357,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 207.69
+      },
+      {
+        "freq_ghz": 10.0,
+        "q_three": [
+          11.773,
+          11.8,
+          11.8
+        ],
+        "L_nh": 0.0675,
+        "R_ohm": 0.36,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 207.76
+      },
+      {
+        "freq_ghz": 10.5,
+        "q_three": [
+          12.243,
+          12.275,
+          12.275
+        ],
+        "L_nh": 0.0675,
+        "R_ohm": 0.363,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 207.82
+      },
+      {
+        "freq_ghz": 11.0,
+        "q_three": [
+          12.848,
+          12.884,
+          12.884
+        ],
+        "L_nh": 0.0676,
+        "R_ohm": 0.362,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 207.75
+      },
+      {
+        "freq_ghz": 11.5,
+        "q_three": [
+          13.333,
+          13.374,
+          13.374
+        ],
+        "L_nh": 0.0675,
+        "R_ohm": 0.365,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 207.81
+      },
+      {
+        "freq_ghz": 12.0,
+        "q_three": [
+          13.791,
+          13.838,
+          13.838
+        ],
+        "L_nh": 0.0675,
+        "R_ohm": 0.368,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 207.88
+      },
+      {
+        "freq_ghz": 12.5,
+        "q_three": [
+          14.267,
+          14.319,
+          14.319
+        ],
+        "L_nh": 0.0674,
+        "R_ohm": 0.37,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 207.93
+      },
+      {
+        "freq_ghz": 13.0,
+        "q_three": [
+          14.739,
+          14.797,
+          14.797
+        ],
+        "L_nh": 0.0674,
+        "R_ohm": 0.372,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 207.97
+      },
+      {
+        "freq_ghz": 13.5,
+        "q_three": [
+          15.181,
+          15.245,
+          15.245
+        ],
+        "L_nh": 0.0674,
+        "R_ohm": 0.375,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 208.04
+      },
+      {
+        "freq_ghz": 14.0,
+        "q_three": [
+          15.644,
+          15.716,
+          15.716
+        ],
+        "L_nh": 0.0673,
+        "R_ohm": 0.377,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 208.08
+      },
+      {
+        "freq_ghz": 14.5,
+        "q_three": [
+          16.104,
+          16.183,
+          16.183
+        ],
+        "L_nh": 0.0673,
+        "R_ohm": 0.379,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 208.11
+      },
+      {
+        "freq_ghz": 15.0,
+        "q_three": [
+          16.532,
+          16.619,
+          16.619
+        ],
+        "L_nh": 0.0673,
+        "R_ohm": 0.382,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 208.17
+      },
+      {
+        "freq_ghz": 15.5,
+        "q_three": [
+          16.984,
+          17.079,
+          17.079
+        ],
+        "L_nh": 0.0673,
+        "R_ohm": 0.384,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 208.21
+      },
+      {
+        "freq_ghz": 16.0,
+        "q_three": [
+          17.433,
+          17.537,
+          17.537
+        ],
+        "L_nh": 0.0672,
+        "R_ohm": 0.385,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 208.24
+      },
+      {
+        "freq_ghz": 16.5,
+        "q_three": [
+          17.879,
+          17.993,
+          17.993
+        ],
+        "L_nh": 0.0672,
+        "R_ohm": 0.387,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 208.27
+      },
+      {
+        "freq_ghz": 17.0,
+        "q_three": [
+          18.289,
+          18.413,
+          18.413
+        ],
+        "L_nh": 0.0672,
+        "R_ohm": 0.39,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 208.32
+      },
+      {
+        "freq_ghz": 17.5,
+        "q_three": [
+          18.728,
+          18.862,
+          18.862
+        ],
+        "L_nh": 0.0672,
+        "R_ohm": 0.392,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 208.35
+      },
+      {
+        "freq_ghz": 18.0,
+        "q_three": [
+          19.164,
+          19.309,
+          19.309
+        ],
+        "L_nh": 0.0671,
+        "R_ohm": 0.393,
+        "Cs1_ff": 8.69,
+        "Rs1_ohm": 0.164,
+        "Cs2_ff": 0.0,
+        "Rs2_ohm": 1000000000000000.0,
+        "f_res_ghz": 208.38
       }
     ],
     "cap_points": [
@@ -95,16 +755,182 @@
         "cap_r_ohm": 0.165
       },
       {
+        "freq_ghz": 1.5,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.165
+      },
+      {
+        "freq_ghz": 2.0,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.165
+      },
+      {
+        "freq_ghz": 2.5,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 3.0,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 3.5,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 4.0,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 4.5,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
         "freq_ghz": 5.0,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 5.5,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 6.0,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 6.5,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 7.0,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 7.5,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 8.0,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 8.5,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 9.0,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 9.5,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 10.0,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 10.5,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 11.0,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 11.5,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 12.0,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 12.5,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 13.0,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 13.5,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 14.0,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 14.5,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 15.0,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 15.5,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 16.0,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 16.5,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 17.0,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 17.5,
+        "cap_ff": 8.688,
+        "cap_r_ohm": 0.164
+      },
+      {
+        "freq_ghz": 18.0,
         "cap_ff": 8.688,
         "cap_r_ohm": 0.164
       }
     ],
-    "stable_session_rc": 1,
-    "stable_session_seconds": 10.02,
-    "sweep_session_rc": 1,
-    "sweep_session_seconds": 50.31,
-    "s2p_freq_count": 10,
+    "srf_ghz": 207.69,
+    "stable_session_rc": -3,
+    "stable_session_seconds": 283.71,
+    "sweep_session_rc": -3,
+    "sweep_session_seconds": 276.01,
+    "s2p_freq_count": 34,
     "commands_run": [
       "W NAME=W2:LEN=100:WID=10:METAL=m5:XORG=0:YORG=0",
       "MetArea W2",
@@ -115,16 +941,214 @@
       "Pi2 W2 1.0",
       "Cap W2 1.0",
       "LRMAT W2 1.0",
+      "ResHF W2 1.5",
+      "Q W2 1.5",
+      "Pi2 W2 1.5",
+      "Cap W2 1.5",
+      "LRMAT W2 1.5",
+      "ResHF W2 2.0",
+      "Q W2 2.0",
+      "Pi2 W2 2.0",
+      "Cap W2 2.0",
+      "LRMAT W2 2.0",
+      "ResHF W2 2.5",
+      "Q W2 2.5",
+      "Pi2 W2 2.5",
+      "Cap W2 2.5",
+      "LRMAT W2 2.5",
+      "ResHF W2 3.0",
+      "Q W2 3.0",
+      "Pi2 W2 3.0",
+      "Cap W2 3.0",
+      "LRMAT W2 3.0",
+      "ResHF W2 3.5",
+      "Q W2 3.5",
+      "Pi2 W2 3.5",
+      "Cap W2 3.5",
+      "LRMAT W2 3.5",
+      "ResHF W2 4.0",
+      "Q W2 4.0",
+      "Pi2 W2 4.0",
+      "Cap W2 4.0",
+      "LRMAT W2 4.0",
+      "ResHF W2 4.5",
+      "Q W2 4.5",
+      "Pi2 W2 4.5",
+      "Cap W2 4.5",
+      "LRMAT W2 4.5",
       "ResHF W2 5.0",
       "Q W2 5.0",
       "Pi2 W2 5.0",
       "Cap W2 5.0",
       "LRMAT W2 5.0",
-      "2Port W2 1.0 10.0 1.0 S polar slow wire_cmos_L100_W10_m5.s2p"
+      "ResHF W2 5.5",
+      "Q W2 5.5",
+      "Pi2 W2 5.5",
+      "Cap W2 5.5",
+      "LRMAT W2 5.5",
+      "ResHF W2 6.0",
+      "Q W2 6.0",
+      "Pi2 W2 6.0",
+      "Cap W2 6.0",
+      "LRMAT W2 6.0",
+      "ResHF W2 6.5",
+      "Q W2 6.5",
+      "Pi2 W2 6.5",
+      "Cap W2 6.5",
+      "LRMAT W2 6.5",
+      "ResHF W2 7.0",
+      "Q W2 7.0",
+      "Pi2 W2 7.0",
+      "Cap W2 7.0",
+      "LRMAT W2 7.0",
+      "ResHF W2 7.5",
+      "Q W2 7.5",
+      "Pi2 W2 7.5",
+      "Cap W2 7.5",
+      "LRMAT W2 7.5",
+      "ResHF W2 8.0",
+      "Q W2 8.0",
+      "Pi2 W2 8.0",
+      "Cap W2 8.0",
+      "LRMAT W2 8.0",
+      "ResHF W2 8.5",
+      "Q W2 8.5",
+      "Pi2 W2 8.5",
+      "Cap W2 8.5",
+      "LRMAT W2 8.5",
+      "ResHF W2 9.0",
+      "Q W2 9.0",
+      "Pi2 W2 9.0",
+      "Cap W2 9.0",
+      "LRMAT W2 9.0",
+      "ResHF W2 9.5",
+      "Q W2 9.5",
+      "Pi2 W2 9.5",
+      "Cap W2 9.5",
+      "LRMAT W2 9.5",
+      "ResHF W2 10.0",
+      "Q W2 10.0",
+      "Pi2 W2 10.0",
+      "Cap W2 10.0",
+      "LRMAT W2 10.0",
+      "ResHF W2 10.5",
+      "Q W2 10.5",
+      "Pi2 W2 10.5",
+      "Cap W2 10.5",
+      "LRMAT W2 10.5",
+      "ResHF W2 11.0",
+      "Q W2 11.0",
+      "Pi2 W2 11.0",
+      "Cap W2 11.0",
+      "LRMAT W2 11.0",
+      "ResHF W2 11.5",
+      "Q W2 11.5",
+      "Pi2 W2 11.5",
+      "Cap W2 11.5",
+      "LRMAT W2 11.5",
+      "ResHF W2 12.0",
+      "Q W2 12.0",
+      "Pi2 W2 12.0",
+      "Cap W2 12.0",
+      "LRMAT W2 12.0",
+      "ResHF W2 12.5",
+      "Q W2 12.5",
+      "Pi2 W2 12.5",
+      "Cap W2 12.5",
+      "LRMAT W2 12.5",
+      "ResHF W2 13.0",
+      "Q W2 13.0",
+      "Pi2 W2 13.0",
+      "Cap W2 13.0",
+      "LRMAT W2 13.0",
+      "ResHF W2 13.5",
+      "Q W2 13.5",
+      "Pi2 W2 13.5",
+      "Cap W2 13.5",
+      "LRMAT W2 13.5",
+      "ResHF W2 14.0",
+      "Q W2 14.0",
+      "Pi2 W2 14.0",
+      "Cap W2 14.0",
+      "LRMAT W2 14.0",
+      "ResHF W2 14.5",
+      "Q W2 14.5",
+      "Pi2 W2 14.5",
+      "Cap W2 14.5",
+      "LRMAT W2 14.5",
+      "ResHF W2 15.0",
+      "Q W2 15.0",
+      "Pi2 W2 15.0",
+      "Cap W2 15.0",
+      "LRMAT W2 15.0",
+      "ResHF W2 15.5",
+      "Q W2 15.5",
+      "Pi2 W2 15.5",
+      "Cap W2 15.5",
+      "LRMAT W2 15.5",
+      "ResHF W2 16.0",
+      "Q W2 16.0",
+      "Pi2 W2 16.0",
+      "Cap W2 16.0",
+      "LRMAT W2 16.0",
+      "ResHF W2 16.5",
+      "Q W2 16.5",
+      "Pi2 W2 16.5",
+      "Cap W2 16.5",
+      "LRMAT W2 16.5",
+      "ResHF W2 17.0",
+      "Q W2 17.0",
+      "Pi2 W2 17.0",
+      "Cap W2 17.0",
+      "LRMAT W2 17.0",
+      "ResHF W2 17.5",
+      "Q W2 17.5",
+      "Pi2 W2 17.5",
+      "Cap W2 17.5",
+      "LRMAT W2 17.5",
+      "ResHF W2 18.0",
+      "Q W2 18.0",
+      "Pi2 W2 18.0",
+      "Cap W2 18.0",
+      "LRMAT W2 18.0",
+      "2Port W2 1.0 18.0 0.5 S polar slow wire_cmos_L100_W10_m5.s2p"
     ],
     "errors": [
       "Pi2 W2 1.0: Warning:  Could not open data file at frequency = 1.00.",
-      "Pi2 W2 5.0: Warning:  Could not open data file at frequency = 5.00."
+      "Pi2 W2 1.5: Warning:  Could not open data file at frequency = 1.50.",
+      "Pi2 W2 2.0: Warning:  Could not open data file at frequency = 2.00.",
+      "Pi2 W2 2.5: Warning:  Could not open data file at frequency = 2.50.",
+      "Pi2 W2 3.0: Warning:  Could not open data file at frequency = 3.00.",
+      "Pi2 W2 3.5: Warning:  Could not open data file at frequency = 3.50.",
+      "Pi2 W2 4.0: Warning:  Could not open data file at frequency = 4.00.",
+      "Pi2 W2 4.5: Warning:  Could not open data file at frequency = 4.50.",
+      "Pi2 W2 5.0: Warning:  Could not open data file at frequency = 5.00.",
+      "Pi2 W2 5.5: Warning:  Could not open data file at frequency = 5.50.",
+      "Pi2 W2 6.0: Warning:  Could not open data file at frequency = 6.00.",
+      "Pi2 W2 6.5: Warning:  Could not open data file at frequency = 6.50.",
+      "Pi2 W2 7.0: Warning:  Could not open data file at frequency = 7.00.",
+      "Pi2 W2 7.5: Warning:  Could not open data file at frequency = 7.50.",
+      "Pi2 W2 8.0: Warning:  Could not open data file at frequency = 8.00.",
+      "Pi2 W2 8.5: Warning:  Could not open data file at frequency = 8.50.",
+      "Pi2 W2 9.0: Warning:  Could not open data file at frequency = 9.00.",
+      "Pi2 W2 9.5: Warning:  Could not open data file at frequency = 9.50.",
+      "Pi2 W2 10.0: Warning:  Could not open data file at frequency = 10.00.",
+      "Pi2 W2 10.5: Warning:  Could not open data file at frequency = 10.50.",
+      "Pi2 W2 11.0: Warning:  Could not open data file at frequency = 11.00.",
+      "Pi2 W2 11.5: Warning:  Could not open data file at frequency = 11.50.",
+      "Pi2 W2 12.0: Warning:  Could not open data file at frequency = 12.00.",
+      "Pi2 W2 12.5: Warning:  Could not open data file at frequency = 12.50.",
+      "Pi2 W2 13.0: Warning:  Could not open data file at frequency = 13.00.",
+      "Pi2 W2 13.5: Warning:  Could not open data file at frequency = 13.50.",
+      "Pi2 W2 14.0: Warning:  Could not open data file at frequency = 14.00.",
+      "Pi2 W2 14.5: Warning:  Could not open data file at frequency = 14.50.",
+      "Pi2 W2 15.0: Warning:  Could not open data file at frequency = 15.00.",
+      "Pi2 W2 15.5: Warning:  Could not open data file at frequency = 15.50.",
+      "Pi2 W2 16.0: Warning:  Could not open data file at frequency = 16.00.",
+      "Pi2 W2 16.5: Warning:  Could not open data file at frequency = 16.50.",
+      "Pi2 W2 17.0: Warning:  Could not open data file at frequency = 17.00.",
+      "Pi2 W2 17.5: Warning:  Could not open data file at frequency = 17.50.",
+      "Pi2 W2 18.0: Warning:  Could not open data file at frequency = 18.00."
     ]
   },
   "artifacts": {

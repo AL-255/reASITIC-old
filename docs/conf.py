@@ -190,12 +190,28 @@ def _copy_repl_into_build(app, exception):  # pragma: no cover - build hook
     """Mirror ``docs/repl/`` into ``_build/html/repl/`` post-build.
 
     Skipped if the build raised, so failed runs don't ship a stale REPL.
+    Also regenerates ``examples.json`` from
+    ``tests/data/validation/*.json`` so the REPL's Examples menu stays
+    in sync with the validation set.
     """
     if exception is not None:
         return
     src = Path(app.srcdir) / "repl"
     if not src.is_dir():
         return
+
+    # Refresh the Examples manifest before the copy so the deployed site
+    # picks up any newly-captured validation points.
+    try:
+        import subprocess
+        subprocess.run(
+            ["python", str(src / "build_examples.py")],
+            check=True,
+        )
+    except Exception:
+        # Non-fatal: examples.json may already exist from a previous run.
+        pass
+
     dst = Path(app.outdir) / "repl"
     if dst.exists():
         shutil.rmtree(dst)

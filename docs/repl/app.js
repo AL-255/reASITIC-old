@@ -72,6 +72,10 @@ const ui = {
 const ANALYSIS_TABS = new Map();
 let analysisCounter = 0;
 
+// Most recently loaded / saved file basename — used as the default name
+// for ``Save`` (without re-prompting) until the user picks Save As.
+let currentDocumentName = null;
+
 // Parse a value that may be blank ("") / "0" → return undefined ("not specified").
 // Otherwise parse as float and return that. Used to send only the parameters
 // the user explicitly set so bridge.py can apply ASITIC defaults.
@@ -447,6 +451,8 @@ async function bootPyodide() {
   versionEl.textContent = v;
 
   await loadTechFile(ui.techSelect.value);
+  // Populate the Examples menu from the manifest in parallel with boot.
+  loadExamplesMenu();
 
   setEnabled(true);
   applyShapeVisibility();
@@ -1250,6 +1256,21 @@ function closeAnalysisTab(id) {
   if (wasActive) setActiveTab("results");
 }
 
+// Close every closable analysis tab in one shot, leaving the static
+// Results / Python REPL panes alone. Triggered by the "Clear outputs"
+// button in the output-panel header.
+function closeAllAnalysisTabs() {
+  const ids = Array.from(ANALYSIS_TABS.keys());
+  ids.forEach((id) => {
+    const reg = ANALYSIS_TABS.get(id);
+    if (!reg) return;
+    reg.tabEl.remove();
+    reg.paneEl.remove();
+    ANALYSIS_TABS.delete(id);
+  });
+  setActiveTab("results");
+}
+
 // Spawn a new analysis tab + pane and switch to it. The new tab starts
 // with ``Live update`` enabled so the user can iterate on geometry and
 // see numbers refresh without re-clicking the analysis button.
@@ -1447,6 +1468,402 @@ async function runRepl() {
   }
 }
 
+// ---- Menu bar (File / Examples) -----------------------------------------
+//
+// Save format mirrors the JSON schema used by ``tests/data/validation/``:
+//
+//   {
+//     "name": "<file-stem>",
+//     "build_command": "SQ NAME=L1:LEN=170:W=10:S=3:N=2:METAL=m3",
+//     "shape_name": "L1",
+//     "tech_file": "BiCMOS.tek"
+//   }
+//
+// Only those four fields are needed to round-trip the REPL state; the
+// rest of the validation schema (parsed Geom, captured CIF/GDS paths,
+// numerical analysis arrays) is regeneratable from the same command +
+// tech file via build_shape and the analyze_* / export_gds_bytes calls.
+
+// Parse an ASITIC ``Create`` command line back into a spec dict that
+// ``applySpec`` can shovel into the UI. Inverse of ``formatCreateCommand``.
+function parseCreateCommand(cmd) {
+  if (!cmd || typeof cmd !== "string") return null;
+  const m = cmd.trim().match(/^(\S+)\s+(.*)$/);
+  if (!m) return null;
+  const verb = m[1].toUpperCase();
+  const kv = {};
+  for (const pair of m[2].split(":")) {
+    const eq = pair.indexOf("=");
+    if (eq < 0) continue;
+    kv[pair.slice(0, eq).toUpperCase().trim()] = pair.slice(eq + 1).trim();
+  }
+  // ASITIC verb -> our internal kind. Aliases come from run/doc/create.
+  const verbMap = {
+    SQ: "square_spiral", SQUARE: "square_spiral", SQR: "square_spiral", RECT: "square_spiral",
+    SP: "polygon_spiral", S: "polygon_spiral", SPI: "polygon_spiral", SPIRAL: "polygon_spiral",
+    SYMSQ: "symmetric_square", BALSQ: "symmetric_square", CENTERSQ: "symmetric_square",
+    SYMSQUARE: "symmetric_square",
+    SYMPOLY: "symmetric_polygon", BALPOLY: "symmetric_polygon", CENTERPOLY: "symmetric_polygon",
+    SQMM: "multi_metal_square", MMSQUARE: "multi_metal_square", MMSQ: "multi_metal_square",
+    RECTMM: "multi_metal_square",
+    TRANS: "transformer_primary", TRANSFORMER: "transformer_primary",
+    T: "transformer_primary", TR: "transformer_primary",
+    BALUN: "balun_primary", B: "balun_primary", BALUNT: "balun_primary", SYMT: "balun_primary",
+    W: "wire", WIRE: "wire",
+    CAP: "capacitor", CAPTOR: "capacitor", CCAP: "capacitor", CAPACITOR: "capacitor",
+    VIA: "via", V: "via", CONTACT: "via",
+    RING: "ring",
+  };
+  const kind = verbMap[verb] || "square_spiral";
+  const num = (k) => {
+    if (!(k in kv)) return null;
+    const v = parseFloat(kv[k]);
+    return Number.isFinite(v) ? v : null;
+  };
+  const spec = {
+    kind,
+    name: kv.NAME || kv.PNAME || kv.SNAME || "L1",
+    metal: kv.METAL || null,
+    exit_metal: kv.EXIT || null,
+    metal_top: kv.METAL1 || null,
+    metal_bottom: kv.METAL2 || null,
+    metal_transition: null,
+    length: num("LEN"),
+    radius: num("RADIUS") ?? num("RAD"),
+    width: num("W") ?? num("WID") ?? num("W1"),
+    spacing: num("S"),
+    turns: num("N"),
+    sides: kv.SIDES ? parseInt(kv.SIDES, 10) : 8,
+    gap: num("GAP"),
+    ilen: num("ILEN"),
+    iwid: num("IWID"),
+    wid: num("WID"),
+    w2: num("W2"),
+    x_origin: num("XORG") ?? num("XORIG") ?? 0,
+    y_origin: num("YORG") ?? num("YORIG") ?? 0,
+    orient: num("ORIENT") ?? 0,
+    phase: num("PHASE") ?? 0,
+    // For VIA the doc allows ``N`` as an alias for ``NX`` — only honour
+    // that fallback when the verb is actually VIA, otherwise ``N`` is
+    // the spiral turn count and would corrupt the via grid size.
+    n_via_x: kv.NX ? parseInt(kv.NX, 10)
+      : (kind === "via" && kv.N ? parseInt(kv.N, 10) : 1),
+    n_via_y: kv.NY ? parseInt(kv.NY, 10)
+      : (kv.NX ? parseInt(kv.NX, 10) : 1),
+    via_index: 0,
+    via_phase: 0,
+  };
+  // BALUN: METAL2 is the inter-turn transition layer, not a bottom plate.
+  if (kind === "balun_primary" || kind === "balun_secondary") {
+    spec.metal_transition = kv.METAL2 || null;
+    spec.metal_bottom = null;
+    spec.metal_top = null;
+  }
+  // CAP: METAL1 / METAL2 split is correct as parsed.
+  return spec;
+}
+
+function _setVal(el, value) {
+  if (!el) return;
+  if (value === null || value === undefined) return;
+  el.value = String(value);
+}
+
+// Drop a spec into every UI input it concerns, then rebuild the canvas.
+// Hidden inputs (by ``data-only``) are written anyway — getSpec will
+// ignore them because they're not visible.
+async function applySpec(spec) {
+  if (!spec) return;
+  ui.shapeSelect.value = spec.kind;
+  applyShapeVisibility();
+
+  const k = spec.kind;
+  if (k === "transformer_primary") {
+    _setVal(ui.pname, spec.name || "TP");
+  } else if (k === "transformer_secondary") {
+    _setVal(ui.sname, spec.name || "TS");
+  } else {
+    _setVal(ui.name, spec.name || "L1");
+  }
+
+  _setVal(ui.metalSelect, spec.metal);
+  _setVal(ui.exitMetalSelect, spec.exit_metal || "");
+  _setVal(ui.mmsqExitSelect, spec.exit_metal);
+  _setVal(ui.metalBalunPrimarySelect, spec.metal);
+  _setVal(ui.metalBalunTransitionSelect, spec.metal_transition);
+  _setVal(ui.metalCapTopSelect, spec.metal_top || spec.metal);
+  _setVal(ui.metalCapBottomSelect, spec.metal_bottom);
+
+  if (k === "wire") {
+    _setVal(ui.wireLength, spec.length);
+    _setVal(ui.wireWidth, spec.width);
+  } else if (k === "capacitor") {
+    _setVal(ui.capLength, spec.length);
+    _setVal(ui.capWidth, spec.width);
+  } else if (k === "ring") {
+    _setVal(ui.ringRadius, spec.radius);
+    _setVal(ui.wireWidth, spec.width);
+    _setVal(ui.gap, spec.gap);
+    _setVal(ui.sides, spec.sides);
+  } else if (k === "polygon_spiral" || k === "symmetric_polygon") {
+    _setVal(ui.radius, spec.radius);
+    _setVal(ui.width, spec.width);
+  } else if (k === "balun_primary" || k === "balun_secondary") {
+    _setVal(ui.length, spec.length);
+    _setVal(ui.balunW1, spec.width);
+    _setVal(ui.balunW2, spec.w2 ?? "");
+  } else {
+    _setVal(ui.length, spec.length);
+    _setVal(ui.width, spec.width);
+  }
+
+  _setVal(ui.spacing, spec.spacing);
+  _setVal(ui.turns, spec.turns);
+  _setVal(ui.sides, spec.sides);
+  _setVal(ui.ilen, spec.ilen);
+  _setVal(ui.iwid, spec.iwid ?? "");
+  _setVal(ui.wid, spec.wid ?? "");
+  _setVal(ui.xorg, spec.x_origin);
+  _setVal(ui.yorg, spec.y_origin);
+  _setVal(ui.orient, spec.orient);
+  _setVal(ui.phase, spec.phase);
+  _setVal(ui.nvx, spec.n_via_x);
+  _setVal(ui.nvy, spec.n_via_y);
+
+  await buildShape();
+}
+
+function setDocumentName(name) {
+  currentDocumentName = name || null;
+  const el = $("menubar-filename");
+  if (el) el.textContent = name ? `— ${name}` : "";
+}
+
+function buildSaveBlob(filename) {
+  const spec = getSpec();
+  const cmd = formatCreateCommand(spec);
+  const stem = (filename || "").replace(/\.json$/i, "") || "untitled";
+  return JSON.stringify({
+    name: stem,
+    build_command: cmd,
+    shape_name: spec.name,
+    tech_file: ui.techSelect.value,
+  }, null, 2);
+}
+
+function fileNew() {
+  // Pick a sensible default — the square spiral the page boots with.
+  applySpec({
+    kind: "square_spiral", name: "L1", metal: ui.metalSelect.value,
+    exit_metal: null, length: 170, width: 10, spacing: 3, turns: 2,
+    sides: 8, x_origin: 0, y_origin: 0, orient: 0, phase: 0,
+    n_via_x: 1, n_via_y: 1, via_index: 0,
+  });
+  setDocumentName(null);
+}
+
+async function fileSave() {
+  const stem = currentDocumentName || "untitled";
+  downloadText(`${stem}.json`, buildSaveBlob(stem), "application/json");
+  setDocumentName(stem);
+}
+
+async function fileSaveAs() {
+  const proposed = currentDocumentName || ui.name.value || "untitled";
+  const stem = window.prompt("Save as (without .json):", proposed);
+  if (!stem) return;
+  const cleaned = stem.replace(/\.json$/i, "");
+  downloadText(`${cleaned}.json`, buildSaveBlob(cleaned), "application/json");
+  setDocumentName(cleaned);
+}
+
+function fileOpen() {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = ".json,application/json";
+  input.addEventListener("change", () => {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async () => {
+      try {
+        const data = JSON.parse(reader.result);
+        await loadFromValidationRecord(data);
+        setDocumentName(file.name.replace(/\.json$/i, ""));
+      } catch (err) {
+        setStatus("Open failed.", "error");
+        showResult(`Failed to open ${file.name}:\n${err.message}`, "error");
+      }
+    };
+    reader.readAsText(file);
+  });
+  input.click();
+}
+
+// Common loader for both File→Open and the Examples menu — both supply
+// a record that matches the validation JSON schema.
+async function loadFromValidationRecord(data) {
+  if (!data || !data.build_command) {
+    throw new Error("File has no ``build_command``");
+  }
+  // Swap tech files if needed (and the page knows about it).
+  const wantedTech = data.tech_file;
+  if (wantedTech && ui.techSelect.value !== wantedTech) {
+    const opt = Array.from(ui.techSelect.options)
+      .find((o) => o.value === wantedTech);
+    if (opt) {
+      ui.techSelect.value = wantedTech;
+      setEnabled(false);
+      try {
+        await loadTechFile(wantedTech);
+      } finally {
+        setEnabled(true);
+      }
+    }
+  }
+  const spec = parseCreateCommand(data.build_command);
+  if (!spec) throw new Error(`Couldn't parse: ${data.build_command}`);
+  // Honour the validation shape_name when present (the build_command's
+  // NAME= sometimes uses a temp scratch name).
+  if (data.shape_name) spec.name = data.shape_name;
+  await applySpec(spec);
+}
+
+// ---- Examples browser ----------------------------------------------------
+
+function _exampleFamily(kind) {
+  // Map the parsed-kind tag back to a human header for the dropdown.
+  return ({
+    square_spiral: "Square spirals",
+    polygon_spiral: "Polygon spirals",
+    symmetric_square: "Symmetric squares",
+    symmetric_polygon: "Symmetric polygons",
+    multi_metal_square: "Multi-metal squares",
+    transformer_primary: "Transformers (primary)",
+    transformer_secondary: "Transformers (secondary)",
+    balun_primary: "Baluns (primary)",
+    balun_secondary: "Baluns (secondary)",
+    wire: "Wires",
+    capacitor: "Capacitors",
+    ring: "Rings",
+    via: "Via clusters",
+  })[kind] || "Other";
+}
+
+async function loadExamplesMenu() {
+  const dropdown = $("examples-dropdown");
+  if (!dropdown) return;
+  try {
+    const resp = await fetch("examples.json", { cache: "no-cache" });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const examples = await resp.json();
+    populateExamplesMenu(dropdown, examples);
+  } catch (err) {
+    dropdown.innerHTML = `<p class="menu-loading">No examples available (${err.message || err}).</p>`;
+  }
+}
+
+function populateExamplesMenu(dropdown, examples) {
+  dropdown.innerHTML = "";
+  // Group by parsed kind, with the families in a stable order.
+  const groups = new Map();
+  examples.forEach((ex) => {
+    const spec = parseCreateCommand(ex.build_command);
+    // For TRANS/BALUN the validation set has separate `-primary` and
+    // `-secondary` JSONs that both share the same build_command; switch
+    // the kind by inspecting the record name's suffix.
+    let kind = spec ? spec.kind : "other";
+    if (kind === "transformer_primary"
+        && /_secondary$/.test(ex.name || "")) kind = "transformer_secondary";
+    if (kind === "balun_primary"
+        && /_secondary$/.test(ex.name || "")) kind = "balun_secondary";
+    if (!groups.has(kind)) groups.set(kind, []);
+    groups.get(kind).push({ ex, spec, kind });
+  });
+  const order = [
+    "square_spiral", "polygon_spiral",
+    "symmetric_square", "symmetric_polygon",
+    "multi_metal_square",
+    "transformer_primary", "transformer_secondary",
+    "balun_primary", "balun_secondary",
+    "wire", "capacitor", "ring", "via",
+  ];
+  for (const kind of order) {
+    const arr = groups.get(kind);
+    if (!arr) continue;
+    const header = document.createElement("div");
+    header.className = "menu-section";
+    header.textContent = `${_exampleFamily(kind)} (${arr.length})`;
+    dropdown.appendChild(header);
+    arr.forEach(({ ex }) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "example-row";
+      const tech = ex.tech_file ? ex.tech_file.replace(/\.tek$/i, "") : "";
+      btn.innerHTML = `${ex.name}<span class="example-tech">${tech}</span>`;
+      btn.title = ex.build_command;
+      btn.addEventListener("click", async () => {
+        closeAllMenus();
+        // Force the record's kind through to the active shape — the same
+        // build_command produces both -primary and -secondary, but the
+        // validation record's name tells us which coil to display.
+        const record = { ...ex };
+        await loadFromValidationRecord(record);
+        // After applySpec ran with the parsed kind, switch to secondary
+        // if the example name says so.
+        if (/_secondary$/.test(record.name) && record.build_command.startsWith("TRANS")) {
+          ui.shapeSelect.value = "transformer_secondary";
+          applyShapeVisibility();
+          await buildShape();
+        }
+        if (/_secondary$/.test(record.name) && record.build_command.startsWith("BALUN")) {
+          ui.shapeSelect.value = "balun_secondary";
+          applyShapeVisibility();
+          await buildShape();
+        }
+        setDocumentName(record.name);
+      });
+      dropdown.appendChild(btn);
+    });
+  }
+  if (dropdown.children.length === 0) {
+    dropdown.innerHTML = `<p class="menu-loading">No examples in manifest.</p>`;
+  }
+}
+
+function closeAllMenus() {
+  document.querySelectorAll(".menubar .menu.open").forEach((m) => m.classList.remove("open"));
+}
+
+function wireMenubar() {
+  document.querySelectorAll(".menubar .menu").forEach((menu) => {
+    const btn = menu.querySelector(".menu-button");
+    if (!btn) return;
+    btn.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      const wasOpen = menu.classList.contains("open");
+      closeAllMenus();
+      if (!wasOpen) menu.classList.add("open");
+    });
+  });
+  document.addEventListener("click", (ev) => {
+    if (!ev.target.closest(".menubar")) closeAllMenus();
+  });
+  document.addEventListener("keydown", (ev) => {
+    if (ev.key === "Escape") closeAllMenus();
+  });
+  document.querySelectorAll(".menubar [data-menu-action]").forEach((b) => {
+    b.addEventListener("click", () => {
+      closeAllMenus();
+      const action = b.dataset.menuAction;
+      if (action === "new") fileNew();
+      else if (action === "open") fileOpen();
+      else if (action === "save") fileSave();
+      else if (action === "save_as") fileSaveAs();
+    });
+  });
+}
+
 function wireEvents() {
   ui.techSelect.addEventListener("change", async () => {
     setEnabled(false);
@@ -1504,8 +1921,15 @@ function wireEvents() {
     setActiveTab(tab.dataset.tab);
   });
 
+  const clearAllBtn = $("btn-close-all-tabs");
+  if (clearAllBtn) {
+    clearAllBtn.addEventListener("click", closeAllAnalysisTabs);
+  }
+
   // Resizable output panel: drag the left-edge handle horizontally.
   wireOutputResizer();
+  // File / Examples menus.
+  wireMenubar();
 }
 
 // Drag-to-resize the right-hand output panel. The grid uses a CSS var

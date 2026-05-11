@@ -18,6 +18,25 @@
   </nav>
 </header>
 
+<nav class="menubar" id="menubar">
+  <div class="menu" data-menu="file">
+    <button class="menu-button" type="button">File</button>
+    <div class="menu-dropdown">
+      <button type="button" data-menu-action="new">New</button>
+      <button type="button" data-menu-action="open">Open…</button>
+      <button type="button" data-menu-action="save">Save</button>
+      <button type="button" data-menu-action="save_as">Save As…</button>
+    </div>
+  </div>
+  <div class="menu" data-menu="examples">
+    <button class="menu-button" type="button">Example Browser</button>
+    <div class="menu-dropdown menu-dropdown-wide" id="examples-dropdown">
+      <p class="menu-loading">Loading examples…</p>
+    </div>
+  </div>
+  <span class="menubar-filename" id="menubar-filename"></span>
+</nav>
+
 <main>
   <section class="panel params">
     <h2>Geometry</h2>
@@ -258,6 +277,10 @@
         <button class="tab" data-tab="repl" data-static="1">Python REPL</button>
         <!-- Analysis-driven tabs are inserted here at runtime. -->
       </div>
+      <button type="button" id="btn-close-all-tabs"
+              class="output-clear" title="Close every analysis tab">
+        Clear outputs
+      </button>
     </div>
 
     <div class="tab-pane active" data-pane="results">

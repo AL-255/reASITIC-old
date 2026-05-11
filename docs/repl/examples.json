@@ -1,0 +1,650 @@
+[
+  {
+    "name": "balun_bicmos_L180_W8_S3_N2_m3_m2_primary",
+    "build_command": "BALUN NAME=BL_180:LEN=180:W1=8:S=3:N=2:METAL=m3:METAL2=m2:XORG=100:YORG=100",
+    "shape_name": "BL_180-P",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "balun_bicmos_L180_W8_S3_N2_m3_m2_secondary",
+    "build_command": "BALUN NAME=BL_180:LEN=180:W1=8:S=3:N=2:METAL=m3:METAL2=m2:XORG=100:YORG=100",
+    "shape_name": "BL_180-S",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "balun_bicmos_L200_W8_S3_N3_m3_m2_primary",
+    "build_command": "BALUN NAME=BL_200:LEN=200:W1=8:S=3:N=3:METAL=m3:METAL2=m2:XORG=100:YORG=100",
+    "shape_name": "BL_200-P",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "balun_bicmos_L200_W8_S3_N3_m3_m2_secondary",
+    "build_command": "BALUN NAME=BL_200:LEN=200:W1=8:S=3:N=3:METAL=m3:METAL2=m2:XORG=100:YORG=100",
+    "shape_name": "BL_200-S",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "balun_bicmos_L250_W10_S3_N3_m3_m2_primary",
+    "build_command": "BALUN NAME=BL_250:LEN=250:W1=10:S=3:N=3:METAL=m3:METAL2=m2:XORG=100:YORG=100",
+    "shape_name": "BL_250-P",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "balun_bicmos_L250_W10_S3_N3_m3_m2_secondary",
+    "build_command": "BALUN NAME=BL_250:LEN=250:W1=10:S=3:N=3:METAL=m3:METAL2=m2:XORG=100:YORG=100",
+    "shape_name": "BL_250-S",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "balun_cmos_L180_W8_S3_N2_m5_m4_primary",
+    "build_command": "BALUN NAME=BL_180:LEN=180:W1=8:S=3:N=2:METAL=m5:METAL2=m4:XORG=100:YORG=100",
+    "shape_name": "BL_180-P",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "balun_cmos_L180_W8_S3_N2_m5_m4_secondary",
+    "build_command": "BALUN NAME=BL_180:LEN=180:W1=8:S=3:N=2:METAL=m5:METAL2=m4:XORG=100:YORG=100",
+    "shape_name": "BL_180-S",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "balun_cmos_L200_W8_S3_N3_m5_m4_primary",
+    "build_command": "BALUN NAME=BL_200:LEN=200:W1=8:S=3:N=3:METAL=m5:METAL2=m4:XORG=100:YORG=100",
+    "shape_name": "BL_200-P",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "balun_cmos_L200_W8_S3_N3_m5_m4_secondary",
+    "build_command": "BALUN NAME=BL_200:LEN=200:W1=8:S=3:N=3:METAL=m5:METAL2=m4:XORG=100:YORG=100",
+    "shape_name": "BL_200-S",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "balun_cmos_L250_W10_S3_N3_m5_m4_primary",
+    "build_command": "BALUN NAME=BL_250:LEN=250:W1=10:S=3:N=3:METAL=m5:METAL2=m4:XORG=100:YORG=100",
+    "shape_name": "BL_250-P",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "balun_cmos_L250_W10_S3_N3_m5_m4_secondary",
+    "build_command": "BALUN NAME=BL_250:LEN=250:W1=10:S=3:N=3:METAL=m5:METAL2=m4:XORG=100:YORG=100",
+    "shape_name": "BL_250-S",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "cap_bicmos_L120_W60_m3_m2",
+    "build_command": "CAPACITOR NAME=C3:LEN=120:WID=60:METAL1=m3:METAL2=m2:XORG=50:YORG=50",
+    "shape_name": "C3",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "cap_bicmos_L160_W100_m3_m2",
+    "build_command": "CAPACITOR NAME=C4:LEN=160:WID=100:METAL1=m3:METAL2=m2:XORG=100:YORG=200",
+    "shape_name": "C4",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "cap_bicmos_L200_W120_m3_m2",
+    "build_command": "CAPACITOR NAME=C5:LEN=200:WID=120:METAL1=m3:METAL2=m2:XORG=50:YORG=200",
+    "shape_name": "C5",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "cap_bicmos_L60_W60_m3_m2",
+    "build_command": "CAPACITOR NAME=C1:LEN=60:WID=60:METAL1=m3:METAL2=m2:XORG=0:YORG=0",
+    "shape_name": "C1",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "cap_bicmos_L80_W80_m3_m2",
+    "build_command": "CAPACITOR NAME=C2:LEN=80:WID=80:METAL1=m3:METAL2=m2:XORG=100:YORG=100",
+    "shape_name": "C2",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "cap_cmos_L120_W60_m5_m4",
+    "build_command": "CAPACITOR NAME=C3:LEN=120:WID=60:METAL1=m5:METAL2=m4:XORG=50:YORG=50",
+    "shape_name": "C3",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "cap_cmos_L160_W100_m5_m4",
+    "build_command": "CAPACITOR NAME=C4:LEN=160:WID=100:METAL1=m5:METAL2=m4:XORG=100:YORG=200",
+    "shape_name": "C4",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "cap_cmos_L200_W120_m5_m4",
+    "build_command": "CAPACITOR NAME=C5:LEN=200:WID=120:METAL1=m5:METAL2=m4:XORG=50:YORG=200",
+    "shape_name": "C5",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "cap_cmos_L60_W60_m5_m4",
+    "build_command": "CAPACITOR NAME=C1:LEN=60:WID=60:METAL1=m5:METAL2=m4:XORG=0:YORG=0",
+    "shape_name": "C1",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "cap_cmos_L80_W80_m5_m4",
+    "build_command": "CAPACITOR NAME=C2:LEN=80:WID=80:METAL1=m5:METAL2=m4:XORG=100:YORG=100",
+    "shape_name": "C2",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "mmsq_bicmos_L140_W10_S2_N2_m3_to_m2",
+    "build_command": "MMSQ NAME=MM_140:LEN=140:W=10:S=2:N=2:METAL=m3:EXIT=m2:XORG=100:YORG=100",
+    "shape_name": "MM_140",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "mmsq_bicmos_L160_W10_S2_N3_m3_to_m2",
+    "build_command": "MMSQ NAME=MM_160:LEN=160:W=10:S=2:N=3:METAL=m3:EXIT=m2:XORG=100:YORG=100",
+    "shape_name": "MM_160",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "mmsq_bicmos_L200_W12_S3_N2p5_m3_to_m2",
+    "build_command": "MMSQ NAME=MM_200:LEN=200:W=12:S=3:N=2.5:METAL=m3:EXIT=m2:XORG=100:YORG=100",
+    "shape_name": "MM_200",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "mmsq_bicmos_L240_W10_S3_N3_m3_to_m2",
+    "build_command": "MMSQ NAME=MM_240:LEN=240:W=10:S=3:N=3:METAL=m3:EXIT=m2:XORG=100:YORG=100",
+    "shape_name": "MM_240",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "mmsq_cmos_L140_W10_S2_N2_m5_to_m4",
+    "build_command": "MMSQ NAME=MM_140:LEN=140:W=10:S=2:N=2:METAL=m5:EXIT=m4:XORG=100:YORG=100",
+    "shape_name": "MM_140",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "mmsq_cmos_L160_W10_S2_N3_m5_to_m4",
+    "build_command": "MMSQ NAME=MM_160:LEN=160:W=10:S=2:N=3:METAL=m5:EXIT=m4:XORG=100:YORG=100",
+    "shape_name": "MM_160",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "mmsq_cmos_L200_W12_S3_N2p5_m5_to_m4",
+    "build_command": "MMSQ NAME=MM_200:LEN=200:W=12:S=3:N=2.5:METAL=m5:EXIT=m4:XORG=100:YORG=100",
+    "shape_name": "MM_200",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "mmsq_cmos_L240_W10_S3_N3_m5_to_m4",
+    "build_command": "MMSQ NAME=MM_240:LEN=240:W=10:S=3:N=3:METAL=m5:EXIT=m4:XORG=100:YORG=100",
+    "shape_name": "MM_240",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "ring_bicmos_R100_W8_G6_m2",
+    "build_command": "RING NAME=RG3:RAD=100:W=8:GAP=6:METAL=m2:XORG=200:YORG=200",
+    "shape_name": "RG3",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "ring_bicmos_R120_W8_G6_m3",
+    "build_command": "RING NAME=RG4:RAD=120:W=8:GAP=6:METAL=m3:XORG=200:YORG=200",
+    "shape_name": "RG4",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "ring_bicmos_R60_W8_G4_m3",
+    "build_command": "RING NAME=RG1:RAD=60:W=8:GAP=4:METAL=m3:XORG=200:YORG=200",
+    "shape_name": "RG1",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "ring_bicmos_R80_W10_G4_m3",
+    "build_command": "RING NAME=RG2:RAD=80:W=10:GAP=4:METAL=m3:XORG=200:YORG=200",
+    "shape_name": "RG2",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "ring_cmos_R100_W8_G6_m3",
+    "build_command": "RING NAME=RG3:RAD=100:W=8:GAP=6:METAL=m3:XORG=200:YORG=200",
+    "shape_name": "RG3",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "ring_cmos_R120_W8_G6_m5",
+    "build_command": "RING NAME=RG4:RAD=120:W=8:GAP=6:METAL=m5:XORG=200:YORG=200",
+    "shape_name": "RG4",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "ring_cmos_R60_W8_G4_m5",
+    "build_command": "RING NAME=RG1:RAD=60:W=8:GAP=4:METAL=m5:XORG=200:YORG=200",
+    "shape_name": "RG1",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "ring_cmos_R80_W10_G4_m5",
+    "build_command": "RING NAME=RG2:RAD=80:W=10:GAP=4:METAL=m5:XORG=200:YORG=200",
+    "shape_name": "RG2",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "sp_bicmos_R100_sides16_W8_S3_N2_m3",
+    "build_command": "SP NAME=SP4:RADIUS=100:SIDES=16:W=8:S=3:N=2:METAL=m3:XORG=200:YORG=200",
+    "shape_name": "SP4",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "sp_bicmos_R100_sides8_W8_S3_N3_m3",
+    "build_command": "SP NAME=SP3:RADIUS=100:SIDES=8:W=8:S=3:N=3:METAL=m3:XORG=200:YORG=200",
+    "shape_name": "SP3",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "sp_bicmos_R120_sides16_W8_S3_N2_m3",
+    "build_command": "SP NAME=SP6:RADIUS=120:SIDES=16:W=8:S=3:N=2:METAL=m3:XORG=200:YORG=200",
+    "shape_name": "SP6",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "sp_bicmos_R120_sides8_W8_S3_N2_m2",
+    "build_command": "SP NAME=SP5:RADIUS=120:SIDES=8:W=8:S=3:N=2:METAL=m2:XORG=200:YORG=200",
+    "shape_name": "SP5",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "sp_bicmos_R60_sides8_W6_S2_N2_m3",
+    "build_command": "SP NAME=SP1:RADIUS=60:SIDES=8:W=6:S=2:N=2:METAL=m3:XORG=200:YORG=200",
+    "shape_name": "SP1",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "sp_bicmos_R80_sides8_W6_S2_N2_m3",
+    "build_command": "SP NAME=SP2:RADIUS=80:SIDES=8:W=6:S=2:N=2:METAL=m3:XORG=200:YORG=200",
+    "shape_name": "SP2",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "sp_cmos_R100_sides16_W8_S3_N2_m5",
+    "build_command": "SP NAME=SP4:RADIUS=100:SIDES=16:W=8:S=3:N=2:METAL=m5:XORG=200:YORG=200",
+    "shape_name": "SP4",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "sp_cmos_R100_sides8_W8_S3_N3_m5",
+    "build_command": "SP NAME=SP3:RADIUS=100:SIDES=8:W=8:S=3:N=3:METAL=m5:XORG=200:YORG=200",
+    "shape_name": "SP3",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "sp_cmos_R120_sides16_W8_S3_N2_m5",
+    "build_command": "SP NAME=SP6:RADIUS=120:SIDES=16:W=8:S=3:N=2:METAL=m5:XORG=200:YORG=200",
+    "shape_name": "SP6",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "sp_cmos_R120_sides8_W8_S3_N2_m3",
+    "build_command": "SP NAME=SP5:RADIUS=120:SIDES=8:W=8:S=3:N=2:METAL=m3:XORG=200:YORG=200",
+    "shape_name": "SP5",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "sp_cmos_R60_sides8_W6_S2_N2_m5",
+    "build_command": "SP NAME=SP1:RADIUS=60:SIDES=8:W=6:S=2:N=2:METAL=m5:XORG=200:YORG=200",
+    "shape_name": "SP1",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "sp_cmos_R80_sides8_W6_S2_N2_m5",
+    "build_command": "SP NAME=SP2:RADIUS=80:SIDES=8:W=6:S=2:N=2:METAL=m5:XORG=200:YORG=200",
+    "shape_name": "SP2",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "sq_bicmos_L120_W10_S2_N1p5_m3",
+    "build_command": "SQ NAME=SQ_120:LEN=120:W=10:S=2:N=1.5:METAL=m3:XORG=50:YORG=75",
+    "shape_name": "SQ_120",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "sq_bicmos_L150_W8_S2_N2_exitm2_m3",
+    "build_command": "SQ NAME=SQ_150:LEN=150:W=8:S=2:N=2.0:METAL=m3:EXIT=m2:XORG=200:YORG=200",
+    "shape_name": "SQ_150",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "sq_bicmos_L170_W10_S3_N2_exitm2_m3",
+    "build_command": "SQ NAME=SQ_170:LEN=170:W=10:S=3:N=2.0:METAL=m3:EXIT=m2:XORG=200:YORG=200",
+    "shape_name": "SQ_170",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "sq_bicmos_L200_W10_S2_N3_m3",
+    "build_command": "SQ NAME=SQ_200:LEN=200:W=10:S=2:N=3.0:METAL=m3:XORG=200:YORG=200",
+    "shape_name": "SQ_200",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "sq_bicmos_L220_W12_S3_N2p5_exitm2_m3",
+    "build_command": "SQ NAME=SQ_220:LEN=220:W=12:S=3:N=2.5:METAL=m3:EXIT=m2:XORG=100:YORG=100",
+    "shape_name": "SQ_220",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "sq_bicmos_L260_W10_S4_N2p25_exitm2_m3",
+    "build_command": "SQ NAME=SQ_260:LEN=260:W=10:S=4:N=2.25:METAL=m3:EXIT=m2:XORG=100:YORG=120",
+    "shape_name": "SQ_260",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "sq_bicmos_L300_W12_S3_N3_exitm2_m3",
+    "build_command": "SQ NAME=SQ_300:LEN=300:W=12:S=3:N=3.0:METAL=m3:EXIT=m2:XORG=50:YORG=50",
+    "shape_name": "SQ_300",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "sq_bicmos_L300_W8_S2_N4_exitm2_m3",
+    "build_command": "SQ NAME=SQ_300:LEN=300:W=8:S=2:N=4.0:METAL=m3:EXIT=m2:XORG=100:YORG=100",
+    "shape_name": "SQ_300",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "sq_cmos_L120_W10_S2_N1p5_m5",
+    "build_command": "SQ NAME=SQ_120:LEN=120:W=10:S=2:N=1.5:METAL=m5:XORG=50:YORG=75",
+    "shape_name": "SQ_120",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "sq_cmos_L150_W8_S2_N2_exitm4_m5",
+    "build_command": "SQ NAME=SQ_150:LEN=150:W=8:S=2:N=2.0:METAL=m5:EXIT=m4:XORG=200:YORG=200",
+    "shape_name": "SQ_150",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "sq_cmos_L170_W10_S3_N2_exitm4_m5",
+    "build_command": "SQ NAME=SQ_170:LEN=170:W=10:S=3:N=2.0:METAL=m5:EXIT=m4:XORG=200:YORG=200",
+    "shape_name": "SQ_170",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "sq_cmos_L200_W10_S2_N3_m5",
+    "build_command": "SQ NAME=SQ_200:LEN=200:W=10:S=2:N=3.0:METAL=m5:XORG=200:YORG=200",
+    "shape_name": "SQ_200",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "sq_cmos_L220_W12_S3_N2p5_exitm4_m5",
+    "build_command": "SQ NAME=SQ_220:LEN=220:W=12:S=3:N=2.5:METAL=m5:EXIT=m4:XORG=100:YORG=100",
+    "shape_name": "SQ_220",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "sq_cmos_L260_W10_S4_N2p25_exitm4_m5",
+    "build_command": "SQ NAME=SQ_260:LEN=260:W=10:S=4:N=2.25:METAL=m5:EXIT=m4:XORG=100:YORG=120",
+    "shape_name": "SQ_260",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "sq_cmos_L300_W12_S3_N3_exitm4_m5",
+    "build_command": "SQ NAME=SQ_300:LEN=300:W=12:S=3:N=3.0:METAL=m5:EXIT=m4:XORG=50:YORG=50",
+    "shape_name": "SQ_300",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "sq_cmos_L300_W8_S2_N4_exitm4_m5",
+    "build_command": "SQ NAME=SQ_300:LEN=300:W=8:S=2:N=4.0:METAL=m5:EXIT=m4:XORG=100:YORG=100",
+    "shape_name": "SQ_300",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "sympoly_bicmos_R100_sides8_W10_S3_N2_m3",
+    "build_command": "SYMPOLY NAME=YP_100_2:RAD=100:W=10:S=3:N=2:ILEN=20:SIDES=8:METAL=m3:METAL2=m2:XORG=200:YORG=200",
+    "shape_name": "YP_100_2",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "sympoly_bicmos_R100_sides8_W10_S3_N3_m3",
+    "build_command": "SYMPOLY NAME=YP_100_3:RAD=100:W=10:S=3:N=3:ILEN=20:SIDES=8:METAL=m3:METAL2=m2:XORG=200:YORG=200",
+    "shape_name": "YP_100_3",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "sympoly_bicmos_R120_sides8_W10_S3_N2_m3",
+    "build_command": "SYMPOLY NAME=YP_120_2:RAD=120:W=10:S=3:N=2:ILEN=20:SIDES=8:METAL=m3:METAL2=m2:XORG=200:YORG=200",
+    "shape_name": "YP_120_2",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "sympoly_bicmos_R80_sides8_W10_S3_N2_m3",
+    "build_command": "SYMPOLY NAME=YP_80_2:RAD=80:W=10:S=3:N=2:ILEN=20:SIDES=8:METAL=m3:METAL2=m2:XORG=200:YORG=200",
+    "shape_name": "YP_80_2",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "sympoly_cmos_R100_sides8_W10_S3_N2_m5",
+    "build_command": "SYMPOLY NAME=YP_100_2:RAD=100:W=10:S=3:N=2:ILEN=20:SIDES=8:METAL=m5:METAL2=m4:XORG=200:YORG=200",
+    "shape_name": "YP_100_2",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "sympoly_cmos_R100_sides8_W10_S3_N3_m5",
+    "build_command": "SYMPOLY NAME=YP_100_3:RAD=100:W=10:S=3:N=3:ILEN=20:SIDES=8:METAL=m5:METAL2=m4:XORG=200:YORG=200",
+    "shape_name": "YP_100_3",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "sympoly_cmos_R120_sides8_W10_S3_N2_m5",
+    "build_command": "SYMPOLY NAME=YP_120_2:RAD=120:W=10:S=3:N=2:ILEN=20:SIDES=8:METAL=m5:METAL2=m4:XORG=200:YORG=200",
+    "shape_name": "YP_120_2",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "sympoly_cmos_R80_sides8_W10_S3_N2_m5",
+    "build_command": "SYMPOLY NAME=YP_80_2:RAD=80:W=10:S=3:N=2:ILEN=20:SIDES=8:METAL=m5:METAL2=m4:XORG=200:YORG=200",
+    "shape_name": "YP_80_2",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "symsq_bicmos_L150_W8_S2_N2_ILEN15_m3",
+    "build_command": "SYMSQ NAME=Y_150_2:LEN=150:W=8:S=2:N=2:ILEN=15:METAL=m3:METAL2=m2:XORG=100:YORG=100",
+    "shape_name": "Y_150_2",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "symsq_bicmos_L200_W10_S3_N2_ILEN20_m3",
+    "build_command": "SYMSQ NAME=Y_200_2:LEN=200:W=10:S=3:N=2:ILEN=20:METAL=m3:METAL2=m2:XORG=100:YORG=100",
+    "shape_name": "Y_200_2",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "symsq_bicmos_L200_W10_S3_N3_ILEN20_m3",
+    "build_command": "SYMSQ NAME=Y_200_3:LEN=200:W=10:S=3:N=3:ILEN=20:METAL=m3:METAL2=m2:XORG=100:YORG=100",
+    "shape_name": "Y_200_3",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "symsq_bicmos_L250_W10_S3_N3_ILEN25_m3",
+    "build_command": "SYMSQ NAME=Y_250_3:LEN=250:W=10:S=3:N=3:ILEN=25:METAL=m3:METAL2=m2:XORG=100:YORG=100",
+    "shape_name": "Y_250_3",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "symsq_bicmos_L300_W12_S4_N3_ILEN30_m3",
+    "build_command": "SYMSQ NAME=Y_300_3:LEN=300:W=12:S=4:N=3:ILEN=30:METAL=m3:METAL2=m2:XORG=100:YORG=100",
+    "shape_name": "Y_300_3",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "symsq_cmos_L150_W8_S2_N2_ILEN15_m5",
+    "build_command": "SYMSQ NAME=Y_150_2:LEN=150:W=8:S=2:N=2:ILEN=15:METAL=m5:METAL2=m4:XORG=100:YORG=100",
+    "shape_name": "Y_150_2",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "symsq_cmos_L200_W10_S3_N2_ILEN20_m5",
+    "build_command": "SYMSQ NAME=Y_200_2:LEN=200:W=10:S=3:N=2:ILEN=20:METAL=m5:METAL2=m4:XORG=100:YORG=100",
+    "shape_name": "Y_200_2",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "symsq_cmos_L200_W10_S3_N3_ILEN20_m5",
+    "build_command": "SYMSQ NAME=Y_200_3:LEN=200:W=10:S=3:N=3:ILEN=20:METAL=m5:METAL2=m4:XORG=100:YORG=100",
+    "shape_name": "Y_200_3",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "symsq_cmos_L250_W10_S3_N3_ILEN25_m5",
+    "build_command": "SYMSQ NAME=Y_250_3:LEN=250:W=10:S=3:N=3:ILEN=25:METAL=m5:METAL2=m4:XORG=100:YORG=100",
+    "shape_name": "Y_250_3",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "symsq_cmos_L300_W12_S4_N3_ILEN30_m5",
+    "build_command": "SYMSQ NAME=Y_300_3:LEN=300:W=12:S=4:N=3:ILEN=30:METAL=m5:METAL2=m4:XORG=100:YORG=100",
+    "shape_name": "Y_300_3",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "trans_bicmos_L180_W8_S3_N2_m3_m2_primary",
+    "build_command": "TRANS PNAME=TP_180:SNAME=TS_180:LEN=180:W=8:S=3:N=2:METAL=m3:EXIT=m2:XORG=100:YORG=100",
+    "shape_name": "TP_180",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "trans_bicmos_L180_W8_S3_N2_m3_m2_secondary",
+    "build_command": "TRANS PNAME=TP_180:SNAME=TS_180:LEN=180:W=8:S=3:N=2:METAL=m3:EXIT=m2:XORG=100:YORG=100",
+    "shape_name": "TS_180",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "trans_bicmos_L200_W8_S3_N3_m3_m2_primary",
+    "build_command": "TRANS PNAME=TP_200:SNAME=TS_200:LEN=200:W=8:S=3:N=3:METAL=m3:EXIT=m2:XORG=100:YORG=100",
+    "shape_name": "TP_200",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "trans_bicmos_L200_W8_S3_N3_m3_m2_secondary",
+    "build_command": "TRANS PNAME=TP_200:SNAME=TS_200:LEN=200:W=8:S=3:N=3:METAL=m3:EXIT=m2:XORG=100:YORG=100",
+    "shape_name": "TS_200",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "trans_bicmos_L250_W10_S3_N3_m3_m2_primary",
+    "build_command": "TRANS PNAME=TP_250:SNAME=TS_250:LEN=250:W=10:S=3:N=3:METAL=m3:EXIT=m2:XORG=100:YORG=100",
+    "shape_name": "TP_250",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "trans_bicmos_L250_W10_S3_N3_m3_m2_secondary",
+    "build_command": "TRANS PNAME=TP_250:SNAME=TS_250:LEN=250:W=10:S=3:N=3:METAL=m3:EXIT=m2:XORG=100:YORG=100",
+    "shape_name": "TS_250",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "trans_cmos_L180_W8_S3_N2_m5_m4_primary",
+    "build_command": "TRANS PNAME=TP_180:SNAME=TS_180:LEN=180:W=8:S=3:N=2:METAL=m5:EXIT=m4:XORG=100:YORG=100",
+    "shape_name": "TP_180",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "trans_cmos_L180_W8_S3_N2_m5_m4_secondary",
+    "build_command": "TRANS PNAME=TP_180:SNAME=TS_180:LEN=180:W=8:S=3:N=2:METAL=m5:EXIT=m4:XORG=100:YORG=100",
+    "shape_name": "TS_180",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "trans_cmos_L200_W8_S3_N3_m5_m4_primary",
+    "build_command": "TRANS PNAME=TP_200:SNAME=TS_200:LEN=200:W=8:S=3:N=3:METAL=m5:EXIT=m4:XORG=100:YORG=100",
+    "shape_name": "TP_200",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "trans_cmos_L200_W8_S3_N3_m5_m4_secondary",
+    "build_command": "TRANS PNAME=TP_200:SNAME=TS_200:LEN=200:W=8:S=3:N=3:METAL=m5:EXIT=m4:XORG=100:YORG=100",
+    "shape_name": "TS_200",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "trans_cmos_L250_W10_S3_N3_m5_m4_primary",
+    "build_command": "TRANS PNAME=TP_250:SNAME=TS_250:LEN=250:W=10:S=3:N=3:METAL=m5:EXIT=m4:XORG=100:YORG=100",
+    "shape_name": "TP_250",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "trans_cmos_L250_W10_S3_N3_m5_m4_secondary",
+    "build_command": "TRANS PNAME=TP_250:SNAME=TS_250:LEN=250:W=10:S=3:N=3:METAL=m5:EXIT=m4:XORG=100:YORG=100",
+    "shape_name": "TS_250",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "wire_bicmos_L100_W10_m3",
+    "build_command": "W NAME=W2:LEN=100:WID=10:METAL=m3:XORG=0:YORG=0",
+    "shape_name": "W2",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "wire_bicmos_L100_W8_m2",
+    "build_command": "W NAME=W3:LEN=100:WID=8:METAL=m2:XORG=100:YORG=100",
+    "shape_name": "W3",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "wire_bicmos_L150_W12_m3",
+    "build_command": "W NAME=W4:LEN=150:WID=12:METAL=m3:XORG=50:YORG=50",
+    "shape_name": "W4",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "wire_bicmos_L200_W8_m2",
+    "build_command": "W NAME=W5:LEN=200:WID=8:METAL=m2:XORG=150:YORG=150",
+    "shape_name": "W5",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "wire_bicmos_L300_W12_m3",
+    "build_command": "W NAME=W6:LEN=300:WID=12:METAL=m3:XORG=50:YORG=200",
+    "shape_name": "W6",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "wire_bicmos_L50_W5_msub",
+    "build_command": "W NAME=W1:LEN=50:WID=5:METAL=msub:XORG=100:YORG=100",
+    "shape_name": "W1",
+    "tech_file": "BiCMOS.tek"
+  },
+  {
+    "name": "wire_cmos_L100_W10_m5",
+    "build_command": "W NAME=W2:LEN=100:WID=10:METAL=m5:XORG=0:YORG=0",
+    "shape_name": "W2",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "wire_cmos_L100_W8_m3",
+    "build_command": "W NAME=W3:LEN=100:WID=8:METAL=m3:XORG=100:YORG=100",
+    "shape_name": "W3",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "wire_cmos_L150_W12_m5",
+    "build_command": "W NAME=W4:LEN=150:WID=12:METAL=m5:XORG=50:YORG=50",
+    "shape_name": "W4",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "wire_cmos_L200_W8_m3",
+    "build_command": "W NAME=W5:LEN=200:WID=8:METAL=m3:XORG=150:YORG=150",
+    "shape_name": "W5",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "wire_cmos_L300_W12_m5",
+    "build_command": "W NAME=W6:LEN=300:WID=12:METAL=m5:XORG=50:YORG=200",
+    "shape_name": "W6",
+    "tech_file": "CMOS.tek"
+  },
+  {
+    "name": "wire_cmos_L50_W5_m1",
+    "build_command": "W NAME=W1:LEN=50:WID=5:METAL=m1:XORG=100:YORG=100",
+    "shape_name": "W1",
+    "tech_file": "CMOS.tek"
+  }
+]
